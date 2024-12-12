@@ -23,6 +23,9 @@ import More from './pages/More/More.tsx';
 import Contact from './pages/Contact/Contact.tsx';
 import AstroProfile from './pages/AstroProfile/AstroProfile.tsx';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -40,14 +43,18 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/subscription" element={<Subscription />} />
-      <Route path="/contact" element={<Contact />} /> 
-      <Route path="/astro-profile" element={<AstroProfile />} /> 
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/astro-profile" element={<AstroProfile />} />
     </Route>
   )
 );
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 )

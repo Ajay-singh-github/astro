@@ -12,53 +12,53 @@ const Header = () => {
     setSidebarVisible(!sidebarVisible);
   };
 
-    const items = [
-      {
-        key: "1",
-        label: "Home",
-        path: "/",
-      },
-      {
-        key: "2",
-        label: "Horoscope",
-        path: "/horoscope",
-      },
-      {
-        key: "3",
-        label: "Janam Kundli",
-        path: "/janam-kundli",
-      },
-      {
-        key: "4",
-        label: "Match Making",
-        path: "/match-making",
-      },
-      {
-        key: "5",
-        label: "Panchang",
-        path: "/panchang",
-      },
-      {
-        key: "6",
-        label: "Shubhmuhurat Dates",
-        path: "/shubhmuhurat-dates",
-      },
-      // {
-      //   key: "7",
-      //   label: "Tarot Reading",
-      //   path: "/tarot-reading",
-      // },
-      {
-        key: "8",
-        label: "Numerology Calculator",
-        path: "/numerology-calculator",
-      },
-      {
-        key: "1",
-        label: "MORE",
-        path: "/more",
-      },
-    ];
+  const items = [
+    {
+      key: "1",
+      label: "Home",
+      path: "/",
+    },
+    {
+      key: "2",
+      label: "Horoscope",
+      path: "/horoscope",
+    },
+    {
+      key: "3",
+      label: "Janam Kundli",
+      path: "/janam-kundli",
+    },
+    {
+      key: "4",
+      label: "Match Making",
+      path: "/match-making",
+    },
+    {
+      key: "5",
+      label: "Panchang",
+      path: "/panchang",
+    },
+    {
+      key: "6",
+      label: "Shubhmuhurat Dates",
+      path: "/shubhmuhurat-dates",
+    },
+    // {
+    //   key: "7",
+    //   label: "Tarot Reading",
+    //   path: "/tarot-reading",
+    // },
+    {
+      key: "8",
+      label: "Numerology Calculator",
+      path: "/numerology-calculator",
+    },
+    {
+      key: "1",
+      label: "MORE",
+      path: "/more",
+    },
+  ];
 
   return (
     <div className="">
@@ -87,20 +87,21 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <nav className="bg-primary-100 hidden lg:flex p-8 justify-between text-base font-semibold">
-        {items.map((item) => (
-          <NavLink
-            key={item.key}
-            to={item.path}
-            className={`hover:underline hover:text-secondary-100 ${
-              location.pathname === item.path
+      <nav className="bg-primary-100 hidden lg:flex p-8 justify-center items-center font-semibold text-sm md:text-base">
+        <div className="flex gap-4 justify-center  sm:gap-8 md:gap-10 lg:gap-6 xl:gap-8 xl:text-xl 2xl:gap-12 2xl:text-2xl text-center items-center">
+          {items.map((item) => (
+            <NavLink
+              key={item.key}
+              to={item.path}
+              className={`hover:underline hover:text-secondary-100 ${location.pathname === item.path
                 ? "underline text-secondary-100"
                 : ""
-            }`}
-          >
-            {item.label}
-          </NavLink>
-        ))}
+                }`}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
       </nav>
       <nav className="lg:hidden">
         <div className="text-2xl text-primary-300 p-4 fixed right-0 items-center justify-end">
@@ -112,9 +113,8 @@ const Header = () => {
           </div>
         </div>
         <div
-          className={`fixed ${
-            sidebarVisible ? "block" : "hidden"
-          } top-0 z-50 flex justify-end h-screen w-full bg-primary-300/70`}
+          className={`fixed ${sidebarVisible ? "block" : "hidden"
+            } top-0 z-50 flex justify-end h-screen w-full bg-primary-300/70`}
         >
           <div className={`text-userprimary-100 bg-primary-100 h-full`}>
             <div className="text-3xl w-full flex justify-end px-4 pt-4">
