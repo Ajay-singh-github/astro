@@ -155,7 +155,7 @@ const ShubhMuhurat = () => {
                 readOnly
                 min={2024}
                 max={3000}
-                className="w-[50%] rounded-md p-2 px-4"
+                className="w-[50%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 defaultValue={2024}
               />
             </div>

@@ -140,7 +140,7 @@ const LoveMatching = () => {
       </div>
 
       <div className="px-2 md:px-[10vw]">
-        <div className="bg-primary-200 rounded-lg items-center justify-center p-2 md:p-4">
+        <div className="bg-secondary-600 rounded-lg items-center justify-center p-2 md:p-4">
           <div className="flex flex-col md:flex-row md:gap-4 gap-2">
             <Form
               title="Boy's Detail"
@@ -163,9 +163,9 @@ const LoveMatching = () => {
               setCity={setGirlCity}
             />
           </div>
-          <div className="w-full text-secondary-200 rounded-full bg-primary-300 text-center p-1 my-2 text-xl">
+          <div className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl">
             <select
-              className="bg-primary-300"
+              className="bg-secondary-100"
               onChange={(e) => {
                 setDir(e.target.value);
                 setData(null);
@@ -176,7 +176,7 @@ const LoveMatching = () => {
             </select>
           </div>
           <div
-            className="w-full text-secondary-200 rounded-full bg-primary-300 text-center p-1 my-2 text-xl cursor-pointer"
+            className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl cursor-pointer"
             onClick={handleSubmit}
           >
             Match Horoscope

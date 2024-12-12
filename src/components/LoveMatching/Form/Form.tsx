@@ -13,7 +13,7 @@ interface Props {
 const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, setSec, setCity}) => {
 
   return (
-    <div className="rounded-lg border-4 border-secondary-400 p-2 md:p-4 md:min-w-[20rem]">
+    <div className="rounded-lg border-4 border-secondary-600 bg-secondary-600 p-2 md:p-4 md:min-w-[20rem]">
       <div className="bg-secondary-200 p-2 rounded text-center w-full text-xl">
         {title}
       </div>
@@ -22,7 +22,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
         <input
           type="text"
           placeholder="Enter name"
-          className="border-2 rounded-md p-1"
+          className="border-2 rounded-md p-1 focus:outline-none focus:ring-0"
         />
         <label>Birth Details</label>
         <div className="flex justify-between gap-4">
@@ -33,14 +33,14 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
               min={1}
               max={31}
               defaultValue={0}
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setDay(e.target.value)}
             />
           </div>
           <div className="flex flex-col basis-1/3">
             <label>Month</label>
             <select
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setMonth(e.target.value)}
             >
               <option value={1}>Jan</option>
@@ -64,7 +64,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
               min={1}
               max={2030}
               defaultValue={1980}
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setYear(e.target.value)}
             />
           </div>
@@ -77,7 +77,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
               min={0}
               max={23}
               defaultValue={0}
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setHr(e.target.value)}
             />
           </div>
@@ -88,7 +88,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
               min={0}
               max={59}
               defaultValue={0}
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setMin(e.target.value)}
             />
           </div>
@@ -99,7 +99,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
               min={0}
               max={59}
               defaultValue={0}
-              className="p-1 border-2 rounded-md"
+              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
               onChange={(e) => setSec(e.target.value)}
             />
           </div>
@@ -108,7 +108,7 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
         <input
           type="text"
           placeholder="Enter place of birth"
-          className="border-2 rounded-md p-1"
+          className="border-2 rounded-md p-1 focus:outline-none focus:ring-0"
           onChange={(e)=>setCity(e.target.value)}
         />
       </div>

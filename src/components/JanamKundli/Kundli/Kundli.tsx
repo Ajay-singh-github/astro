@@ -150,12 +150,12 @@ const Kundli = () => {
       </div>
 
       <div className="md:px-[10vw] my-6">
-        <div className="bg-primary-200 md:p-2 text-primary-300 rounded-md">
-          <div className="text-xl md:text-3xl font-bold w-full text-center">
+        <div className="bg-secondary-600 md:p-2 text-primary-300 rounded-md ">
+          <div className="text-xl md:text-3xl font-bold w-full text-center py-4">
             Get Your Kundli by Date of Birth
           </div>
-          <form>
-            <div className="text-sm md:text-lg p-2 md:p-6 bg-secondary-500 m-2 mx-4 border rounded-md border-primary-300 flex flex-col gap-2">
+          <form className="">
+            <div className="text-sm md:text-lg p-2 md:p-6  m-2 mx-4  flex flex-col gap-2">
               {/* <div className="flex flex-col md:flex-row gap-2 md:gap-4">
                 <div className="flex flex-col gap-1 md:basis-2/3">
                   <label className="font-bold">Name</label>
@@ -220,7 +220,7 @@ const Kundli = () => {
                       placeholder="Day"
                       name="day"
                       onChange={(e) => setDate(e.target.valueAsNumber)}
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:basis-2/3">
@@ -233,7 +233,7 @@ const Kundli = () => {
                       onChange={(e) => setMonth(e.target.valueAsNumber)}
                       placeholder="Month"
                       name="month"
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:basis-2/3">
@@ -245,7 +245,7 @@ const Kundli = () => {
                       onChange={(e) => setYear(e.target.valueAsNumber)}
                       placeholder="Year"
                       name="year"
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                 </div>
@@ -260,7 +260,7 @@ const Kundli = () => {
                       onChange={(e) => setHr(e.target.valueAsNumber)}
                       placeholder="Hours"
                       name="hrs"
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:basis-2/3">
@@ -273,7 +273,7 @@ const Kundli = () => {
                       onChange={(e) => setMin(e.target.valueAsNumber)}
                       placeholder="Minute"
                       name="min"
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                   <div className="flex flex-col gap-1 md:basis-2/3">
@@ -286,7 +286,7 @@ const Kundli = () => {
                       onChange={(e) => setSec(e.target.valueAsNumber)}
                       placeholder="Second"
                       name="sec"
-                      className="rounded-md border p-1 px-2 border-primary-300"
+                      className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                     />
                   </div>
                 </div>
@@ -300,7 +300,7 @@ const Kundli = () => {
                   minLength={3}
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="rounded-md border p-1 px-2 border-primary-300"
+                  className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                 />
               </div>
 

@@ -87,7 +87,7 @@ const Numerology = () => {
             </label>
             <input
               type="date"
-              className="w-full rounded-md p-2 px-4"
+              className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
               onChange={(e) => setDate(e.target.valueAsDate)}
             />
           </div>
@@ -98,13 +98,13 @@ const Numerology = () => {
             <div className="flex gap-2 w-full">
               <input
                 type="text"
-                className="w-[50%] rounded-md p-2 px-4"
+                className="w-[50%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 placeholder="First Name"
                 onChange={(e) => setFirstName(e.target.value)}
               />
               <input
                 type="text"
-                className="w-[50%] rounded-md p-2 px-4"
+                className="w-[50%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 placeholder="Last Name"
                 onChange={(e) => setLastName(e.target.value)}
               />
