@@ -41,12 +41,12 @@ const ShubhMuhurat = () => {
             <div key={m}>
               {shubhMuhrat[muhrat]?.hasOwnProperty(m) ? (
                 <>
-                  <div className="text-xl md:text-3xl font-bold text-center">
+                  <div className="text-xl md:text-3xl font-bold text-center mb-4 mt-4">
                     Muhrats in {m}, 2024
                   </div>
 
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                    {shubhMuhrat[muhrat] &&
+                    {/* {shubhMuhrat[muhrat] &&
                       shubhMuhrat[muhrat][m]?.map((event: any) => (
                         <div
                           key={event.date}
@@ -55,7 +55,26 @@ const ShubhMuhurat = () => {
                           <div className="text-left">{event.Date}</div>
                           <div className="text-right">{event.Time}</div>
                         </div>
-                      ))}
+                      ))} */}
+                    <table className="w-full border border-black table-auto border-collapse">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="border border-black px-4 py-2">Date</th>
+                          <th className="border border-black px-4 py-2">From</th>
+                          <th className="border border-black px-4 py-2">To</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shubhMuhrat[muhrat] &&
+                          shubhMuhrat[muhrat][m]?.map((event: any) => (
+                            <tr key={event.Date} className="border-b">
+                              <td className="border border-black px-4 py-2">{event.Date}</td>
+                              <td className="border border-black px-4 py-2">{event.Time.split("-")[0]}</td>
+                              <td className="border border-black px-4 py-2">{event.Time.split("-")[1]}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
                   </div>
                 </>
               ) : (
