@@ -12,7 +12,7 @@ import { shubhMuhrat } from "@/constants/constants";
 import { useState } from "react";
 
 type MProps = "Marriage" | "Vehicle" | "Annanprashan" | "Namkaran" | "Mundan" | "GrihaPravesh";
-type MonthProps = "Jan"| "Feb"| "Mar"| "Apr"| "May"| "Jun"| "Jul"| "Aug"| "Sep"| "Oct"| "Nov"| "Dec" | "all"
+type MonthProps = "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun" | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec" | "all"
 type MonthKeys =
   | "Jan"
   | "Feb"
@@ -29,46 +29,46 @@ type MonthKeys =
 
 
 const ShubhMuhurat = () => {
-  const [month, setMonth ] = useState<MonthProps>("Jan");
+  const [month, setMonth] = useState<MonthProps>("Jan");
   const [muhrat, setMuhrat] = useState<MProps>("Marriage");
   const months: MonthKeys[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
   const renderMuhrats = () => {
-  return (
-    <div>
-      {months.map((m) => {
-        return (
-          <div key={m}>
-            {shubhMuhrat[muhrat]?.hasOwnProperty(m) ? (
-              <>
-                <div className="text-xl md:text-3xl font-bold text-center">
-                  Muhrats in {m}, 2024
-                </div>
+    return (
+      <div>
+        {months.map((m) => {
+          return (
+            <div key={m}>
+              {shubhMuhrat[muhrat]?.hasOwnProperty(m) ? (
+                <>
+                  <div className="text-xl md:text-3xl font-bold text-center">
+                    Muhrats in {m}, 2024
+                  </div>
 
-                <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                  {shubhMuhrat[muhrat] &&
-                    shubhMuhrat[muhrat][m]?.map((event: any) => (
-                      <div
-                        key={event.date}
-                        className="grid grid-cols-2 gap-2 md:gap-4 md:w-[60%] border-b-2 border-primary-300 md:px-4"
-                      >
-                        <div className="text-left">{event.Date}</div>
-                        <div className="text-right">{event.Time}</div>
-                      </div>
-                    ))}
+                  <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
+                    {shubhMuhrat[muhrat] &&
+                      shubhMuhrat[muhrat][m]?.map((event: any) => (
+                        <div
+                          key={event.date}
+                          className="grid grid-cols-2 gap-2 md:gap-4 md:w-[60%] border-b-2 border-primary-300 md:px-4"
+                        >
+                          <div className="text-left">{event.Date}</div>
+                          <div className="text-right">{event.Time}</div>
+                        </div>
+                      ))}
+                  </div>
+                </>
+              ) : (
+                <div className="w-full text-center font-bold my-4 text-xl md:text-3xl">
+                  No Muhrats in {m}, 2024
                 </div>
-              </>
-            ) : (
-              <div className="w-full text-center font-bold my-4 text-xl md:text-3xl">
-                No Muhrats in {m}, 2024
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
   return (
     <div className="py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
@@ -292,20 +292,27 @@ const ShubhMuhurat = () => {
                 <div className="text-xl md:text-3xl font-bold text-center mb-4">
                   Muhrat dates in {month}, 2024
                 </div>
-                {shubhMuhrat[muhrat]?.hasOwnProperty(month) ? (
+                {shubhMuhrat[muhrat]?.hasOwnProperty(month) && (
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                    {shubhMuhrat[muhrat][month]?.map((event:any) => (
-                      <div
-                        key={event.date}
-                        className="grid grid-cols-2 gap-2 md:gap-4 md:w-[60%] border-b-2 border-primary-300 md:px-4"
-                      >
-                        <div className="text-left">{event.Date}</div>
-                        <div className="text-right">{event.Time}</div>
-                      </div>
-                    ))}
+                    <table className="w-full border border-black table-auto border-collapse">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="border border-black px-4 py-2">Date</th>
+                          <th className="border border-black px-4 py-2">From</th>
+                          <th className="border border-black px-4 py-2">To</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shubhMuhrat[muhrat][month]?.map((event: any, index: number) => (
+                          <tr key={index} className="border-b">
+                            <td className="border border-black px-4 py-2">{event.Date}</td>
+                            <td className="border border-black px-4 py-2">{event.Time.split("to")[0]}</td>
+                            <td className="border border-black px-4 py-2">{event.Time.split("to")[1]}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                ) : (
-                  <div className="w-full text-center text-lg md:text-2xl">No Muhrats in {month}, 2024</div>
                 )}
               </div>
             )}
