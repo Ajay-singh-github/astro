@@ -1,6 +1,51 @@
-import { FaFacebook } from "react-icons/fa";
+import { FaDiscord, FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
+
+const socialLinks: { icon: React.ReactNode; name: string; link: string }[] = [
+  {
+    icon: <FaDiscord />,
+    name: "Discord",
+    link: "https://discord.com"
+  },
+  {
+    icon: <FaInstagram />,
+    name: "Instagram",
+    link: "https://instagram.com"
+  },
+  {
+    icon: <FaTwitter />,
+    name: "Twitter",
+    link: "https://twitter.com"
+  },
+  {
+    icon: <FaFacebook />,
+    name: "Facebook",
+    link: "https://facebook.com"
+  }
+]
+
+const importantLinks: { name: string; link: string }[] = [
+  {
+    name: "Horoscope",
+    link: "/horoscope"
+  },
+  {
+    name: "Janam Kundli",
+    link: "/janam-kundli"
+  },
+  {
+    name: "Match Making",
+    link: "/match-making"
+  },
+  {
+    name: "Panchang",
+    link: "/panchang"
+  },
+  
+]
 const Footer = () => {
   return (
     <div className="bg-secondary-300">
@@ -29,21 +74,19 @@ const Footer = () => {
             </div>
           </div>
           <div>
-            <div className="underline md:text-2xl">Community</div>
+            <div className="underline md:text-2xl">Important Links  </div>
             <div className="hidden md:flex my-4 flex-col gap-4 font-normal">
-              <div>Events</div>
-              <div>Blog</div>
-              <div>Podcast</div>
-              <div>Invite a friend</div>
+              {importantLinks.map((link) => (
+                <div key={link.name} className="flex items-center gap-2"><Link to={link.link}>{link.name}</Link></div>
+              ))}
             </div>
           </div>
           <div>
             <div className="underline md:text-2xl">Socials</div>
             <div className="hidden md:flex my-4 flex-col gap-4 font-normal">
-              <div>Discord</div>
-              <div>Instagram</div>
-              <div>Twitter</div>
-              <div>Facebook</div>
+              {socialLinks.map((link) => (
+                <div key={link.name} className="flex items-center gap-2"><div>{link.icon}</div> {link.name}</div>
+              ))}
             </div>
           </div>
         </div>
