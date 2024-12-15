@@ -2,29 +2,124 @@ import { useState } from "react";
 import moon from "../../assets/moon.svg";
 import Articles from "../../components/common/Articles/Articles";
 import axios from "axios";
+import { VITE_API_KEY } from "@/api/userAPI";
+import { Location as LocationType } from "@/components/more/Form";
+import { languages } from "../Horoscope/Horoscope";
+
+
+type NumerologyData = {
+  radical_number: number;
+  radical_ruler: string;
+  characteristics: string[];
+  fav_color: string;
+  fav_day: string;
+  fav_god: string;
+  fav_mantra: string;
+  fav_metal: string;
+  fav_stone: string;
+  fav_substone: string;
+  friendly_num: string;
+  evil_num: string;
+  neutral_num: string;
+  destiny: number;
+  name_number: number;
+  date_considered: string;
+}
+
 
 const Numerology = () => {
 
-  const [date,setDate]=useState<Date|null>()
-  const [data,setData]=useState("")
+  const [name, setName] = useState<string>("");
+  const [dateofbirth, setDateofbirth] = useState<Date | null>()
+  const [timeofbirth, setTimeofbirth] = useState<Date | null>()
+  const [location, setLocation] = useState<string>("");
+  const [latitude, setLatitude] = useState<string>("")
+  const [longitude, setLongitude] = useState<string>("")
+  const [timezone, setTimezone] = useState<string>("")
+  const [language, setLanguage] = useState("en")
+
+
+  const [locationOptions, setLocationOptions] = useState<LocationType[]>([])
   const [load, setLoad] = useState("");
-  const [firstName,setFirstName] = useState("")
-  const [lastName,setLastName] = useState("")
-  const handleSubmit =async()=>{
-    setLoad("Loading...")
-    console.log(date, firstName, lastName)
-    await axios
-      .get(
-        `https://api.vedicastroapi.com/v3-json/prediction/numerology?name=${firstName}${lastName}&date=${date?.getDate()}/${
-          date!?.getMonth() + 1
-        }/${date?.getFullYear()}&api_key=${process.env.VITE_API_KEY}&lang=en`
-      )
-      .then((res) => {
-        setData(res.data.response);
-        console.log(data);
-        setLoad("");
-      });
-  }
+  const [data, setData] = useState<NumerologyData>();
+  // const handleSubmit = async () => {
+  //   setLoad("Loading...")
+  //   console.log(date, name)
+  //   await axios
+  //     .get(
+  //       `https://api.vedicastroapi.com/v3-json/prediction/numerology?name=${firstName}${lastName}&date=${date?.getDate()}/${date!?.getMonth() + 1
+  //       }/${date?.getFullYear()}&api_key=${process.env.VITE_API_KEY}&lang=en`
+  //     )
+  //     .then((res) => {
+  //       setData(res.data.response);
+  //       console.log(data);
+  //       setLoad("");
+  //     });
+  // }
+
+  const handleSubmit = async () => {
+    // Format date of birth (DD/MM/YYYY)
+    const formattedDateOfBirth = new Date(dateofbirth).toLocaleDateString("en-GB");
+
+    // Format time of birth (HH:MM)
+    const timeParts = new Date(timeofbirth).toTimeString().split(":");
+    const formattedTimeOfBirth = `${timeParts[0]}:${timeParts[1]}`;
+
+    // Format timezone (jumps of 0.5)
+    const formattedTimezone = parseFloat(timezone).toFixed(1);
+
+    // Format latitude and longitude (decimals)
+    const formattedLatitude = parseFloat(latitude).toFixed(6);
+    const formattedLongitude = parseFloat(longitude).toFixed(6);
+
+    // Construct the API URL with parameters
+    const apiUrl = `https://api.vedicastroapi.com/v3-json/extended-horoscope/numero-table?name=${encodeURIComponent(
+      name
+    )}&dob=${formattedDateOfBirth}&tob=${formattedTimeOfBirth}&lat=${formattedLatitude}&lon=${formattedLongitude}&tz=${formattedTimezone}&api_key=${VITE_API_KEY}&lang=${language}`;
+
+    try {
+      // Make the API call
+      const response = await fetch(apiUrl);
+
+      // Check if the response is successful
+      if (!response.ok) {
+        throw new Error(`API request failed with status: ${response.status}`);
+      }
+
+      // Parse the JSON response
+      const result = await response.json();
+
+      // Log the result
+      console.log("API Response:", result);
+      setData(result.response)
+      // Handle the response data (e.g., update UI or state)
+    } catch (error) {
+      // Handle errors
+      console.error("Error during API call:", error);
+    }
+  };
+
+
+
+
+  const getLocationOptions = async (city: string) => {
+    if (city.trim() === "") {
+      setLocationOptions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
+      );
+      const locations = Array.isArray(response.data.response)
+        ? response.data.response
+        : [];
+      setLocationOptions(locations);
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      setLocationOptions([]);
+    }
+  };
   return (
     <div className="px-2 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
@@ -80,7 +175,15 @@ const Numerology = () => {
         </div>
       </div>
       <div className="my-6 md:my-[4vw] w-full px-4 md:px-[25vw]">
+
         <div className="rounded-lg bg-secondary-600 p-2 px-4 md:p-4 md:px-6 flex flex-col gap-4 md:gap-6">
+          <div className="flex justify-end w-full items-center">
+            <select className="align-middle" onChange={(e) => setLanguage(e.target.value)}>
+              {languages.map((item) => (
+                <option value={item.key} className="cursor-pointer">{item.value}</option>
+              ))}
+            </select>
+          </div>
           <div className="flex flex-col gap-2 md:gap-4 w-full">
             <label className="md:text-xl">
               Date of Birth for Life Path Number
@@ -88,7 +191,17 @@ const Numerology = () => {
             <input
               type="date"
               className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-              onChange={(e) => setDate(e.target.valueAsDate)}
+              onChange={(e) => setDateofbirth(e.target.valueAsDate)}
+            />
+          </div>
+          <div className="flex flex-col gap-2 md:gap-4 w-full">
+            <label className="md:text-xl">
+              Time of Birth
+            </label>
+            <input
+              type="time"
+              className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
+              onChange={(e) => setTimeofbirth(e.target.valueAsDate)}
             />
           </div>
           <div className="flex flex-col gap-2 md:gap-4 w-full">
@@ -98,16 +211,41 @@ const Numerology = () => {
             <div className="flex gap-2 w-full">
               <input
                 type="text"
-                className="w-[50%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
+                value={name}
+                className="w-[100%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 placeholder="First Name"
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               />
+            </div>
+            <div className="relative flex flex-col gap-2 md:gap-4 w-full">
+              <label className="md:text-xl">
+                Location
+              </label>
               <input
                 type="text"
-                className="w-[50%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-                placeholder="Last Name"
-                onChange={(e) => setLastName(e.target.value)}
+                value={location}
+                className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
+                onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value) }}
               />
+              {locationOptions.length > 0 && (
+                <div className="absolute top-[90px] w-full h-[200px] bg-white overflow-y-auto ">
+                  {locationOptions.map((item) => (
+                    <div
+                      key={item.name}
+                      className="p-2 cursor-pointer hover:bg-primary-200"
+                      onClick={() => {
+                        setLocation(item.name);
+                        setLatitude(item.coordinates[0]);
+                        setLongitude(item.coordinates[1]);
+                        setTimezone(item.tz.toString());
+                        setLocationOptions([]);
+                      }}
+                    >
+                      {item.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex w-full items-center justify-center">
@@ -124,34 +262,43 @@ const Numerology = () => {
           <div className="w-full text-center text-xl md:text-3xl">{load}</div>
           {data && (
             <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-              <div className="flex flex-col gap-2 md:gap-4">
-                {/* Iterate through the keys in the data object to display the content */}
-                {Object.keys(data).map((key: any) => {
-                  const item: any = data[key];
-                  console.log(item);
-                  return (
-                    <div className="category-section">
-                      <h2 className="text-xl md:text-3xl font-bold">
-                        {item.title}
-                      </h2>
-                      <h3>Category: {item.category}</h3>
-                      <p>
-                        <strong>Number:</strong> {item.number}{" "}
-                        {item.master ? "(Master Number)" : ""}
-                      </p>
-                      <p>
-                        <strong>Meaning:</strong> {item.meaning}
-                      </p>
-                      <p>
-                        <strong>Description:</strong> {item.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
+              <h2 className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>
+              <table className="table-auto w-full text-left border-collapse border border-primary-300">
+                <thead>
+                  <tr className="bg-secondary-100 text-white">
+                    <th className="border border-primary-300 p-2">Key</th>
+                    <th className="border border-primary-300 p-2">Value</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-primary-500">
+                  {Object.keys(data).map((key) => {
+                    const value = data[key];
+
+                    return (
+                      <tr key={key} className="border-t border-primary-300">
+                        <td className="border border-primary-300 p-2 font-semibold capitalize">
+                          {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
+                        </td>
+                        <td className="border border-primary-300 p-2">
+                          {Array.isArray(value) ? (
+                            <ul className="list-disc list-inside">
+                              {value.map((item: any, index: number) => (
+                                <li key={index}>{item}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            value.toString()
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
+
       </div>
       <div className="px-2 md:px-8 my-6 md:my-[6vw]">
         <div className="font-bold w-max">
