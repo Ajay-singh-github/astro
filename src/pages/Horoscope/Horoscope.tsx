@@ -24,145 +24,267 @@ import sagittariuslogo from "../../assets/sagittariuslogo.svg";
 import capricornlogo from "../../assets/capricornlogo.svg";
 import pisceslogo from "../../assets/pisceslogo.svg";
 import Articles from "../../components/common/Articles/Articles";
-import Passage from "../../components/Horoscope/Passage/Passage";
+import Passage, { PassageForWeekly, PassageForYearly } from "../../components/Horoscope/Passage/Passage";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { VITE_API_KEY } from "@/api/userAPI";
+
+
+export type HoroscopeProps = {
+  lucky_color: string;
+  lucky_color_code: string;
+  lucky_number: number[];
+  bot_response: {
+    physique: {
+      score: number;
+      split_response: string;
+    };
+    status: {
+      score: number;
+      split_response: string;
+    };
+    finances: {
+      score: number;
+      split_response: string;
+    };
+    relationship: {
+      score: number;
+      split_response: string;
+    };
+    career: {
+      score: number;
+      split_response: string;
+    };
+  };
+  zodiac: string;
+
+};
+
+export type HoroscopePropWeekly = {
+  total_score: number;
+  lucky_color: string;
+  lucky_color_code: string;
+  lucky_number: number[];
+  status: number;
+  finances: number;
+  relationship: number;
+  career: number;
+  travel: number;
+  family: number;
+  friends: number;
+  health: number;
+  bot_response: string;
+  zodiac: string;
+};
+
+type Phase = {
+  score: number;
+  period: string;
+  prediction: string;
+  health: {
+    score: number;
+    prediction: string;
+  };
+  career: {
+    score: number;
+    prediction: string;
+  };
+  relationship: {
+    score: number;
+    prediction: string;
+  };
+  travel: {
+    score: number;
+    prediction: string;
+  };
+  family: {
+    score: number;
+    prediction: string;
+  };
+  friends: {
+    score: number;
+    prediction: string;
+  };
+  finances: {
+    score: number;
+    prediction: string;
+  };
+  status: {
+    score: number;
+    prediction: string;
+  };
+
+};
+
+export type HoroscopePropYearly = {
+  phase_1: Phase; 
+  phase_2: Phase;
+  phase_3: Phase;
+  phase_4: Phase;
+  
+};
+
+
+
+
+type ZodiacListProps = {
+  key: string;
+  value: string;
+  img: string;
+  logo: string;
+}
+
+type LanguageProps = {
+  key: string;
+  value: string;
+}
+
+
+
+const zodiacList: ZodiacListProps[] = [
+  {
+    key: "1",
+    value: "aries",
+    img: aries,
+    logo: arieslogo,
+  },
+  {
+    key: "2",
+    value: "taurus",
+    img: taurus,
+    logo: tauruslogo,
+  },
+  {
+    key: "3",
+    value: "gemini",
+    img: gemini,
+    logo: geminilogo,
+  },
+  {
+    key: "4",
+    value: "cancer",
+    img: cancer,
+    logo: cancerlogo,
+  },
+  {
+    key: "5",
+    value: "leo",
+    img: leo,
+    logo: leologo,
+  },
+  {
+    key: "6",
+    value: "virgo",
+    img: virgo,
+    logo: virgologo,
+  },
+  {
+    key: "7",
+    value: "libra",
+    img: libra,
+    logo: libralogo,
+  },
+  {
+    key: "8",
+    value: "scorpio",
+    img: scorpio,
+    logo: scorpiologo,
+  },
+  {
+    key: "9",
+    value: "sagittarius",
+    img: sagittarius,
+    logo: sagittariuslogo,
+  },
+  {
+    key: "10",
+    value: "capricorn",
+    img: capricorn,
+    logo: capricornlogo,
+  },
+  {
+    key: "11",
+    value: "aquarius",
+    img: aquarius,
+    logo: aquariuslogo,
+  },
+  {
+    key: "12",
+    value: "pisces",
+    img: pisces,
+    logo: pisceslogo,
+  },
+];
+
+const languages: LanguageProps[] = [
+  {
+    key: "en",
+    value: "English"
+  },
+  {
+    key: "ta",
+    value: "Tamil"
+  },
+  {
+    key: "ka",
+    value: "Kannada"
+  },
+  {
+    key: "te",
+    value: "Telugu"
+  },
+  {
+    key: "hi",
+    value: "Hindi"
+  },
+  {
+    key: "ml",
+    value: "Malayalam"
+  },
+  {
+    key: "mr",
+    value: "Marathi"
+  },
+  {
+    key: "bn",
+    value: "Bengali"
+  },
+  {
+    key: "sp",
+    value: "Spanish"
+  },
+  {
+    key: "fr",
+    value: "French"
+  }
+]
+
 
 const Horoscope = () => {
   const [type, setType] = useState("daily");
   const [year, setYear] = useState<string | null>(null);
   const [lang, setLang] = useState<string>("en");
 
-  const [data, setData] = useState<any>(null);
-  const items = [
-    {
-      key: "1",
-      value: "aries",
-      img: aries,
-      logo: arieslogo,
-    },
-    {
-      key: "2",
-      value: "taurus",
-      img: taurus,
-      logo: tauruslogo,
-    },
-    {
-      key: "3",
-      value: "gemini",
-      img: gemini,
-      logo: geminilogo,
-    },
-    {
-      key: "4",
-      value: "cancer",
-      img: cancer,
-      logo: cancerlogo,
-    },
-    {
-      key: "5",
-      value: "leo",
-      img: leo,
-      logo: leologo,
-    },
-    {
-      key: "6",
-      value: "virgo",
-      img: virgo,
-      logo: virgologo,
-    },
-    {
-      key: "7",
-      value: "libra",
-      img: libra,
-      logo: libralogo,
-    },
-    {
-      key: "8",
-      value: "scorpio",
-      img: scorpio,
-      logo: scorpiologo,
-    },
-    {
-      key: "9",
-      value: "sagittarius",
-      img: sagittarius,
-      logo: sagittariuslogo,
-    },
-    {
-      key: "10",
-      value: "capricorn",
-      img: capricorn,
-      logo: capricornlogo,
-    },
-    {
-      key: "11",
-      value: "aquarius",
-      img: aquarius,
-      logo: aquariuslogo,
-    },
-    {
-      key: "12",
-      value: "pisces",
-      img: pisces,
-      logo: pisceslogo,
-    },
-  ];
-  const languages = [
-    {
-      key: "en",
-      value: "English"
-    },
-    {
-      key: "ta",
-      value: "Tamil"
-    },
-    {
-      key: "ka",
-      value: "Kannada"
-    },
-    {
-      key: "te",
-      value: "Telugu"
-    },
-    {
-      key: "hi",
-      value: "Hindi"
-    },
-    {
-      key: "ml",
-      value: "Malayalam"
-    },
-    {
-      key: "mr",
-      value: "Marathi"
-    },
-    {
-      key: "bn",
-      value: "Bengali"
-    },
-    {
-      key: "sp",
-      value: "Spanish"
-    },
-    {
-      key: "fr",
-      value: "French"
-    }
-  ]
+  const [data, setData] = useState<HoroscopeProps | null>(null);
+  const [dataWeekly, setDataWeekly] = useState<HoroscopePropWeekly | null>(null);
+  const [dataYearly, setDataYearly] = useState<HoroscopeProps | null>(null);
+
+
   const date = new Date(Date.now());
   const d = String(date.getDate()).padStart(2, "0");
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const y = String(date.getFullYear());
-  const [im, setIm] = useState<any>(items[1].img);
-  console.log(process.env.VITE_API_KEY, "----------------------------");
+  const [im, setIm] = useState<string>(zodiacList[1].img);
 
-  const handleClick = async (item: any) => {
+
+
+  const handleClick = async (item: ZodiacListProps) => {
     if (type === "daily") {
       try {
-        const res: any = await axios.get(
-          `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${process.env.VITE_API_KEY}&lang=${lang}&split=true&type=big`
+        const res = await axios.get(
+          `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}&split=true&type=big`
         );
+        console.log(res);
         setIm(item.img);
         setData(res.data.response);
       } catch (error) {
@@ -170,30 +292,31 @@ const Horoscope = () => {
       }
     } else if (type === "weekly") {
       try {
-        const res: any = await axios.get(
-          `https://api.vedicastroapi.com/v3-json/prediction/weekly-sun?zodiac=${item.key}&week=thisweek&show_same=true&api_key=${process.env.VITE_API_KEY}&lang=${lang}`
+        const res = await axios.get(
+          `https://api.vedicastroapi.com/v3-json/prediction/weekly-sun?zodiac=${item.key}&week=thisweek&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}`
         );
+        console.log(res);
         setIm(item.img);
-        setData(res.data.response);
+        setDataWeekly(res.data.response);
       } catch (error) {
         console.log(error);
       }
 
     } else if (type === "yearly") {
       try {
-        const res: any = await axios.get(
+        const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/yearly?zodiac=${item.key}&year=${year}&show_same=true&api_key=${process.env.VITE_API_KEY}&lang=${lang}`
         );
         setIm(item.img);
-        setData(res.data.response);
+        setDataYearly(res.data.response);
       } catch (error) {
         console.log(error);
       }
     }
   };
-  //  useEffect(()=>{
-  //     handleClick(items[0])
-  //   },[])
+  useEffect(() => {
+    handleClick(zodiacList[0])
+  }, [lang, type, year])
 
 
   return (
@@ -264,51 +387,9 @@ const Horoscope = () => {
         </div>
       </div>
 
-      {/* <div className="font-bold flex flex-col items-center justify-center bg-red-500">
-        <div>
-
-        </div>
-      </div>
-      <div className="w-full md:text-xl gap-4 items-center md:-top-16 flex flex-col md:flex-row px-4 md:px-12 justify-end relative">
-        <div className="flex gap-4 items-center justify-center">
-
-        </div>
-
-        <div className="flex flex-col gap-7 items-center justify-center mt-4 md:mt-0">
-          <div className="flex gap-4 items-center">
-            <div>Sort By:</div>
-            <select
-              className="p-2 rounded-md border"
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-
-          {type === "yearly" && (
-            <div className="flex gap-4 items-center">
-              Select Year:{" "}
-              <select
-                className="p-2 rounded-md border"
-                onChange={(e) => setYear(e.target.value)}
-              >
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-                <option value="2030">2030</option>
-              </select>
-            </div>
-          )}
-        </div>
-      </div> */}
 
       <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center my-4 md:my-8">
-        {items.map((item) => (
+        {zodiacList.map((item) => (
           <div
             key={item.key}
             className="cursor-pointer rounded-full text-primary-300 font-bold text-center"
@@ -319,13 +400,38 @@ const Horoscope = () => {
           </div>
         ))}
       </div>
-      {data ? (
-        <Passage data={data} img={im} />
-      ) : (
-        <div className="w-full p-12 text-center text-xl md:text-3xl">
-          Loading...
-        </div>
-      )}
+      {
+        data ? (
+          type === "daily" ? (
+            <Passage data={data} img={im} />
+          ) : type === "weekly" ? (
+            dataWeekly ? (
+              <PassageForWeekly data={dataWeekly} img={im} />
+            ) : (
+              <div className="w-full p-12 text-center text-xl md:text-3xl">
+                Loading...
+              </div>
+            )
+          ) : type === "yearly" ? (
+            dataYearly ? (
+              <PassageForYearly data={dataYearly} img={im} />
+            ) : (
+              <div className="w-full p-12 text-center text-xl md:text-3xl">
+                Loading...
+              </div>
+            )
+          ) : (
+            <div className="w-full p-12 text-center text-xl md:text-3xl">
+              Loading...
+            </div>
+          )
+        ) : (
+          <div className="w-full p-12 text-center text-xl md:text-3xl">
+            Loading...
+          </div>
+        )
+      }
+
       <div className="w-full">
         <Articles />
       </div>{" "}
