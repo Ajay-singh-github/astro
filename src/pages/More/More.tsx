@@ -20,10 +20,10 @@ const More = () => {
     trirashi_lord: "Mercury",
     current_ayanamsa: 24.170955159462665,
   });
-  const onSubmit = async(day: string, month: string, year: string, hr: string, min: string, sec: string, city: string) => {
-    try{
+  const onSubmit = async (day: string, month: string, year: string, hr: string, min: string, sec: string, city: string) => {
+    try {
       console.log(sec)
-      const dob = day.padStart(2, "0") + "/" + String(Number(month)+1).padStart(2, "0") + "/" + year;
+      const dob = day.padStart(2, "0") + "/" + String(Number(month) + 1).padStart(2, "0") + "/" + year;
       const tob = hr + ":" + min;
       await axios
         .get(
@@ -50,10 +50,12 @@ const More = () => {
         setData(res.data.response)
         console.log(res.data.response)
       });
-    } catch(err){console.log(err)}
+    } catch (err) { console.log(err) }
     setCall(false);
     document.body.style.overflow = "auto";
   }
+
+  console.log(data, "-------------------------------");
   return (
     <div className="px-2 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
@@ -90,69 +92,76 @@ const More = () => {
         ))}
       </div>
 
-      {call && <Form onSubmit={onSubmit} setCall={setCall}/>}
+      {call && <Form onSubmit={onSubmit} setCall={setCall} />}
       {data && (
         <div className="bg-primary-200 p-2 md:p-4 rounded-lg w-full my-4 md:my-10">
           <div className="w-full text-xl md:text-4xl text-center my-4 font-semibold">
             {k}
           </div>
-          {Object.entries(data).map(([key, value]) => {
-            // Check for nested objects
-            if (
-              typeof value === "object" &&
-              !Array.isArray(value) &&
-              value !== null
-            ) {
-              return (
-                <div
-                  key={key}
-                  className="border border-primary-300 bg-primary-500 my-4 rounded-lg p-2 md:p-4 w-full shadow-md"
-                >
-                  <h3 className="md:text-3xl font-semibold mb-2">{key}</h3>
-                  <div className="space-y-2">
-                    {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                      <p key={nestedKey} className="text-sm md:text-xl">
-                        <span className="font-semibold">{nestedKey}: </span>
-                        {Array.isArray(nestedValue)
-                          ? nestedValue.join(", ") // Handle arrays
-                          : nestedValue}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
+          <table className="table-auto w-full text-sm md:text-xl border-collapse border border-primary-300">
+            <thead>
+              <tr className="bg-secondary-300">
+                <th className="border border-primary-300 p-2">Key</th>
+                <th className="border border-primary-300 p-2">Value</th>
+              </tr>
+            </thead>
+            <tbody className="bg-secondary-200">
+              {Object.entries(data).map(([key, value]) => {
+                // Check for nested objects
+                if (
+                  typeof value === "object" &&
+                  !Array.isArray(value) &&
+                  value !== null
+                ) {
+                  return (
+                    <tr key={key} className="border-b">
+                      <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
+                        {key}
+                      </td>
+                      <td className="p-2 border border-primary-300">
+                        <table className="table-auto w-full text-sm md:text-xl">
+                          <tbody>
+                            {Object.entries(value).map(([nestedKey, nestedValue]) => (
+                              <tr key={nestedKey} className="border-b">
+                                <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
+                                  {nestedKey}:
+                                </td>
+                                <td className="p-2 border border-primary-300">
+                                  {Array.isArray(nestedValue)
+                                    ? nestedValue.join(", ") // Handle arrays
+                                    : nestedValue}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  );
+                }
 
-            // Check if the value is a boolean
-            const content:any = typeof value === "boolean" ? (value ? "True" : "False") : value;
+                // Check if the value is a boolean
+                const content: any = typeof value === "boolean" ? (value ? "True" : "False") : value;
 
-            return (
-              <div
-                key={key}
-                className="border border-primary-300 bg-primary-500 my-4 rounded-lg p-2 md:p-4 w-full shadow-md"
-              >
-                <h3 className="md:text-3xl font-semibold mb-2">
-                  {key}
-                </h3>
-                <div className="text-sm md:text-xl">
-                  {Array.isArray(content)
-                          ? content.map((con)=><div>{Array.isArray(con)
-                          ? con.map((c)=><div>{c}</div>)
-                          : typeof con === "object" ? Object.entries(con).map(([nestedKey, nestedValue]) => (
-                      <p key={nestedKey} className="text-sm md:text-xl">
-                        <span className="font-semibold">{nestedKey}: </span>
-                        {Array.isArray(nestedValue)
-                          ? nestedValue.join(", ") // Handle arrays
-                          : nestedValue as string}
-                      </p>
-                    )) : con}</div>)
-                          : content}
-                </div>
-              </div>
-            );
-          })}
+                return (
+                  <tr key={key} className="border-b">
+                    <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
+                      {key}
+                    </td>
+                    <td className="p-2 border border-primary-300">
+                      {Array.isArray(content)
+                        ? content.join(", ")
+                        : content}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
+
+
     </div>
   );
 };
