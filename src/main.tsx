@@ -15,7 +15,7 @@ import LoveMatching from './pages/LoveMatching/LoveMatching.tsx';
 import Panchang from './pages/Panchang/Panchang.tsx';
 import ShubhMuhurat from './pages/ShubhMuhurat/ShubhMuhurat.tsx';
 import Numerology from './pages/Numerology/Numerology.tsx';
-import Articles from './pages/Articles/Articles.tsx';
+import Article from './pages/Articles/Article.tsx';
 import Signup from './pages/Signup/Signup.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import Subscription from './pages/Subscription/Subscription.tsx';
@@ -24,6 +24,7 @@ import Contact from './pages/Contact/Contact.tsx';
 import AstroProfile from './pages/AstroProfile/AstroProfile.tsx';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Articles from './pages/Articles/Articles.tsx';
 
 
 const router = createBrowserRouter(
@@ -38,6 +39,7 @@ const router = createBrowserRouter(
         <Route path="/shubhmuhurat-dates" element={<ShubhMuhurat />} />
         <Route path="/numerology-calculator" element={<Numerology />} />
         <Route path="/articles" element={<Articles />} />
+        <Route path="/article" element={<Article />} />
         <Route path="/more" element={<More />} />
       </Route>
       <Route path="/signup" element={<Signup />} />

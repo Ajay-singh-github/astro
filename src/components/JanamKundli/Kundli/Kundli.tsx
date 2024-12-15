@@ -2,19 +2,20 @@ import moon from "../../../assets/moon.svg";
 import kundli from "../../../assets/kunli.svg";
 import { useState } from "react";
 import axios from "axios";
+import Loader from "@/components/Loader/loader";
 
 const Kundli = () => {
-  const [load, setLoad] = useState("");
-  const [city, setCity] = useState("");
+  const [load, setLoad] = useState<boolean>(false);
+  const [city, setCity] = useState<string>("");
   const [data, setData] = useState<any>();
-  const [date, setDate] = useState(1);
-  const [month, setMonth] = useState(1);
-  const [year, setYear] = useState(1900);
-  const [hr, setHr] = useState(0);
+  const [date, setDate] = useState<number>(1);
+  const [month, setMonth] = useState<number>(1);
+  const [year, setYear] = useState<number>(1900);
+  const [hr, setHr] = useState<number>(0);
   const [min, setMin] = useState(0);
-  const [sec, setSec] = useState(0);
-  const [lat, setLat] = useState(0);
-  const [lon, setLon] = useState(0);
+  const [sec, setSec] = useState<number>(0);
+  const [lat, setLat] = useState<number>(0);
+  const [lon, setLon] = useState<number>(0);
 
   const handleLoc=()=>{
     navigator.geolocation.getCurrentPosition(
@@ -32,7 +33,7 @@ const Kundli = () => {
   }
 
   const handleSubmit = async() => {
-    setLoad("loading...");
+    setLoad(true);
     
     console.log(lat, lon);
     if(lat===0){
@@ -57,7 +58,7 @@ const Kundli = () => {
       .then((pla: any) => {
         setData(pla.data.response);
         console.log(data);
-        setLoad("");
+        setLoad(false);
       });    
   };
 
@@ -332,7 +333,7 @@ const Kundli = () => {
           </form>
         </div>
         <div className="mt-4 md:mt-10">
-          <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+          {load && <Loader />}
           {data && (
             <div className="rounded-lg bg-primary-200 p-2 md:p-6">
               <div className="flex flex-col gap-2 md:gap-4">
@@ -508,3 +509,4 @@ const Kundli = () => {
 };
 
 export default Kundli;
+

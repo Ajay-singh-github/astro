@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 // import calendar from '../../../assets/calendar.svg'
 import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
+import Loader from "@/components/Loader/loader";
 
 const P2025 = () => {
   const [cdate, setCdate] = useState<Date | undefined>(new Date("2025-01-01"));
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [data, setData] = useState<any>();
-  const [load, setLoad] = useState("loading...");
+  const [load, setLoad] = useState<boolean>(false);
   let d = new Date("2025-01-01");
   if(typeof cdate !== "undefined" && cdate){
     d = cdate;
@@ -45,7 +46,7 @@ const P2025 = () => {
 
     if (res.data.status === 200) {
       setData(res.data.response);
-      setLoad("");
+      setLoad(false);
     }
     console.log(res);
   };
@@ -82,7 +83,7 @@ const P2025 = () => {
           defaultMonth={new Date(2025, 0)}
         />
       </div>
-      <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+      {load && <Loader />}
       <div className="w-full flex items-center justify-center my-6 md:my-[4vw]">
         {data && (
           <div>

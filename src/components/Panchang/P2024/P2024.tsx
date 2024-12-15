@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 // import calendar from '../../../assets/calendar.svg' 
 import { Calendar } from "@/components/ui/calendar";
 import axios from 'axios';
+import Loader from '@/components/Loader/loader';
 
 
 const P2024 = () => {
@@ -9,7 +10,7 @@ const P2024 = () => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [data, setData] = useState<any>();
-  const [load, setLoad] = useState("loading...");
+  const [load, setLoad] = useState<boolean>(false);
   let d = new Date();
   if(typeof cdate !== "undefined" && cdate){
     d = cdate;
@@ -45,7 +46,7 @@ const P2024 = () => {
 
     if (res.data.status === 200) {
       setData(res.data.response);
-      setLoad("");
+      setLoad(false);
     }
     console.log(res);
   };
@@ -81,7 +82,7 @@ const P2024 = () => {
           className="rounded-md border-2 bg-primary-200"
         />
       </div>
-      <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+      {load && <Loader />}
       <div className="w-full flex items-center justify-center my-6 md:my-[4vw]">
         {data && (
           <div>

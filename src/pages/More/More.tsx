@@ -55,7 +55,6 @@ const More = () => {
     document.body.style.overflow = "auto";
   }
 
-  console.log(data, "-------------------------------");
   return (
     <div className="px-2 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
@@ -94,7 +93,7 @@ const More = () => {
 
       {call && <Form onSubmit={onSubmit} setCall={setCall} />}
       {data && (
-        <div className="bg-primary-200 p-2 md:p-4 rounded-lg w-full my-4 md:my-10">
+        <div className="bg-primary-200 p-2 md:p-4 rounded-lg w-full my-4 md:my-10 xl:my-20 xl:w-2/3">
           <div className="w-full text-xl md:text-4xl text-center my-4 font-semibold">
             {k}
           </div>

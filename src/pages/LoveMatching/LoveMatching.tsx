@@ -4,6 +4,7 @@ import Form from "../../components/LoveMatching/Form/Form";
 import Articles from "../../components/common/Articles/Articles";
 import { useState } from "react";
 import axios from "axios";
+import Loader from "@/components/Loader/loader";
 
 const LoveMatching = () => {
   const [boyDate, setBoyDate] = useState("");
@@ -26,10 +27,10 @@ const LoveMatching = () => {
   const [girlLon, setGirlLon] = useState("");
   const [dir, setDir] = useState("ashtakoot");
   const [data, setData] = useState<any>(null);
-  const [load, setLoad] = useState("");
+  const [load, setLoad] = useState<boolean>(false);
 
   const handleSubmit = async () => {
-    setLoad("Loading...");
+    setLoad(true);
     console.log(boySec, girlSec);
     const resBoy = await axios.get(
       `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${boyCity}&api_key=${process.env.VITE_API_KEY}`
@@ -58,7 +59,7 @@ const LoveMatching = () => {
         console.log(res);
       });
 
-    setLoad("");
+    setLoad(false);
   };
 
   return (
@@ -183,7 +184,7 @@ const LoveMatching = () => {
           </div>
         </div>
         <div className="mt-4 md:mt-10">
-          <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+          {load && <Loader />}
           {data &&
             (dir === "dashakoot" ? (
               <div className="rounded-lg bg-primary-200 p-2 md:p-6">

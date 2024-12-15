@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import moon from "../../../assets/moon.svg";
 import ptoday2 from "../../../assets/ptoday2.svg";
 import axios from "axios";
+import Loader from "@/components/Loader/loader";
 
 const PToday = () => {  
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [data, setData] = useState<any>();
-  const [load, setLoad] = useState("loading...");
+  const [load, setLoad] = useState<boolean>(false);
   const d = new Date(Date.now());
   const date = `${String(d.getDate()).padStart(2, "0")}/${String(
     d.getMonth()
@@ -32,19 +33,35 @@ const PToday = () => {
 
   const getData = async()=>{
     handleLoc();
+    setLoad(true);
     const res = await axios.get(
       `https://api.vedicastroapi.com/v3-json/panchang/hora-muhurta?api_key=${process.env.VITE_API_KEY}&date=${date}&tz=5.5&lat=${lat}&lon=${lon}&time=${time}&lang=en`
     );
+    console.log(res.data.response)
 
     if(res.data.status===200){setData(res.data.response);
-    setLoad("");}
+    setLoad(false);}
     console.log(res)
 
   }
 
-  useEffect(()=>{
-    getData();
-  },[])
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Set latitude and longitude from the position object
+          setLat(position.coords.latitude);
+          setLon(position.coords.longitude);
+        },
+        (err) => {
+          console.log('Failed to get location. Error: ' + err.message);
+        }
+      );
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }, []);
+
   return (
     <div>
       <div className="my-6 md:my-[6vw]">
@@ -103,7 +120,9 @@ const PToday = () => {
           decisions and seize opportunities at the most propitious moments.
         </div>
       </div>
-      <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+      {
+        load && <Loader />
+      }
       <div className="w-full flex items-center justify-center my-6 md:my-[4vw]">
         {data && (
           <div>

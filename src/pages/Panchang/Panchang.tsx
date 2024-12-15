@@ -40,11 +40,10 @@ const Panchang = () => {
       <div className="flex items-center justify-center gap-4 md:gap-8 text-sm md:text-xl px-2 flex-wrap my-6 md:my-[4vw]">
         {items.map((item) => (
           <div
-            className={`p-1 px-4 md:p-2 md:px-8 ${
-              selIt === item.key
+            className={`p-1 px-4 md:p-2 md:px-8 ${selIt === item.key
                 ? "bg-secondary-100 text-primary-200"
                 : "bg-secondary-200"
-            } rounded-full cursor-pointer`}
+              } rounded-full cursor-pointer`}
             onClick={() => setSelIt(item.key)}
           >
             {item.value}
@@ -64,8 +63,8 @@ const Panchang = () => {
         )}
       </div>
       <div className="w-[90%] md:w-full">
-        
-      <Articles />
+
+        <Articles />
       </div>
 
       <div className="px-2 md:px-8">

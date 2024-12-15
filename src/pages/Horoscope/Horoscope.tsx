@@ -28,6 +28,7 @@ import Passage, { PassageForWeekly, PassageForYearly } from "../../components/Ho
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { VITE_API_KEY } from "@/api/userAPI";
+import Loader from "@/components/Loader/loader";
 
 
 export type HoroscopeProps = {
@@ -134,7 +135,7 @@ type ZodiacListProps = {
   logo: string;
 }
 
-type LanguageProps = {
+export type LanguageProps = {
   key: string;
   value: string;
 }
@@ -216,7 +217,7 @@ const zodiacList: ZodiacListProps[] = [
   },
 ];
 
-const languages: LanguageProps[] = [
+export const languages: LanguageProps[] = [
   {
     key: "en",
     value: "English"
@@ -409,7 +410,7 @@ const Horoscope = () => {
               <PassageForWeekly data={dataWeekly} img={im} />
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
-                Loading...
+                <Loader />  
               </div>
             )
           ) : type === "yearly" ? (
@@ -417,17 +418,17 @@ const Horoscope = () => {
               <PassageForYearly data={dataYearly} img={im} />
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
-                Loading...
+                <Loader />  
               </div>
             )
           ) : (
             <div className="w-full p-12 text-center text-xl md:text-3xl">
-              Loading...
+              <Loader />  
             </div>
           )
         ) : (
           <div className="w-full p-12 text-center text-xl md:text-3xl">
-            Loading...
+            <Loader />  
           </div>
         )
       }

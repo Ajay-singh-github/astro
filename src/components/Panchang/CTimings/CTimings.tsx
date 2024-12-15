@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader/loader";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -5,7 +6,7 @@ const CTimings = () => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [data, setData] = useState<any>();
-  const [load, setLoad] = useState("loading");
+  const [load, setLoad] = useState<boolean>(false);
   const d = new Date(Date.now());
   const date = `${String(d.getDate()).padStart(2, "0")}/${String(
     d.getMonth()
@@ -36,7 +37,7 @@ const CTimings = () => {
     );
 
     setData(res.data.response);
-    setLoad("");
+    setLoad(false);
   };
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const CTimings = () => {
   }, []);
   return (
     <div>
-      <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+      {load && <Loader />}
       {data && data.day && (
         <div className="rounded-lg bg-primary-200 p-2 md:p-6 w-full">
           <div className="flex flex-col gap-2 md:gap-4 w-full">

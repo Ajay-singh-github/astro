@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
-type Location = {
+export type Location = {
   name: string;
   alternate_name: string;
   country: string;
@@ -53,7 +53,6 @@ const Form: React.FC<Props> = ({ onSubmit, setCall }) => {
       const response = await axios.get(
         `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
       );
-      console.log(response.data.response,"------------");
       const locations = Array.isArray(response.data.response)
         ? response.data.response
         : [];

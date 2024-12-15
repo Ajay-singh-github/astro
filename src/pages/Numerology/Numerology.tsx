@@ -5,6 +5,7 @@ import axios from "axios";
 import { VITE_API_KEY } from "@/api/userAPI";
 import { Location as LocationType } from "@/components/more/Form";
 import { languages } from "../Horoscope/Horoscope";
+import Loader from "@/components/Loader/loader";
 
 
 type NumerologyData = {
@@ -40,24 +41,12 @@ const Numerology = () => {
 
 
   const [locationOptions, setLocationOptions] = useState<LocationType[]>([])
-  const [load, setLoad] = useState("");
+  const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<NumerologyData>();
-  // const handleSubmit = async () => {
-  //   setLoad("Loading...")
-  //   console.log(date, name)
-  //   await axios
-  //     .get(
-  //       `https://api.vedicastroapi.com/v3-json/prediction/numerology?name=${firstName}${lastName}&date=${date?.getDate()}/${date!?.getMonth() + 1
-  //       }/${date?.getFullYear()}&api_key=${process.env.VITE_API_KEY}&lang=en`
-  //     )
-  //     .then((res) => {
-  //       setData(res.data.response);
-  //       console.log(data);
-  //       setLoad("");
-  //     });
-  // }
+  
 
   const handleSubmit = async () => {
+    setLoad(true);
     // Format date of birth (DD/MM/YYYY)
     const formattedDateOfBirth = new Date(dateofbirth).toLocaleDateString("en-GB");
 
@@ -97,6 +86,7 @@ const Numerology = () => {
       // Handle errors
       console.error("Error during API call:", error);
     }
+    setLoad(false);
   };
 
 
@@ -178,7 +168,7 @@ const Numerology = () => {
 
         <div className="rounded-lg bg-secondary-600 p-2 px-4 md:p-4 md:px-6 flex flex-col gap-4 md:gap-6">
           <div className="flex justify-end w-full items-center">
-            <select className="align-middle" onChange={(e) => setLanguage(e.target.value)}>
+            <select className="align-middle py-1" onChange={(e) => setLanguage(e.target.value)}>
               {languages.map((item) => (
                 <option value={item.key} className="cursor-pointer">{item.value}</option>
               ))}
@@ -259,7 +249,7 @@ const Numerology = () => {
         </div>
 
         <div className="mt-4 md:mt-10">
-          <div className="w-full text-center text-xl md:text-3xl">{load}</div>
+          {load && <Loader />}
           {data && (
             <div className="rounded-lg bg-primary-200 p-2 md:p-6">
               <h2 className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>

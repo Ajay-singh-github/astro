@@ -44,7 +44,7 @@ const Articles = () => {
                   </div>
                 </div>
                 <div className="p-2">
-                  <div className="rounded-lg bg-secondary-100 text-primary-200 w-full p-2 md:text-lg text-center cursor-pointer" onClick={()=>navigate("/articles")}>
+                  <div className="rounded-lg bg-secondary-100 text-primary-200 w-full p-2 md:text-lg text-center cursor-pointer" onClick={()=>navigate(`/article?key=${item.key}`)}>
                     More
                   </div>
                 </div>
