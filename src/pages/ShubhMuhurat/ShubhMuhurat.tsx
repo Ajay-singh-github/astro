@@ -41,7 +41,7 @@ const ShubhMuhurat = () => {
             <div key={m}>
               {shubhMuhrat[muhrat]?.hasOwnProperty(m) ? (
                 <>
-                  <div className="text-xl md:text-3xl font-bold text-center mb-4 mt-4">
+                  <div className="text-xl md:text-3xl font-bold text-center mb-4 mt-6">
                     Muhrats in {m}, 2024
                   </div>
 
@@ -137,16 +137,16 @@ const ShubhMuhurat = () => {
         </div>
       </div>
 
-      <div className="font-bold mb-4">
+      {/* <div className="font-bold mb-4">
         <div className="text-xl md:text-3xl ">MUHURAT CALCULATOR</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="my-6 md:my-[4vw] w-full px-4 md:px-[25vw]">
+      {/* <div className="my-6 md:my-[4vw] w-full px-4 md:px-[25vw]">
         <div className="rounded-lg bg-secondary-600 p-2 px-4 md:p-4 md:px-6 flex flex-col gap-4 md:gap-6">
           <div className="flex flex-col gap-2 md:gap-4 w-full">
             <label className="md:text-xl">Month</label>
@@ -194,19 +194,14 @@ const ShubhMuhurat = () => {
               <option value="Annaprashan">Annaprashan</option>
             </select>
           </div>
-          {/* <div className="flex flex-col gap-2 md:gap-4 w-full">
-            <label className="md:text-xl">Place of Birth</label>
-            <select className="w-full rounded-md p-2 px-4">
-              <option value="Delhi">Delhi</option>
-            </select>
-          </div> */}
+          
           <div className="flex w-full items-center justify-center">
             <div className="p-2 px-6 rounded-md bg-secondary-100 text-primary-200">
               Submit
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="px-2 md:px-8 w-full">
         <div className="my-6 w-full px-4 md:px-8">
           <div className="font-bold w-max">
@@ -390,3 +385,4 @@ const ShubhMuhurat = () => {
 };
 
 export default ShubhMuhurat;
+
