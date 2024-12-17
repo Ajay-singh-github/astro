@@ -43,7 +43,7 @@ const Numerology = () => {
   const [locationOptions, setLocationOptions] = useState<LocationType[]>([])
   const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<NumerologyData>();
-  
+
 
   const handleSubmit = async () => {
     setLoad(true);
@@ -67,23 +67,16 @@ const Numerology = () => {
     )}&dob=${formattedDateOfBirth}&tob=${formattedTimeOfBirth}&lat=${formattedLatitude}&lon=${formattedLongitude}&tz=${formattedTimezone}&api_key=${VITE_API_KEY}&lang=${language}`;
 
     try {
-      // Make the API call
       const response = await fetch(apiUrl);
 
-      // Check if the response is successful
       if (!response.ok) {
         throw new Error(`API request failed with status: ${response.status}`);
       }
 
-      // Parse the JSON response
       const result = await response.json();
 
-      // Log the result
-      console.log("API Response:", result);
       setData(result.response)
-      // Handle the response data (e.g., update UI or state)
     } catch (error) {
-      // Handle errors
       console.error("Error during API call:", error);
     }
     setLoad(false);
@@ -248,47 +241,128 @@ const Numerology = () => {
           </div>
         </div>
 
-        <div className="mt-4 md:mt-10">
-          {load && <Loader />}
-          {data && (
-            <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-              <h2 className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>
-              <table className="table-auto w-full text-left border-collapse border border-primary-300">
-                <thead>
-                  <tr className="bg-secondary-100 text-white">
-                    <th className="border border-primary-300 p-2">Key</th>
-                    <th className="border border-primary-300 p-2">Value</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-primary-500">
-                  {Object.keys(data).map((key) => {
-                    const value = data[key];
+      </div>
+      <div className="mt-4 md:mt-10 w-full">
+        {load && <Loader />}
+        {data && (
+          <div className="rounded-lg p-2 md:p-6">
+            <h2 className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>
 
-                    return (
-                      <tr key={key} className="border-t border-primary-300">
-                        <td className="border border-primary-300 p-2 font-semibold capitalize">
-                          {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
-                        </td>
-                        <td className="border border-primary-300 p-2">
-                          {Array.isArray(value) ? (
-                            <ul className="list-disc list-inside">
-                              {value.map((item: any, index: number) => (
-                                <li key={index}>{item}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            value.toString()
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="hidden md:grid md:grid-cols-2 gap-4">
+              {/* First Table */}
+              <div className="w-full">
+                <table className="table-auto w-full text-left border-collapse border bg-orange-100 border-orange-500">
+                  <thead>
+                    <tr className="bg-orange-200">
+                      <th className="border border-orange-500 p-2">Attribute</th>
+                      <th className="border border-orange-500 p-2">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-orange-100">
+                    {Object.keys(data).slice(0, Math.ceil(Object.keys(data).length / 2)).map((key) => {
+                      const value = data[key];
+                      return (
+                        <tr key={key} className="border-t border-orange-500">
+                          <td className="border border-orange-500 p-2 font-semibold capitalize">
+                            {key.replace(/_/g, " ")}
+                          </td>
+                          <td className="border border-orange-500 p-2">
+                            {Array.isArray(value) ? (
+                              <ul className="list-disc list-inside">
+                                {value.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              value.toString()
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Second Table */}
+              <div className="w-full">
+                <table className="table-auto w-full text-left border-collapse border bg-orange-100 border-orange-500">
+                  <thead>
+                    <tr className="bg-orange-200">
+                      <th className="border border-orange-500 p-2">Attribute</th>
+                      <th className="border border-orange-500 p-2">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-orange-100">
+                    {Object.keys(data).slice(Math.ceil(Object.keys(data).length / 2)).map((key) => {
+                      const value = data[key];
+                      return (
+                        <tr key={key} className="border-t border-orange-500">
+                          <td className="border border-orange-500 p-2 font-semibold capitalize">
+                            {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
+                          </td>
+                          <td className="border border-orange-500 p-2">
+                            {Array.isArray(value) ? (
+                              <ul className="list-disc list-inside">
+                                {value.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              value.toString()
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+
+
+
             </div>
-          )}
-        </div>
+            {/* Mobile View table */}
+            <div className="md:hidden">
+              <div className="w-full">
+                <table className="table-auto w-full text-left border-collapse border bg-orange-100 border-orange-500">
+                  <thead>
+                    <tr className="bg-orange-200">
+                      <th className="border border-orange-500 p-2">Attribute</th>
+                      <th className="border border-orange-500 p-2">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-orange-100">
+                    {Object.keys(data).map((key) => {
+                      const value = data[key];
+                      return (
+                        <tr key={key} className="border-t border-orange-500">
+                          <td className="border border-orange-500 p-2 font-semibold capitalize">
+                            {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
+                          </td>
+                          <td className="border border-orange-500 p-2">
+                            {Array.isArray(value) ? (
+                              <ul className="list-disc list-inside">
+                                {value.map((item, index) => (
+                                  <li key={index}>{item}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              value.toString()
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
+
+        )}
       </div>
       <div className="px-2 md:px-8 my-6 md:my-[6vw]">
         <div className="font-bold w-max">
