@@ -1,7 +1,7 @@
 import { moreItems } from "@/constants/constants";
 import moon from "../../assets/moon.svg";
 import Form from "@/components/more/Form";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { VITE_API_KEY } from "@/api/userAPI";
 import { IoMdClose } from "react-icons/io";
@@ -167,6 +167,8 @@ const More = () => {
 
   const [locationOptions, setLocationOptions] = useState<LocationType[]>([]);
 
+  const sectionRef = useRef(null);
+
 
   const handleSubmit = async () => {
     try {
@@ -180,9 +182,7 @@ const More = () => {
       const formattedDateOfBirth = dateofbirth.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
 
       // Format time of birth (HH:MM)
-      console.log(timeofbirth, "+++++++++++++++++++++++++");
       const formattedTimeOfBirth = timeofbirth;
-      console.log(formattedTimeOfBirth, "+++++++++++++++++++++++++");
 
 
       // Format latitude, longitude, and timezone
@@ -197,13 +197,27 @@ const More = () => {
 
       // Make the API call
       const response = await axios.get(apiUrl);
-      console.log("API Response:", response.data);
-
-      // Update state with API response
-      setData(response.data);
+      if(response.status==200){
+        setData(response.data.response);
+        sectionRef.current.scrollIntoView({
+          behavior: "smooth", 
+          block: "start", 
+        });
+      }
+      else{
+        alert("Something went wrong");
+      }
 
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setFormShow(false);
+      setDateofbirth(null);
+      setTimeofbirth(null);
+      setLocation("");
+      setLatitude("");
+      setLongitude("");
+      setTimezone("");
     }
   };
 
@@ -225,113 +239,19 @@ const More = () => {
       console.error("Error fetching location data:", error);
       setLocationOptions([]);
     }
+
   };
+
+  function convertToCapitalizedWords(str: string) {
+    return str
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .split(" ") 
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) 
+      .join(" "); 
+  }
 
   return (
     <div className="px-2 md:px-8 py-8 md:py-20 bg-primary-100 w-full">
-      {/* <div className="font-bold mb-4 md:mb-10">
-        <div className="text-xl md:text-5xl mb-6">More in Astrology</div>
-        <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
-          <div className="absolute -top-4 bg-primary-100">
-            <img src={moon} className="text-xs" />
-          </div>
-        </div>
-      </div>
-
-      <div className="grid border-primary-300 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {moreItems.map((item) => (
-          <div className="rounded-md md:rounded-xl bg-primary-100 border-2 border-primary-300/50">
-            <div className="font-semibold p-2 md:p-4 text-xl md:text-4xl text-center bg-primary-200 rounded-t-md md:rounded-t-xl cursor-default">
-              {item.name}
-            </div>
-            <div className="overflow-y-auto p-2 max-h-60">
-              {item.content.map((content) => (
-                <div
-                  className="border-b border-primary-300/30 p-2 md:text-xl cursor-pointer"
-                  onClick={() => {
-                    setK(content.key);
-                    setLink(content.link);
-                    setCall(true);
-                    document.body.style.overflow = "hidden";
-                  }}
-                >
-                  {content.key}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {call && <Form onSubmit={onSubmit} setCall={setCall} />}
-      {data && (
-        <div className="bg-primary-200 p-2 md:p-4 rounded-lg w-full my-4 md:my-10 xl:my-20 xl:w-2/3">
-          <div className="w-full text-xl md:text-4xl text-center my-4 font-semibold">
-            {k}
-          </div>
-          <table className="table-auto w-full text-sm md:text-xl border-collapse border border-primary-300">
-            <thead>
-              <tr className="bg-secondary-300">
-                <th className="border border-primary-300 p-2">Key</th>
-                <th className="border border-primary-300 p-2">Value</th>
-              </tr>
-            </thead>
-            <tbody className="bg-secondary-200">
-              {Object.entries(data).map(([key, value]) => {
-                // Check for nested objects
-                if (
-                  typeof value === "object" &&
-                  !Array.isArray(value) &&
-                  value !== null
-                ) {
-                  return (
-                    <tr key={key} className="border-b">
-                      <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
-                        {key}
-                      </td>
-                      <td className="p-2 border border-primary-300">
-                        <table className="table-auto w-full text-sm md:text-xl">
-                          <tbody>
-                            {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                              <tr key={nestedKey} className="border-b">
-                                <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
-                                  {nestedKey}:
-                                </td>
-                                <td className="p-2 border border-primary-300">
-                                  {Array.isArray(nestedValue)
-                                    ? nestedValue.join(", ") // Handle arrays
-                                    : nestedValue}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  );
-                }
-
-                // Check if the value is a boolean
-                const content: any = typeof value === "boolean" ? (value ? "True" : "False") : value;
-
-                return (
-                  <tr key={key} className="border-b">
-                    <td className="font-semibold p-2 align-top w-1/3 border border-primary-300">
-                      {key}
-                    </td>
-                    <td className="p-2 border border-primary-300">
-                      {Array.isArray(content)
-                        ? content.join(", ")
-                        : content}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )} */}
-
       {/* heading */}
       <div className="font-bold mb-4 md:mb-10">
         <div className="text-xl md:text-5xl mb-6">More in Astrology</div>
@@ -343,7 +263,7 @@ const More = () => {
       </div>
 
       {/* components */}
-      <div className="grid lg:grid-cols-2 gap-4 md:grid-cols-2">
+      <div className="">
         <div className="flex flex-col gap-4 w-full">
           <div><h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">Dosha</h1>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -361,7 +281,7 @@ const More = () => {
                 <div onClick={() => {
                   setLink(item.link);
                   setFormShow(true);
-                }} key={item.key} className=" w-fit  bg-primary-500 hover:bg-[#ffd937] transition-all duration-300 shadow-md  p-2 rounded-md cursor-pointer">{item.key}</div>
+                }} key={item.key} className=" w-fit  bg-primary-500 hover:bg-[#ffd937] transition-all duration-300 shadow-md  p-2 rounded-md cursor-pointer">{convertToCapitalizedWords(item.key)}</div>
               ))}
             </div>
           </div>
@@ -376,11 +296,19 @@ const More = () => {
             </div>
           </div>
         </div>
-        <div>hello</div>
+        <div>
+          {
+            data && <div className="min-h-screen flex mt-10 items-center justify-center">
+              <div className="w-full max-w-6xl" ref={sectionRef} >
+                <TableComponent data={data} />
+              </div>
+            </div>
+          }
+        </div>
       </div>
       {
         formShow && <div className="fixed top-0 left-0 h-full w-full flex justify-center items-center bg-primary-300/50">
-          <div className="rounded-lg border-4 border-primary-300 p-2 md:p-4 md:min-w-[20rem] bg-primary-100">
+          <div className="rounded-lg border-4 border-primary-300 p-2 md:p-4 sm:min-w-[20rem] md:min-w-[30rem] bg-primary-100">
             <div className="bg-secondary-200 p-2 rounded text-center w-full text-xl flex gap-2">
               <span className="w-[90%]">Fill the Form</span>
               <span className="text-2xl flex items-center cursor-pointer" onClick={() => setFormShow(false)}>
@@ -412,7 +340,6 @@ const More = () => {
                   className="p-1 border-2 rounded-md w-full cursor-pointer"
                   onChange={(e) => {
                     setTimeofbirth(e.target.value);
-                    console.log(typeof e.target.value, "----------------------");
                   }}
                 />
 
@@ -463,3 +390,63 @@ const More = () => {
 };
 
 export default More;
+
+
+const TableComponent = ({ data }) => {
+  // Helper function to render arrays or objects inline
+  const renderValue = (value) => {
+    if (Array.isArray(value)) {
+      return (
+        <ul className="list-disc pl-4">
+          {value.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      );
+    } else if (typeof value === "object" && value !== null) {
+      return (
+        <div className="pl-4">
+          {Object.entries(value).map(([key, val], index) => (
+            <div key={index} className="flex gap-2">
+              <span className="font-medium capitalize">{key.replace(/_/g, " ")}:</span>
+              <span>{val}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return value;
+  };
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse border bg-orange-100 border-orange-500">
+        <thead>
+          <tr className="bg-orange-200">
+            <th className="border border-orange-500 px-4 py-2 text-left font-semibold">Key</th>
+            <th className="border border-orange-500 px-4 py-2 text-left font-semibold">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(data).map(([key, value], index) => (
+            <tr
+              key={index}
+              className=" transition-colors"
+            >
+              <td className="border border-orange-500 px-4 py-2 font-medium capitalize">
+                {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
+              </td>
+              <td className="border border-orange-500 px-4 py-2">{renderValue(value)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+
+
+ 
+
+
