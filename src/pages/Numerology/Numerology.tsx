@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import moon from "../../assets/moon.svg";
 import Articles from "../../components/common/Articles/Articles";
 import axios from "axios";
@@ -44,6 +44,8 @@ const Numerology = () => {
   const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<NumerologyData>();
 
+  const sectionRef = useRef(null);
+
 
   const handleSubmit = async () => {
     setLoad(true);
@@ -75,15 +77,24 @@ const Numerology = () => {
 
       const result = await response.json();
 
-      setData(result.response)
+      setData(result.response);
+      sectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     } catch (error) {
       console.error("Error during API call:", error);
+    } finally {
+      setLoad(false);
+      setName("");
+      setDateofbirth(null);
+      setTimeofbirth(null);
+      setLocation("");
+      setLatitude("");
+      setLongitude("");
+      setTimezone("");
     }
-    setLoad(false);
   };
-
-
-
 
   const getLocationOptions = async (city: string) => {
     if (city.trim() === "") {
@@ -196,7 +207,7 @@ const Numerology = () => {
                 type="text"
                 value={name}
                 className="w-[100%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-                placeholder="First Name"
+                placeholder="Name"
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
@@ -242,11 +253,11 @@ const Numerology = () => {
         </div>
 
       </div>
-      <div className="mt-4 md:mt-10 w-full">
+      <div ref={sectionRef} className="mt-4 md:mt-10 w-full">
         {load && <Loader />}
         {data && (
           <div className="rounded-lg p-2 md:p-6">
-            <h2 className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>
+            <h2  className="text-xl md:text-3xl font-bold text-center mb-4">Details</h2>
 
             <div className="hidden md:grid md:grid-cols-2 gap-4">
               {/* First Table */}
