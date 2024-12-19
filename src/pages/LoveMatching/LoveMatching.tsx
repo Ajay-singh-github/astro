@@ -5,62 +5,151 @@ import Articles from "../../components/common/Articles/Articles";
 import { useState } from "react";
 import axios from "axios";
 import Loader from "@/components/Loader/loader";
+import { languages } from "../Horoscope/Horoscope";
+import { VITE_API_KEY } from "@/api/userAPI";
 
 const LoveMatching = () => {
-  const [boyDate, setBoyDate] = useState("");
-  const [girlDate, setGirlDate] = useState("");
-  const [boyMonth, setBoyMonth] = useState("");
-  const [girlMonth, setGirlMonth] = useState("");
-  const [boyYear, setBoyYear] = useState("");
-  const [girlYear, setGirlYear] = useState("");
-  const [boyHr, setBoyHr] = useState("");
-  const [boyMin, setBoyMin] = useState("");
-  const [boySec, setBoySec] = useState("");
-  const [girlHr, setGirlHr] = useState("");
-  const [girlMin, setGirlMin] = useState("");
-  const [girlSec, setGirlSec] = useState("");
-  const [boyCity, setBoyCity] = useState("");
-  const [boyLat, setBoyLat] = useState("");
-  const [boyLon, setBoyLon] = useState("");
-  const [girlCity, setGirlCity] = useState("");
-  const [girlLat, setGirlLat] = useState("");
-  const [girlLon, setGirlLon] = useState("");
+  // const [boyDate, setBoyDate] = useState("");
+  // const [girlDate, setGirlDate] = useState("");
+  // const [boyMonth, setBoyMonth] = useState("");
+  // const [girlMonth, setGirlMonth] = useState("");
+  // const [boyYear, setBoyYear] = useState("");
+  // const [girlYear, setGirlYear] = useState("");
+  // const [boyHr, setBoyHr] = useState("");
+  // const [boyMin, setBoyMin] = useState("");
+  // const [boySec, setBoySec] = useState("");
+  // const [girlHr, setGirlHr] = useState("");
+  // const [girlMin, setGirlMin] = useState("");
+  // const [girlSec, setGirlSec] = useState("");
+  // const [boyCity, setBoyCity] = useState("");
+  // const [boyLat, setBoyLat] = useState("");
+  // const [boyLon, setBoyLon] = useState("");
+  // const [girlCity, setGirlCity] = useState("");
+  // const [girlLat, setGirlLat] = useState("");
+  // const [girlLon, setGirlLon] = useState("");
   const [dir, setDir] = useState("ashtakoot");
   const [data, setData] = useState<any>(null);
   const [load, setLoad] = useState<boolean>(false);
 
+  const [boyDate, setBoyDate] = useState<Date | null>(null);
+  const [boyTime, setBoyTime] = useState("");
+  const [boyTz, setBoyTz] = useState("");
+  const [boyLat, setBoyLat] = useState("");
+  const [boyLon, setBoyLon] = useState("");
+  const [girlDate, setGirlDate] = useState<Date | null>(null);
+  const [girlTime, setGirlTime] = useState("");
+  const [girlTz, setGirlTz] = useState("");
+  const [girlLat, setGirlLat] = useState("");
+  const [girlLon, setGirlLon] = useState("");
+  const [lang, setLang] = useState("en");
+
+
+
+
+  // const handleSubmit = async () => {
+  //   setLoad(true);
+  //   console.log(boySec, girlSec);
+  //   const resBoy = await axios.get(
+  //     `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${boyCity}&api_key=${process.env.VITE_API_KEY}`
+  //   );
+  //   const rb = resBoy?.data.response.filter(
+  //     (items: any) => items.country === "IN"
+  //   );
+  //   setBoyLat(rb[0].coordinates[0]);
+  //   setBoyLon(rb[0].coordinates[1]);
+
+  //   const resGirl = await axios.get(
+  //     `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${girlCity}&api_key=${process.env.VITE_API_KEY}`
+  //   );
+  //   const rg = resGirl?.data.response.filter(
+  //     (items: any) => items.country === "IN"
+  //   );
+  //   setGirlLat(rg[0].coordinates[0]);
+  //   setGirlLon(rg[0].coordinates[1]);
+
+  //   await axios
+  //     .get(
+  //       `https://api.vedicastroapi.com/v3-json/matching/${dir}?boy_dob=${boyDate}/${boyMonth}/${boyYear}&boy_tob=${boyHr}:${boyMin}&boy_tz=5.5&boy_lat=${boyLat}&boy_lon=${boyLon}&girl_dob=${girlDate}/${girlMonth}/${girlYear}&girl_tob=${girlHr}:${girlMin}&girl_tz=5.5&girl_lat=${girlLat}&girl_lon=${girlLon}&api_key=${process.env.VITE_API_KEY}&lang=en`
+  //     )
+  //     .then((res) => {
+  //       setData(res.data.response);
+  //       console.log(res.data.response);
+  //       console.log(res);
+  //     });
+
+  //   setLoad(false);
+  // };
+
+
+
   const handleSubmit = async () => {
     setLoad(true);
-    console.log(boySec, girlSec);
-    const resBoy = await axios.get(
-      `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${boyCity}&api_key=${process.env.VITE_API_KEY}`
+    console.log(
+      boyDate, "boy date",
+      boyTime, "boy time",
+      boyTz, "boy tz",
+      boyLat, "boy lat",
+      boyLon, "boy lon",
+      girlDate, "girl date",
+      girlTime, "girl time",
+      girlTz, "girl tz",
+      girlLat, "girl lat",
+      girlLon, "girl lon",
+      lang, "lang"
     );
-    const rb = resBoy?.data.response.filter(
-      (items: any) => items.country === "IN"
-    );
-    setBoyLat(rb[0].coordinates[0]);
-    setBoyLon(rb[0].coordinates[1]);
-
-    const resGirl = await axios.get(
-      `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${girlCity}&api_key=${process.env.VITE_API_KEY}`
-    );
-    const rg = resGirl?.data.response.filter(
-      (items: any) => items.country === "IN"
-    );
-    setGirlLat(rg[0].coordinates[0]);
-    setGirlLon(rg[0].coordinates[1]);
-
-    await axios
-      .get(
-        `https://api.vedicastroapi.com/v3-json/matching/${dir}?boy_dob=${boyDate}/${boyMonth}/${boyYear}&boy_tob=${boyHr}:${boyMin}&boy_tz=5.5&boy_lat=${boyLat}&boy_lon=${boyLon}&girl_dob=${girlDate}/${girlMonth}/${girlYear}&girl_tob=${girlHr}:${girlMin}&girl_tz=5.5&girl_lat=${girlLat}&girl_lon=${girlLon}&api_key=${process.env.VITE_API_KEY}&lang=en`
-      )
-      .then((res) => {
-        setData(res.data.response);
-        console.log(res);
-      });
-
     setLoad(false);
+
+    if (!boyDate || !boyTime || !boyTz || !boyLat || !boyLon || !girlDate || !girlTime || !girlTz || !girlLat || !girlLon || !lang) {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    if (boyDate && boyTime && boyTz && boyLat && boyLon && girlDate && girlTime && girlTz && girlLat && girlLon && lang) {
+      try {
+        // Formatting the boy's details
+        const formattedDateOfBirthBoy = boyDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+        const formattedTimeOfBirthBoy = boyTime; // HH:MM
+        const formattedTimezoneBoy = parseFloat(boyTz).toFixed(1); // TimeZone in jumps of 0.5
+        const formattedLatitudeBoy = parseFloat(boyLat).toFixed(2); // Latitude with decimals
+        const formattedLongitudeBoy = parseFloat(boyLon).toFixed(2); // Longitude with decimals
+
+        // Formatting the girl's details
+        const formattedDateOfBirthGirl = girlDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+        const formattedTimeOfBirthGirl = girlTime; // HH:MM
+        const formattedTimezoneGirl = parseFloat(girlTz).toFixed(1); // TimeZone in jumps of 0.5
+        const formattedLatitudeGirl = parseFloat(girlLat).toFixed(2); // Latitude with decimals
+        const formattedLongitudeGirl = parseFloat(girlLon).toFixed(2); // Longitude with decimals
+
+        // Constructing the request URL
+        const requestUrl = `https://api.vedicastroapi.com/v3-json/matching/${dir}?boy_dob=${formattedDateOfBirthBoy}&boy_tob=${formattedTimeOfBirthBoy}&boy_tz=${formattedTimezoneBoy}&boy_lat=${formattedLatitudeBoy}&boy_lon=${formattedLongitudeBoy}&girl_dob=${formattedDateOfBirthGirl}&girl_tob=${formattedTimeOfBirthGirl}&girl_tz=${formattedTimezoneGirl}&girl_lat=${formattedLatitudeGirl}&girl_lon=${formattedLongitudeGirl}&api_key=${VITE_API_KEY}&lang=${lang}`;
+
+        // Sending the API request
+        const res = await axios.get(requestUrl);
+
+        // Parsing the response into the required format
+        console.log(res);
+        setData(res.data.response);
+
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong");
+      } finally {
+        setLoad(false);
+        setBoyDate(null);
+        setBoyTime("");
+        setBoyTz("");
+        setBoyLat("");
+        setBoyLon("");
+        setGirlDate(null);
+        setGirlTime("");
+        setGirlTz("");
+        setGirlLat("");
+        setGirlLon("");
+      }
+    }
   };
+
+
 
   return (
     <div className="px-4 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100 p-4 md:p-12">
@@ -142,26 +231,29 @@ const LoveMatching = () => {
 
       <div className="px-2 md:px-[10vw]">
         <div className="bg-secondary-600 rounded-lg items-center justify-center p-2 md:p-4">
+          <div className="flex justify-end w-full items-center">
+            <select className="align-middle py-1" onChange={(e) => setLang(e.target.value)}>
+              {languages.map((item) => (
+                <option value={item.key} className="cursor-pointer">{item.value}</option>
+              ))}
+            </select>
+          </div>
           <div className="flex flex-col md:flex-row md:gap-4 gap-2">
             <Form
               title="Boy's Detail"
-              setDay={setBoyDate}
-              setMonth={setBoyMonth}
-              setYear={setBoyYear}
-              setHr={setBoyHr}
-              setMin={setBoyMin}
-              setSec={setBoySec}
-              setCity={setBoyCity}
+              setDate={setBoyDate}
+              setTime={setBoyTime}
+              setTz={setBoyTz}
+              setLat={setBoyLat}
+              setLon={setBoyLon}
             />
             <Form
               title="Girl's Detail"
-              setDay={setGirlDate}
-              setMonth={setGirlMonth}
-              setYear={setGirlYear}
-              setHr={setGirlHr}
-              setMin={setGirlMin}
-              setSec={setGirlSec}
-              setCity={setGirlCity}
+              setDate={setGirlDate}
+              setTime={setGirlTime}
+              setTz={setGirlTz}
+              setLat={setGirlLat}
+              setLon={setGirlLon}
             />
           </div>
           <div className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl">
@@ -185,371 +277,114 @@ const LoveMatching = () => {
         </div>
         <div className="mt-4 md:mt-10">
           {load && <Loader />}
-          {data &&
-            (dir === "dashakoot" ? (
-              <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-                <div className="flex flex-col gap-2 md:gap-4">
-                  <h1 className="text-2xl md:text-4xl font-bold">
-                    Dashakoot Match
-                  </h1>
-
-                  {/* Dina Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Dina</h2>
-                  <p>
-                    <strong>Boy's Star:</strong> {data.dina.boy_star}
-                  </p>
-                  <p>
-                    <strong>Girl's Star:</strong> {data.dina.girl_star}
-                  </p>
-                  <p>
-                    <strong>Dina Score:</strong> {data.dina.dina}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.dina.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.dina.full_score}
-                  </p>
-
-                  {/* Gana Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Gana</h2>
-                  <p>
-                    <strong>Boy's Gana:</strong> {data.gana.boy_gana}
-                  </p>
-                  <p>
-                    <strong>Girl's Gana:</strong> {data.gana.girl_gana}
-                  </p>
-                  <p>
-                    <strong>Gana Score:</strong> {data.gana.gana}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.gana.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.gana.full_score}
-                  </p>
-
-                  {/* Mahendra Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Mahendra</h2>
-                  <p>
-                    <strong>Boy's Star:</strong> {data.mahendra.boy_star}
-                  </p>
-                  <p>
-                    <strong>Girl's Star:</strong> {data.mahendra.girl_star}
-                  </p>
-                  <p>
-                    <strong>Mahendra Score:</strong> {data.mahendra.mahendra}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.mahendra.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.mahendra.full_score}
-                  </p>
-
-                  {/* Sthree Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Sthree</h2>
-                  <p>
-                    <strong>Boy's Star:</strong> {data.sthree.boy_star}
-                  </p>
-                  <p>
-                    <strong>Girl's Star:</strong> {data.sthree.girl_star}
-                  </p>
-                  <p>
-                    <strong>Sthree Score:</strong> {data.sthree.sthree}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.sthree.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.sthree.full_score}
-                  </p>
-
-                  {/* Yoni Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Yoni</h2>
-                  <p>
-                    <strong>Boy's Yoni:</strong> {data.yoni.boy_yoni}
-                  </p>
-                  <p>
-                    <strong>Girl's Yoni:</strong> {data.yoni.girl_yoni}
-                  </p>
-                  <p>
-                    <strong>Yoni Score:</strong> {data.yoni.yoni}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.yoni.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.yoni.full_score}
-                  </p>
-
-                  {/* Rasi Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Rasi</h2>
-                  <p>
-                    <strong>Boy's Rasi:</strong> {data.rasi.boy_rasi}
-                  </p>
-                  <p>
-                    <strong>Girl's Rasi:</strong> {data.rasi.girl_rasi}
-                  </p>
-                  <p>
-                    <strong>Rasi Score:</strong> {data.rasi.rasi}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.rasi.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.rasi.full_score}
-                  </p>
-
-                  {/* Rasiathi Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Rasiathi</h2>
-                  <p>
-                    <strong>Boy's Lord:</strong> {data.rasiathi.boy_lord}
-                  </p>
-                  <p>
-                    <strong>Girl's Lord:</strong> {data.rasiathi.girl_lord}
-                  </p>
-                  <p>
-                    <strong>Rasiathi Score:</strong> {data.rasiathi.rasiathi}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.rasiathi.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.rasiathi.full_score}
-                  </p>
-
-                  {/* Vasya Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Vasya</h2>
-                  <p>
-                    <strong>Boy's Rasi:</strong> {data.vasya.boy_rasi}
-                  </p>
-                  <p>
-                    <strong>Girl's Rasi:</strong> {data.vasya.girl_rasi}
-                  </p>
-                  <p>
-                    <strong>Vasya Score:</strong> {data.vasya.vasya}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.vasya.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.vasya.full_score}
-                  </p>
-
-                  {/* Rajju Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Rajju</h2>
-                  <p>
-                    <strong>Boy's Rajju:</strong> {data.rajju.boy_rajju}
-                  </p>
-                  <p>
-                    <strong>Girl's Rajju:</strong> {data.rajju.girl_rajju}
-                  </p>
-                  <p>
-                    <strong>Rajju Score:</strong> {data.rajju.rajju}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.rajju.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.rajju.full_score}
-                  </p>
-
-                  {/* Vedha Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Vedha</h2>
-                  <p>
-                    <strong>Boy's Star:</strong> {data.vedha.boy_star}
-                  </p>
-                  <p>
-                    <strong>Girl's Star:</strong> {data.vedha.girl_star}
-                  </p>
-                  <p>
-                    <strong>Vedha Score:</strong> {data.vedha.vedha}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.vedha.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.vedha.full_score}
-                  </p>
-
-                  {/* Overall Score */}
-                  <h2 className="text-xl md:text-3xl font-bold">Total Score</h2>
-                  <p>
-                    <strong>Score:</strong> {data.score}
-                  </p>
-                  <p>
-                    <strong>Bot Response:</strong> {data.bot_response}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-                <div className="flex flex-col gap-2 md:gap-4">
-                  <h1 className="text-2xl md:text-4xl font-bold">
-                    Ashtakoot Match
-                  </h1>
-
-                  {/* Tara Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Tara</h2>
-                  <p>
-                    <strong>Boy's Tara:</strong> {data.tara.boy_tara}
-                  </p>
-                  <p>
-                    <strong>Girl's Tara:</strong> {data.tara.girl_tara}
-                  </p>
-                  <p>
-                    <strong>Tara Score:</strong> {data.tara.tara}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.tara.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.tara.full_score}
-                  </p>
-
-                  {/* Gana Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Gana</h2>
-                  <p>
-                    <strong>Boy's Gana:</strong> {data.gana.boy_gana}
-                  </p>
-                  <p>
-                    <strong>Girl's Gana:</strong> {data.gana.girl_gana}
-                  </p>
-                  <p>
-                    <strong>Gana Score:</strong> {data.gana.gana}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.gana.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.gana.full_score}
-                  </p>
-
-                  {/* Yoni Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Yoni</h2>
-                  <p>
-                    <strong>Boy's Yoni:</strong> {data.yoni.boy_yoni}
-                  </p>
-                  <p>
-                    <strong>Girl's Yoni:</strong> {data.yoni.girl_yoni}
-                  </p>
-                  <p>
-                    <strong>Yoni Score:</strong> {data.yoni.yoni}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.yoni.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.yoni.full_score}
-                  </p>
-
-                  {/* Bhakoot Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Bhakoot</h2>
-                  <p>
-                    <strong>Boy's Rasi:</strong> {data.bhakoot.boy_rasi_name} (
-                    {data.bhakoot.boy_rasi})
-                  </p>
-                  <p>
-                    <strong>Girl's Rasi:</strong> {data.bhakoot.girl_rasi_name}{" "}
-                    ({data.bhakoot.girl_rasi})
-                  </p>
-                  <p>
-                    <strong>Bhakoot Score:</strong> {data.bhakoot.bhakoot}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.bhakoot.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.bhakoot.full_score}
-                  </p>
-
-                  {/* Grahamaitri Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Grahamaitri</h2>
-                  <p>
-                    <strong>Boy's Lord:</strong> {data.grahamaitri.boy_lord}
-                  </p>
-                  <p>
-                    <strong>Girl's Lord:</strong> {data.grahamaitri.girl_lord}
-                  </p>
-                  <p>
-                    <strong>Grahamaitri Score:</strong>{" "}
-                    {data.grahamaitri.grahamaitri}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.grahamaitri.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.grahamaitri.full_score}
-                  </p>
-
-                  {/* Vasya Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Vasya</h2>
-                  <p>
-                    <strong>Boy's Vasya:</strong> {data.vasya.boy_vasya}
-                  </p>
-                  <p>
-                    <strong>Girl's Vasya:</strong> {data.vasya.girl_vasya}
-                  </p>
-                  <p>
-                    <strong>Vasya Score:</strong> {data.vasya.vasya}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.vasya.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.vasya.full_score}
-                  </p>
-
-                  {/* Nadi Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Nadi</h2>
-                  <p>
-                    <strong>Boy's Nadi:</strong> {data.nadi.boy_nadi}
-                  </p>
-                  <p>
-                    <strong>Girl's Nadi:</strong> {data.nadi.girl_nadi}
-                  </p>
-                  <p>
-                    <strong>Nadi Score:</strong> {data.nadi.nadi}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.nadi.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.nadi.full_score}
-                  </p>
-
-                  {/* Varna Section */}
-                  <h2 className="text-xl md:text-3xl font-bold">Varna</h2>
-                  <p>
-                    <strong>Boy's Varna:</strong> {data.varna.boy_varna}
-                  </p>
-                  <p>
-                    <strong>Girl's Varna:</strong> {data.varna.girl_varna}
-                  </p>
-                  <p>
-                    <strong>Varna Score:</strong> {data.varna.varna}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {data.varna.description}
-                  </p>
-                  <p>
-                    <strong>Full Score:</strong> {data.varna.full_score}
-                  </p>
-
-                  {/* Overall Score */}
-                  <h2 className="text-xl md:text-3xl font-bold">Total Score</h2>
-                  <p>
-                    <strong>Score:</strong> {data.score}
-                  </p>
-                  <p>
-                    <strong>Bot Response:</strong> {data.bot_response}
-                  </p>
-                </div>
-              </div>
-            ))}
         </div>
+        {/* {data && (
+          <div className="container mx-auto p-4">
+            <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full border border-orange-500 bg-orange-100">
+                <thead>
+                  <tr className="bg-orange-200">
+                    <th className="px-4 py-2 border border-orange-500">Category</th>
+                    <th className="px-4 py-2 border border-orange-500">Boy</th>
+                    <th className="px-4 py-2 border border-orange-500">Girl</th>
+                    <th className="px-4 py-2 border border-orange-500">Score</th>
+                    <th className="px-4 py-2 border border-orange-500">Description</th>
+                    <th className="px-4 py-2 border border-orange-500">Full Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data &&
+                    Object.entries(data).map(([key, value], index) => (
+                      <tr key={index} className="border-t">
+                        <td className="px-4 py-2 border border-orange-500 capitalize">{key}</td>
+                        <td className="px-4 py-2 border border-orange-500">
+                          {value.boy_tara ||
+                            value.boy_gana ||
+                            value.boy_yoni ||
+                            value.boy_rasi_name ||
+                            value.boy_lord ||
+                            value.boy_vasya ||
+                            value.boy_nadi ||
+                            value.boy_varna ||
+                            "N/A"}
+                        </td>
+                        <td className="px-4 py-2 border border-orange-500">
+                          {value.girl_tara ||
+                            value.girl_gana ||
+                            value.girl_yoni ||
+                            value.girl_rasi_name ||
+                            value.girl_lord ||
+                            value.girl_vasya ||
+                            value.girl_nadi ||
+                            value.girl_varna ||
+                            "N/A"}
+                        </td>
+                        <td className="px-4 py-2 border border-orange-500">{value.score || "N/A"}</td>
+                        <td className="px-4 py-2 border border-orange-500">{value.description || "N/A"}</td>
+                        <td className="px-4 py-2 border border-orange-500">{value.full_score || "N/A"}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )} */}
       </div>
+      {data && (
+        <div className="w-full container mx-auto p-4">
+          <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
+          <div className="overflow-x-auto">
+            <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
+              <thead>
+                <tr className="bg-orange-200">
+                  <th className="border border-orange-500 p-2">Category</th>
+                  <th className="border border-orange-500 p-2">Boy</th>
+                  <th className="border border-orange-500 p-2">Girl</th>
+                  <th className="border border-orange-500 p-2">Score</th>
+                  <th className="border border-orange-500 p-2">Description</th>
+                  <th className="border border-orange-500 p-2">Full Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  Object.entries(data).map(([key, value], index) => (
+                    <tr key={index} className="border-t">
+                      <td className="border border-orange-500 p-2 capitalize">{key}</td>
+                      <td className="border border-orange-500 p-2">
+                        {value.boy_tara ||
+                          value.boy_gana ||
+                          value.boy_yoni ||
+                          value.boy_rasi_name ||
+                          value.boy_lord ||
+                          value.boy_vasya ||
+                          value.boy_nadi ||
+                          value.boy_varna ||
+                          "N/A"}
+                      </td>
+                      <td className="border border-orange-500 p-2">
+                        {value.girl_tara ||
+                          value.girl_gana ||
+                          value.girl_yoni ||
+                          value.girl_rasi_name ||
+                          value.girl_lord ||
+                          value.girl_vasya ||
+                          value.girl_nadi ||
+                          value.girl_varna ||
+                          "N/A"}
+                      </td>
+                      <td className="border border-orange-500 p-2">{value.score || "N/A"}</td>
+                      <td className="border border-orange-500 p-2">{value.description || "N/A"}</td>
+                      <td className="border border-orange-500 p-2">{value.full_score || "N/A"}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+
       <div className="my-6 md:my-[6vw]">
         <div className="font-bold w-max">
           <div className="text-xl md:text-3xl flex gap-2">
@@ -636,3 +471,48 @@ const LoveMatching = () => {
 };
 
 export default LoveMatching;
+
+
+
+const MatchTable = ({ response }: { response: any }) => {
+  const { score, bot_response, ...details } = response;
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full border border-orange-500 bg-orange-100">
+          <thead>
+            <tr className="bg-orange-200">
+              <th className="px-4 py-2 border border-orange-500">Category</th>
+              <th className="px-4 py-2 border border-orange-500">Boy</th>
+              <th className="px-4 py-2 border border-orange-500">Girl</th>
+              <th className="px-4 py-2 border border-orange-500">Score</th>
+              <th className="px-4 py-2 border border-orange-500">Description</th>
+              <th className="px-4 py-2 border border-orange-500">Full Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(details).map(([key, value], index) => (
+              <tr key={index} className="border-t">
+                <td className="px-4 py-2 border border-orange-500 capitalize">{key}</td>
+                <td className="px-4 py-2 border border-orange-500">
+                  {value.boy_tara || value.boy_gana || value.boy_yoni || value.boy_rasi_name || value.boy_lord || value.boy_vasya || value.boy_nadi || value.boy_varna || "N/A"}
+                </td>
+                <td className="px-4 py-2 border border-orange-500">
+                  {value.girl_tara || value.girl_gana || value.girl_yoni || value.girl_rasi_name || value.girl_lord || value.girl_vasya || value.girl_nadi || value.girl_varna || "N/A"}
+                </td>
+                <td className="px-4 py-2 border border-orange-500">{value[key] || "N/A"}</td>
+                <td className="px-4 py-2 border border-orange-500">{value.description || "N/A"}</td>
+                <td className="px-4 py-2 border border-orange-500">{value.full_score || "N/A"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+
+
