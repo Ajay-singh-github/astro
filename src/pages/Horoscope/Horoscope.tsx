@@ -117,13 +117,7 @@ type Phase = {
 
 };
 
-export type HoroscopePropYearly = {
-  phase_1: Phase; 
-  phase_2: Phase;
-  phase_3: Phase;
-  phase_4: Phase;
-  
-};
+
 
 
 
@@ -263,12 +257,14 @@ export const languages: LanguageProps[] = [
 
 const Horoscope = () => {
   const [type, setType] = useState("daily");
-  const [year, setYear] = useState<string | null>(null);
+  const [year, setYear] = useState<string >(new Date().getFullYear().toString());
   const [lang, setLang] = useState<string>("en");
 
   const [data, setData] = useState<HoroscopeProps | null>(null);
   const [dataWeekly, setDataWeekly] = useState<HoroscopePropWeekly | null>(null);
-  const [dataYearly, setDataYearly] = useState<HoroscopeProps | null>(null);
+  const [dataYearly, setDataYearly] = useState(null);
+
+  const [load, setLoad] = useState<boolean>(false);
 
 
   const date = new Date(Date.now());
@@ -280,16 +276,24 @@ const Horoscope = () => {
 
 
   const handleClick = async (item: ZodiacListProps) => {
+    setLoad(true);
     if (type === "daily") {
       try {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}&split=true&type=big`
         );
+        if(res.data.status === 200){
+          setIm(item.img);
+          setData(res.data.response);
+        }else{
+          setData(null);
+        }
         console.log(res);
-        setIm(item.img);
-        setData(res.data.response);
+        
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoad(false);
       }
     } else if (type === "weekly") {
       try {
@@ -301,17 +305,26 @@ const Horoscope = () => {
         setDataWeekly(res.data.response);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoad(false);
       }
 
     } else if (type === "yearly") {
       try {
         const res = await axios.get(
-          `https://api.vedicastroapi.com/v3-json/prediction/yearly?zodiac=${item.key}&year=${year}&show_same=true&api_key=${process.env.VITE_API_KEY}&lang=${lang}`
+          `https://api.vedicastroapi.com/v3-json/prediction/yearly?year=2024&zodiac=${item.key}&api_key=${VITE_API_KEY}&lang=${lang}`
         );
-        setIm(item.img);
-        setDataYearly(res.data.response);
+        if(res.data.response){
+          setIm(item.img);
+          setDataYearly(res.data.response);
+          console.log(res.data.response);
+        }else{
+          setDataYearly(null);
+        }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoad(false);
       }
     }
   };
@@ -323,10 +336,10 @@ const Horoscope = () => {
   return (
     <div className="py-8 md:py-20 bg-primary-100 px-4 md:px-8">
       <div className="xl:grid xl:grid-cols-3 items-center justify-center">
-        <div className=" items-center justify-center xl:flex hidden">
+        <div className=" items-center gap-4 justify-center xl:flex hidden">
           <div> Language:{" "} </div>
           <select
-            className="p-2 rounded-md border"
+            className="p-2 rounded-md border "
             onChange={(e) => setLang(e.target.value)}
           >
             {languages.map((item) => (
@@ -367,7 +380,7 @@ const Horoscope = () => {
               </select>
             </div>
 
-            {type === "yearly" && (
+            {/* {type === "yearly" && (
               <div className="flex gap-4 items-center">
                 Select Year:{" "}
                 <select
@@ -375,15 +388,15 @@ const Horoscope = () => {
                   onChange={(e) => setYear(e.target.value)}
                 >
                   <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
-                  <option value="2028">2028</option>
-                  <option value="2029">2029</option>
-                  <option value="2030">2030</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                  <option value="2020">2020</option>
+                  <option value="2019">2019</option>
+                  <option value="2018">2018</option>
                 </select>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -404,10 +417,28 @@ const Horoscope = () => {
       {
         data ? (
           type === "daily" ? (
-            <Passage data={data} img={im} />
+            data ? (
+              load ? (
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />  
+                </div>
+              ) : (
+                <Passage data={data} img={im} />
+              )
+            ) : (
+              <div className="w-full p-12 text-center text-xl md:text-3xl">
+                <Loader />  
+              </div>
+            )
           ) : type === "weekly" ? (
             dataWeekly ? (
-              <PassageForWeekly data={dataWeekly} img={im} />
+              load ? (
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />  
+                </div>
+              ) : (
+                <PassageForWeekly data={dataWeekly} img={im} />
+              )
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
                 <Loader />  
@@ -415,7 +446,13 @@ const Horoscope = () => {
             )
           ) : type === "yearly" ? (
             dataYearly ? (
-              <PassageForYearly data={dataYearly} img={im} />
+              load ? (
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />  
+                </div>
+              ) : (
+                <PassageForYearly data={dataYearly} img={im} />
+              )
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
                 <Loader />  
@@ -431,6 +468,8 @@ const Horoscope = () => {
             <Loader />  
           </div>
         )
+
+        
       }
 
       <div className="w-full">
