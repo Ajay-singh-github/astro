@@ -1,5 +1,6 @@
 import { HoroscopeProps, HoroscopePropWeekly, HoroscopePropYearly } from "@/pages/Horoscope/Horoscope";
 import moon from "../../../assets/moon.svg";
+import { useState } from "react";
 
 const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
   const { lucky_color, lucky_color_code, lucky_number, bot_response, zodiac } = data;
@@ -10,8 +11,8 @@ const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
       <div className="w-full flex items-center justify-center">
         <img src={img} className="w-[80%]" alt="Zodiac symbol" />
       </div>
-      <div className="font-bold w-max my-4 md:my-8">
-        <div className="text-xl md:text-3xl flex gap-2 uppercase">
+      <div className="font-bold w-max my-4 md:my-8 mx-auto">
+        <div className="text-xl md:text-3xl text-center flex gap-2 uppercase">
           {zodiac} Daily Horoscope
         </div>
         <div className="relative my-3 border-b w-full border-primary-500 flex justify-center">
@@ -36,13 +37,13 @@ const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
           </tr>
           <tr>
             <td className="border border-orange-500 p-2">Lucky Color</td>
-            <td className="border border-orange-500 p-2" style={{ color: lucky_color_code }}>
+            <td className="border border-orange-500 p-2">
               {lucky_color}
             </td>
           </tr>
           <tr>
             <td className="border border-orange-500 p-2">Lucky Numbers</td>
-            <td className="border border-orange-500 p-2">{lucky_number.join(", ")}</td>
+            <td className="border border-orange-500 p-2">{lucky_number?.join(", ")}</td>
           </tr>
         </tbody>
       </table>
@@ -64,8 +65,8 @@ const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
                   <td className="border border-orange-500 p-2">
                     {category.charAt(0).toUpperCase() + category.slice(1)}
                   </td>
-                  <td className="border border-orange-500 p-2">{bot_response[category].score }</td>
-                  <td className="border border-orange-500 p-2">{bot_response[category].split_response }</td>
+                  <td className="border border-orange-500 p-2">{bot_response[category].score}</td>
+                  <td className="border border-orange-500 p-2">{bot_response[category].split_response}</td>
                 </tr>
               );
             }
@@ -101,7 +102,7 @@ export default Passage;
 
 
 
-export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly ; img: string }) => {
+export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly; img: string }) => {
   const {
     lucky_color,
     lucky_color_code,
@@ -125,7 +126,7 @@ export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly ; im
       <div className="w-full flex items-center justify-center">
         <img src={img} className="w-[80%]" alt="Zodiac symbol" />
       </div>
-      <div className="font-bold w-max my-4 md:my-8">
+      <div className="font-bold w-max my-4 md:my-8 mx-auto">
         <div className="text-xl md:text-3xl flex gap-2 uppercase">
           {zodiac} Daily Horoscope
         </div>
@@ -151,7 +152,7 @@ export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly ; im
           </tr>
           <tr>
             <td className="border border-orange-500 p-2">Lucky Color</td>
-            <td className="border border-orange-500 p-2" style={{ color: lucky_color_code }}>
+            <td className="border border-orange-500 p-2">
               {lucky_color}
             </td>
           </tr>
@@ -233,79 +234,114 @@ export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly ; im
 
 
 
+type HoroscopePhase = {
+  score?: number;
+  period?: string;
+  prediction?: string;
+  health?: { score: number; prediction: string };
+  career?: { score: number; prediction: string };
+  relationship?: { score: number; prediction: string };
+  travel?: { score: number; prediction: string };
+  family?: { score: number; prediction: string };
+  friends?: { score: number; prediction: string };
+  finances?: { score: number; prediction: string };
+  status?: { score: number; prediction: string };
+};
 
+type HoroscopeData = {
+  [key: string]: HoroscopePhase;
+};
 
-export const PassageForYearly = ({ data, img }: { data: HoroscopePropYearly; img: string }) => {
-  const phases = Object.keys(data);
+export const PassageForYearly = ({
+  data,
+  zodiacName,
+  img,
+}: {
+  data: HoroscopeData;
+  zodiacName: string;
+  img: string;
+}) => {
+  const [selectedPhase, setSelectedPhase] = useState<string>(
+    Object.keys(data)[0]
+  );
+
+  const renderTable = (phase: HoroscopePhase, zodiacName: string) => (
+    <div className="overflow-x-auto">
+      <table className="w-full h-full bg-orange-100 rounded-xl border-collapse border border-orange-500">
+        <thead>
+          <tr className="bg-orange-200">
+            <th className="border border-orange-500 sm:p-2">Category</th>
+            <th className="border border-orange-500 sm:p-2">Score</th>
+            <th className="border border-orange-500 sm:p-2">Prediction</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            ["Period", "-", phase.period ?? ""],
+            ["Prediction", "-", phase.prediction ?? ""],
+            ["Health", phase.health?.score ?? "", phase.health?.prediction ?? ""],
+            ["Career", phase.career?.score ?? "", phase.career?.prediction ?? ""],
+            ["Relationship", phase.relationship?.score ?? "", phase.relationship?.prediction ?? ""],
+            ["Travel", phase.travel?.score ?? "", phase.travel?.prediction ?? ""],
+            ["Family", phase.family?.score ?? "", phase.family?.prediction ?? ""],
+            ["Friends", phase.friends?.score ?? "", phase.friends?.prediction ?? ""],
+            ["Finances", phase.finances?.score ?? "", phase.finances?.prediction ?? ""],
+            ["Status", phase.status?.score ?? "", phase.status?.prediction ?? ""],
+          ].map(([category, score, prediction], index) => (
+            <tr key={index}>
+              <td className="border border-orange-500 sm:p-2">{category ?? ""}</td>
+              <td className="border border-orange-500 sm:p-2">{score ?? "N/A"}</td>
+              <td className="border border-orange-500 sm:p-2">{prediction ?? "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const renderHeading = (period: string) => {
+    return period;
+  };
 
   return (
     <div className="p-6 space-y-8">
-      {phases.map((phase) => {
-        const phaseData = data[phase];
-        return (
-          <div key={phase} className="bg-gray-100 p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold text-indigo-600 mb-4">
-              {phase.replace("_", " ").toUpperCase()}
-            </h2>
-            <table className="min-w-full table-auto border-collapse">
-              <thead>
-                <tr className="bg-indigo-200">
-                  <th className="py-3 px-4 text-left text-gray-700">Category</th>
-                  <th className="py-3 px-4 text-left text-gray-700">Score</th>
-                  <th className="py-3 px-4 text-left text-gray-700">Prediction</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Period</td>
-                  <td className="py-2 px-4">{phaseData.period}</td>
-                  <td className="py-2 px-4">{phaseData.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Health</td>
-                  <td className="py-2 px-4">{phaseData.health.score}</td>
-                  <td className="py-2 px-4">{phaseData.health.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Career</td>
-                  <td className="py-2 px-4">{phaseData.career.score}</td>
-                  <td className="py-2 px-4">{phaseData.career.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Relationship</td>
-                  <td className="py-2 px-4">{phaseData.relationship.score}</td>
-                  <td className="py-2 px-4">{phaseData.relationship.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Travel</td>
-                  <td className="py-2 px-4">{phaseData.travel.score}</td>
-                  <td className="py-2 px-4">{phaseData.travel.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Family</td>
-                  <td className="py-2 px-4">{phaseData.family.score}</td>
-                  <td className="py-2 px-4">{phaseData.family.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Friends</td>
-                  <td className="py-2 px-4">{phaseData.friends.score}</td>
-                  <td className="py-2 px-4">{phaseData.friends.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Finances</td>
-                  <td className="py-2 px-4">{phaseData.finances.score}</td>
-                  <td className="py-2 px-4">{phaseData.finances.prediction}</td>
-                </tr>
-                <tr className="hover:bg-indigo-50">
-                  <td className="py-2 px-4">Status</td>
-                  <td className="py-2 px-4">{phaseData.status.score}</td>
-                  <td className="py-2 px-4">{phaseData.status.prediction}</td>
-                </tr>
-              </tbody>
-            </table>
+      {/* Header Section */}
+      <div className="w-full flex items-center justify-center">
+        <img src={img} className="w-[80%]" alt="Zodiac symbol" />
+      </div>
+      <div className="font-bold w-max my-4 md:my-8 mx-auto">
+        <div className="text-xl md:text-3xl flex gap-2 uppercase">
+          {zodiacName} Yearly Horoscope
+        </div>
+        <div className="relative my-3 border-b w-full border-primary-500 flex justify-center">
+          <div className="absolute -top-4 bg-primary-100">
+            <img src={moon} className="text-xs" alt="Moon Icon" />
           </div>
-        );
-      })}
+        </div>
+      </div>
+      <nav className="flex space-x-4 border-b pb-4 flex-wrap items-center justify-center ">
+        {Object.keys(data).map((phase) => (
+          <button
+            key={phase}
+            className={`px-4 py-2 rounded-lg my-1 ${
+              phase === selectedPhase
+                ? "bg-orange-500 text-white"
+                : "bg-orange-100 text-orange-500"
+            }`}
+            onClick={() => setSelectedPhase(phase)}
+          >
+            {phase?.replace("_", " ")?.toUpperCase()}
+          </button>
+        ))}
+      </nav>
+      <h1 className="text-2xl w-full flex justify-center font-semibold text-center text-orange-500">
+        {renderHeading(data[selectedPhase]?.period ?? "")}
+      </h1>
+      {renderTable(data[selectedPhase], zodiacName)}
     </div>
   );
 };
+
+
+
+

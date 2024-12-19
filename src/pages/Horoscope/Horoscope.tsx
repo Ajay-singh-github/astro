@@ -236,14 +236,7 @@ export const languages: LanguageProps[] = [
     key: "ml",
     value: "Malayalam"
   },
-  {
-    key: "mr",
-    value: "Marathi"
-  },
-  {
-    key: "bn",
-    value: "Bengali"
-  },
+  
   {
     key: "sp",
     value: "Spanish"
@@ -272,7 +265,7 @@ const Horoscope = () => {
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const y = String(date.getFullYear());
   const [im, setIm] = useState<string>(zodiacList[1].img);
-
+  const [zodiacName, setZodiacName] = useState<string>("");
 
 
   const handleClick = async (item: ZodiacListProps) => {
@@ -317,7 +310,7 @@ const Horoscope = () => {
         if(res.data.response){
           setIm(item.img);
           setDataYearly(res.data.response);
-          console.log(res.data.response);
+          console.log(item.img);
         }else{
           setDataYearly(null);
         }
@@ -407,7 +400,10 @@ const Horoscope = () => {
           <div
             key={item.key}
             className="cursor-pointer rounded-full text-primary-300 font-bold text-center"
-            onClick={() => handleClick(item)}
+            onClick={() => {
+              handleClick(item);
+              setZodiacName(item.value);
+            }}
           >
             <img src={item.logo} className="" />
             <div>{item.value}</div>
@@ -423,7 +419,7 @@ const Horoscope = () => {
                   <Loader />  
                 </div>
               ) : (
-                <Passage data={data} img={im} />
+                <Passage data={data} img={im} zodiacName={zodiacName} />
               )
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
@@ -451,7 +447,7 @@ const Horoscope = () => {
                   <Loader />  
                 </div>
               ) : (
-                <PassageForYearly data={dataYearly} img={im} />
+                <PassageForYearly data={dataYearly} zodiacName={zodiacName} img={im} />
               )
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
