@@ -46,31 +46,22 @@ const ShubhMuhurat = () => {
                   </div>
 
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                    {/* {shubhMuhrat[muhrat] &&
-                      shubhMuhrat[muhrat][m]?.map((event: any) => (
-                        <div
-                          key={event.date}
-                          className="grid grid-cols-2 gap-2 md:gap-4 md:w-[60%] border-b-2 border-primary-300 md:px-4"
-                        >
-                          <div className="text-left">{event.Date}</div>
-                          <div className="text-right">{event.Time}</div>
-                        </div>
-                      ))} */}
-                    <table className="w-full border border-black table-auto border-collapse">
+                    
+                    <table className="w-full border bg-orange-100 border-orange-500 table-auto border-collapse">
                       <thead>
-                        <tr className="border-b">
-                          <th className="border border-black px-4 py-2">Date</th>
-                          <th className="border border-black px-4 py-2">From</th>
-                          <th className="border border-black px-4 py-2">To</th>
+                        <tr className="border-b bg-orange-200">
+                          <th className="border border-orange-500 px-4 py-2">Date</th>
+                          <th className="border border-orange-500 px-4 py-2">From</th>
+                          <th className="border border-orange-500 px-4 py-2">To</th>
                         </tr>
                       </thead>
                       <tbody>
                         {shubhMuhrat[muhrat] &&
                           shubhMuhrat[muhrat][m]?.map((event: any) => (
                             <tr key={event.Date} className="border-b">
-                              <td className="border border-black px-4 py-2">{event.Date}</td>
-                              <td className="border border-black px-4 py-2">{event.Time.split("-")[0]}</td>
-                              <td className="border border-black px-4 py-2">{event.Time.split("-")[1]}</td>
+                              <td className="border border-orange-500 px-4 py-2">{event.Date}</td>
+                              <td className="border border-orange-500 px-4 py-2">{event.Time.split("-")[0]}</td>
+                              <td className="border border-orange-500 px-4 py-2">{event.Time.split("-")[1]}</td>
                             </tr>
                           ))}
                       </tbody>
@@ -294,11 +285,11 @@ const ShubhMuhurat = () => {
       </div>
 
       <div className="px-2 md:px-8 w-full">
-        <div className="bg-primary-200 p-2 md:p-4 rounded-lg w-full flex flex-col gap-2 md:gap-4">
-          <div className="bg-primary-500 rounded-lg p-2 md:p-4 text-xl md:text-3xl font-bold text-center">
+        <div className=" p-2 md:p-4 rounded-lg w-full flex flex-col gap-2 md:gap-4">
+          <div className=" rounded-lg p-2 md:p-4 text-xl md:text-3xl font-bold text-center">
             {muhrat} Muhrat Dates
           </div>
-          <div className="w-full p-2 md:p-4 rounded-lg bg-primary-500 flex flex-col gap-2 md:gap-4">
+          <div className="w-full p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4">
             {month === "all" ? (
               renderMuhrats()
             ) : (
@@ -308,20 +299,20 @@ const ShubhMuhurat = () => {
                 </div>
                 {shubhMuhrat[muhrat]?.hasOwnProperty(month) && (
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                    <table className="w-full border border-black table-auto border-collapse">
+                    <table className="w-full border bg-orange-100 border-orange-500 table-auto border-collapse">
                       <thead>
-                        <tr className="border-b">
-                          <th className="border border-black px-4 py-2">Date</th>
-                          <th className="border border-black px-4 py-2">From</th>
-                          <th className="border border-black px-4 py-2">To</th>
+                        <tr className="border-b bg-orange-200">
+                          <th className="border border-orange-500 px-4 py-2">Date</th>
+                          <th className="border border-orange-500 px-4 py-2">From</th>
+                          <th className="border border-orange-500 px-4 py-2">To</th>
                         </tr>
                       </thead>
                       <tbody>
                         {shubhMuhrat[muhrat][month]?.map((event: any, index: number) => (
                           <tr key={index} className="border-b">
-                            <td className="border border-black px-4 py-2">{event.Date}</td>
-                            <td className="border border-black px-4 py-2">{event.Time.split("to")[0]}</td>
-                            <td className="border border-black px-4 py-2">{event.Time.split("to")[1]}</td>
+                            <td className="border border-orange-500 px-4 py-2">{event.Date}</td>
+                            <td className="border border-orange-500 px-4 py-2">{event.Time.split("-")[0]}</td>
+                            <td className="border border-orange-500 px-4 py-2">{event.Time.split("-")[1]}</td>
                           </tr>
                         ))}
                       </tbody>

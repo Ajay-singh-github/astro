@@ -63,22 +63,21 @@ const Header = () => {
   return (
     <div className="">
       <div className="p-2 md:p-4 md:px-8 flex justify-between items-center bg-primary-400 border-b border-primary-300">
-        <div className="md:px-4 md:text-3xl font-semibold text-primary-300">
-          LOGO
+        
+        <div className="px-4 w-full cursor-pointer flex items-center text-2xl md:text-4xl font-semibold text-primary-300"
+        onClick={() => navigate("/")}
+        >
+          Astro Magic
         </div>
         <div className="flex gap-3 md:gap-8 items-center w-full justify-end text-xs md:text-base">
-        <div
-            className="p-1 md:p-2 rounded bg-white px-2 md:px-8 border border-secondary-100 cursor-pointer text-xl font-bold"
+          <div
+            onClick={() => navigate("/janam-kundli")}
+            className="p-1 uppercase texl-xl md:p-2 rounded bg-white px-2 md:px-8 border border-secondary-100 cursor-pointer font-bold"
           >
-            Todays special offer
+            See free kundli
           </div>
           {/* <div className="underline cursor-pointer">Register</div> */}
-          <div
-            className="p-1 md:p-2 rounded-full bg-secondary-200 px-2 md:px-8 border border-secondary-100 cursor-pointer"
-            onClick={() => navigate("/signup")}
-          >
-            Register / Log In
-          </div>
+
         </div>
       </div>
       <nav className="bg-primary-100 hidden lg:flex p-8 justify-center items-center font-semibold text-sm md:text-base">

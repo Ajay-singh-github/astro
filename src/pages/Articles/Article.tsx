@@ -1,10 +1,11 @@
 import { articlesList } from "../../constants/constants";
 import moon from "../../assets/moon.svg";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 
 const Article = () => {
   const [key, setKey] = useState<string>("");
+  const section = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -17,10 +18,13 @@ const Article = () => {
     }else{
       setKey(key);
     }
+    if(section.current){
+      section.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, []);
 
   return (
-    <div className="text-primary-300 bg-primary-100 px-4 md:px-8 py-4 md:py-[5vw]">
+    <div ref={section} className="text-primary-300 bg-primary-100 px-4 md:px-8 py-4 md:py-[5vw]">
       <div className="font-bold flex flex-col gap-4 px-4 md:px-16 items-center mb-4 md:mb-[5vw]">
         <div className="text-xl md:text-3xl ">
           {articlesList.find((item) => item.key === key)?.title}

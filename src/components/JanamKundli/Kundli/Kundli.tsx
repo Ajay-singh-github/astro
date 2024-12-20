@@ -6,6 +6,7 @@ import Loader from "@/components/Loader/loader";
 import { VITE_API_KEY } from "@/api/userAPI";
 import { languages } from "@/pages/Horoscope/Horoscope";
 import { Location as OptionLocation } from "@/pages/Horoscope/Horoscope";
+import Scrollc from "@/lib/scrollc";
 
 type IndexedObject = {
   name: string;
@@ -335,6 +336,7 @@ const kundliData = {
 
 
 const Kundli = () => {
+  const section = Scrollc();
   const [load, setLoad] = useState<boolean>(false);
   const [timeOfBirth, setTimeOfBirth] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<string>("");
@@ -357,11 +359,14 @@ const Kundli = () => {
       const response = await axios.get(
         `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
       );
-      console.log(response.data.response);
       const locations = Array.isArray(response.data.response)
         ? response.data.response
         : [];
-      setLocationOptions(locations);
+
+        const locationOptions = locations.filter((item:OptionLocation) => item.country === "IN");
+
+      setLocationOptions(locationOptions);
+      
     } catch (error) {
       console.error("Error fetching location data:", error);
       setLocationOptions([]);
@@ -394,6 +399,15 @@ const Kundli = () => {
       console.error('Error fetching horoscope data:', error);
     } finally {
       setLoad(false);
+      section.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setLanguage("en");
+      setDateOfBirth("");
+      setTimeOfBirth("");
+      setLocation("");
+      setLatitude(0);
+      setLongitude(0);
+      setTimezone("");
+      setLocationOptions([]);
     }
 
   };
@@ -566,135 +580,10 @@ const Kundli = () => {
             </div>
           </form>
         </div>
-        <div className="mt-4 md:mt-10">
+        <div className="mt-4 md:mt-10" ref={section}>
           <div className="w-full text-center text-xl md:text-3xl">{load}</div>
-          {/* {data && (
-            <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-              <div className="flex flex-col gap-2 md:gap-4">
-                <h1 className="text-xl md:text-3xl font-bold">
-                  Astrological Data
-                </h1>
-
-                <h2 className="text-lg md:text-2xl font-bold">
-                  Planetary Data
-                </h2>
-                {renderPlanetaryData()}
-                <div>
-                  <h2 className="text-md md:text-xl font-bold">
-                    Dasa Information
-                  </h2>
-                  <p>
-                    <strong>Birth Dasa:</strong> {data.birth_dasa}
-                  </p>
-                  <p>
-                    <strong>Current Dasa:</strong> {data.current_dasa}
-                  </p>
-                  <p>
-                    <strong>Birth Dasa Time:</strong> {data.birth_dasa_time}
-                  </p>
-                  <p>
-                    <strong>Current Dasa Time:</strong> {data.current_dasa_time}
-                  </p>
-                </div>
-                <div>
-                  <h2 className="text-md md:text-xl font-bold">
-                    Lucky Information
-                  </h2>
-                  <p>
-                    <strong>Lucky Gem:</strong> {data.lucky_gem.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Lucky Number:</strong> {data.lucky_num.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Lucky Colors:</strong> {data.lucky_colors.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Lucky Letters:</strong>{" "}
-                    {data.lucky_letters.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Lucky Name Start:</strong>{" "}
-                    {data.lucky_name_start.join(", ")}
-                  </p>
-                </div><div>
-                  <h2 className="text-md md:text-xl font-bold">
-                    Rasi & Nakshatra
-                  </h2>
-                  <p>
-                    <strong>Rasi:</strong> {data.rasi}
-                  </p>
-                  <p>
-                    <strong>Nakshatra:</strong> {data.nakshatra}
-                  </p>
-                  <p>
-                    <strong>Nakshatra Pada:</strong> {data.nakshatra_pada}
-                  </p>
-                </div><div>
-                  <h2 className="text-md md:text-xl font-bold">Panchang</h2>
-                  <p>
-                    <strong>Ayanamsa:</strong> {data.panchang.ayanamsa} (
-                    {data.panchang.ayanamsa_name})
-                  </p>
-                  <p>
-                    <strong>Karana:</strong> {data.panchang.karana}
-                  </p>
-                  <p>
-                    <strong>Yoga:</strong> {data.panchang.yoga}
-                  </p>
-                  <p>
-                    <strong>Day of Birth:</strong> {data.panchang.day_of_birth}
-                  </p>
-                  <p>
-                    <strong>Day Lord:</strong> {data.panchang.day_lord}
-                  </p>
-                  <p>
-                    <strong>Hora Lord:</strong> {data.panchang.hora_lord}
-                  </p>
-                  <p>
-                    <strong>Sunrise at Birth:</strong>{" "}
-                    {data.panchang.sunrise_at_birth}
-                  </p>
-                  <p>
-                    <strong>Sunset at Birth:</strong>{" "}
-                    {data.panchang.sunset_at_birth}
-                  </p>
-                  <p>
-                    <strong>Tithi:</strong> {data.panchang.tithi}
-                  </p>
-                </div><div>
-                  <h2 className="text-md md:text-xl font-bold">Ghatka Chakra</h2>
-                  <p>
-                    <strong>Rasi:</strong> {data.ghatka_chakra.rasi}
-                  </p>
-                  <p>
-                    <strong>Tithis:</strong> {data.ghatka_chakra.tithi.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Day:</strong> {data.ghatka_chakra.day}
-                  </p>
-                  <p>
-                    <strong>Nakshatra:</strong> {data.ghatka_chakra.nakshatra}
-                  </p>
-                  <p>
-                    <strong>Tatva:</strong> {data.ghatka_chakra.tatva}
-                  </p>
-                  <p>
-                    <strong>Lord:</strong> {data.ghatka_chakra.lord}
-                  </p>
-                  <p>
-                    <strong>Same Sex Lagna:</strong>{" "}
-                    {data.ghatka_chakra.same_sex_lagna}
-                  </p>
-                  <p>
-                    <strong>Opposite Sex Lagna:</strong>{" "}
-                    {data.ghatka_chakra.opposite_sex_lagna}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )} */}
-          {data && <ZodiacTabs response={data} />}
+          
+          {data && <ZodiacTabs  response={data} />}
         </div>
       </div>
       <div className="my-6 md:my-[6vw] w-full">
@@ -752,7 +641,7 @@ const ZodiacTabs = ({ response }) => {
           <button
             key={key}
             onClick={() => handleTabClick(index)}
-            className={`px-2  py-1  my-1 md:my-2 rounded-md ${
+            className={`px-2  py-1  my-1 md:my-2 rounded-md border border-orange-500 shadow-md ${
               activeIndex === index
                 ? "bg-orange-500 text-white"
                 : "bg-orange-100 text-orange-500"

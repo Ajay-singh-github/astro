@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import {
@@ -23,8 +23,8 @@ import More from './pages/More/More.tsx';
 import Contact from './pages/Contact/Contact.tsx';
 import AstroProfile from './pages/AstroProfile/AstroProfile.tsx';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Articles from './pages/Articles/Articles.tsx';
+
 
 
 const router = createBrowserRouter(
@@ -40,7 +40,7 @@ const router = createBrowserRouter(
         <Route path="/numerology-calculator" element={<Numerology />} />
         <Route path="/articles" element={<Articles />} />
         <Route path="/article" element={<Article />} />
-        <Route path="/more" element={<More />} />
+        <Route path="/more" element={<More/>} />
       </Route>
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<Profile />} />
@@ -51,12 +51,11 @@ const router = createBrowserRouter(
   )
 );
 
-const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
+      <>
       <RouterProvider router={router} />
-    </QueryClientProvider>
+      </>
   </StrictMode>,
 )

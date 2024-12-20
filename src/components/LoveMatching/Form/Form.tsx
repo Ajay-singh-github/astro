@@ -1,16 +1,51 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { languages } from "@/pages/Horoscope/Horoscope"
+import axios from "axios";
+import { VITE_API_KEY } from "@/api/userAPI";
+import { Location as LocationType } from "@/components/more/Form";
+
 
 interface Props {
   title: string;
-  setDay: Dispatch<SetStateAction<string>>;
-  setMonth: Dispatch<SetStateAction<string>>;
-  setYear: Dispatch<SetStateAction<string>>;
-  setHr: Dispatch<SetStateAction<string>>;
-  setMin: Dispatch<SetStateAction<string>>;
-  setSec: Dispatch<SetStateAction<string>>;
-  setCity: Dispatch<SetStateAction<string>>;
+  setDate: Dispatch<SetStateAction<Date | null>>;
+  setTime: Dispatch<SetStateAction<string>>;
+  setTz: Dispatch<SetStateAction<string>>;
+  setLat: Dispatch<SetStateAction<string>>;
+  setLon: Dispatch<SetStateAction<string>>;
+  name: string;
+  date: Date | null;
+  time: string;
+  tz: string;
+  lat: string;
+  lon: string;
+  setName: Dispatch<SetStateAction<string>>;
 }
-const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, setSec, setCity}) => {
+const Form:React.FC<Props> = ({title, setDate, setTime, setTz, setLat, setLon, name, date, time, tz, lat, lon, setName}) => {
+
+  const [location, setLocation] = useState<string>("");
+  const [locationOptions, setLocationOptions] = useState<LocationType[]>([]);
+
+  const getLocationOptions = async (city: string) => {
+    if (city.trim() === "") {
+      setLocationOptions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
+      );
+      const locations = Array.isArray(response.data.response)
+        ? response.data.response
+        : [];
+      const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
+      setLocationOptions(locationOptions);
+      console.log(response.data.response);
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      setLocationOptions([]);
+    }
+
+  };
 
   return (
     <div className="rounded-lg border-4 border-secondary-600 bg-secondary-600 p-2 md:p-4 md:min-w-[20rem]">
@@ -21,96 +56,65 @@ const Form:React.FC<Props> = ({title, setDay, setMonth, setYear, setHr, setMin, 
         <label>Name</label>
         <input
           type="text"
+          value={name}
           placeholder="Enter name"
           className="border-2 rounded-md p-1 focus:outline-none focus:ring-0"
+          onChange={(e) => setName(e.target.value)}
         />
         <label>Birth Details</label>
         <div className="flex justify-between gap-4">
-          <div className="flex flex-col basis-1/3">
-            <label>Day</label>
-            <input
-              type="number"
-              min={1}
-              max={31}
-              defaultValue={0}
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setDay(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col basis-1/3">
-            <label>Month</label>
-            <select
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option value={1}>Jan</option>
-              <option value={2}>Feb</option>
-              <option value={3}>Mar</option>
-              <option value={4}>Apr</option>
-              <option value={5}>May</option>
-              <option value={6}>Jun</option>
-              <option value={7}>Jul</option>
-              <option value={8}>Aug</option>
-              <option value={9}>Sep</option>
-              <option value={10}>Oct</option>
-              <option value={11}>Nov</option>
-              <option value={12}>Dec</option>
-            </select>
-          </div>
-          <div className="flex flex-col basis-1/3">
-            <label>Year</label>
-            <input
-              type="number"
-              min={1}
-              max={2030}
-              defaultValue={1980}
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setYear(e.target.value)}
-            />
-          </div>
+          <label>Date</label>
+          <input
+            type="date"
+            value={date ? date.toISOString().split('T')[0] : ''}
+            placeholder="DD/MM/YYYY"
+            className="p-1 border-2 rounded-md w-full cursor-pointer"
+            onChange={(e) => setDate(e.target.valueAsDate)}
+          />
         </div>
         <div className="flex justify-between gap-4">
-          <div className="flex flex-col basis-1/3">
-            <label>Hour</label>
-            <input
-              type="number"
-              min={0}
-              max={23}
-              defaultValue={0}
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setHr(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col basis-1/3">
-            <label>Minute</label>
-            <input
-              type="number"
-              min={0}
-              max={59}
-              defaultValue={0}
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setMin(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col basis-1/3">
-            <label>Second</label>
-            <input
-              type="number"
-              min={0}
-              max={59}
-              defaultValue={0}
-              className="p-1 border-2 rounded-md focus:outline-none focus:ring-0"
-              onChange={(e) => setSec(e.target.value)}
-            />
-          </div>
+          <label>Time</label>
+          <input
+            type="time"
+            value={time}
+            className="p-1 border-2 rounded-md w-full cursor-pointer"
+            onChange={(e) => setTime(e.target.value)}
+          />
         </div>
-        <label>Birth Place</label>
-        <input
-          type="text"
-          placeholder="Enter place of birth"
-          className="border-2 rounded-md p-1 focus:outline-none focus:ring-0"
-          onChange={(e)=>setCity(e.target.value)}
-        />
+        <div className="relative">
+          <label>Location</label>
+          <div className="flex justify-between gap-4">
+            <input
+              type="text"
+              value={location}
+              placeholder="Enter place of birth"
+              className="p-1 border-2 rounded-md w-full cursor-pointer"
+                    onChange={(e) => {
+                      getLocationOptions(e.target.value);
+                      setLocation(e.target.value);
+                    }}
+                  />
+                  {locationOptions.length > 0 && (
+                    <div className="absolute top-[70px] w-full h-[200px] bg-white overflow-y-auto ">
+                      {locationOptions.map((item) => (
+                        <div
+                          key={item.name}
+                          className="p-2 cursor-pointer hover:bg-primary-200"
+                          onClick={() => {
+                            setLocation(item.name);
+                            setLat(item.coordinates[0]);
+                            setLon(item.coordinates[1]);
+                            setTz(item.tz.toString());
+                            setLocationOptions([]);
+                          }}
+                        >
+                          {item.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
       </div>
     </div>
   );

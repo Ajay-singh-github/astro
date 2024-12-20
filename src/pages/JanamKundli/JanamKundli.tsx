@@ -14,8 +14,10 @@ import sagittariuslogo from "../../assets/sagittariuslogo.svg";
 import capricornlogo from "../../assets/capricornlogo.svg";
 import pisceslogo from "../../assets/pisceslogo.svg";
 import { useNavigate } from "react-router-dom";
+import Scrollc from "../../lib/scrollc";
 
 const JanamKundli = () => {
+  const section = Scrollc();
   const navigate = useNavigate()
   const items = [
     {
@@ -68,7 +70,7 @@ const JanamKundli = () => {
     },
   ];
   return (
-    <div className="px-4 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div ref={section} className="px-4 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold">
         <div className="text-xl md:text-5xl ">Janam Kundli</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
@@ -93,8 +95,7 @@ const JanamKundli = () => {
           <div
             key={item.key}
             className="cursor-pointer rounded-full text-primary-300 font-bold "
-            onClick={() => navigate("/horoscope")}
-          >
+            onClick={() => navigate(`/horoscope?zodiac=${item.key}`)}>
             <img src={item.img} className="" />
           </div>
         ))}

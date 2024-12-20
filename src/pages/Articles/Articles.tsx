@@ -1,11 +1,19 @@
 import { articlesList } from "../../constants/constants";
 import moon from "../../assets/moon.svg";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 const Articles = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const section = useRef<HTMLDivElement>(null);
+
+    useEffect(()=>{
+        if(section.current){
+            section.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    },[])
     return (
-        <div className="text-primary-300 bg-primary-100 px-4 md:px-8 py-4 md:py-[5vw]">
+        <div ref={section} className="text-primary-300 bg-primary-100 px-4 md:px-8 py-4 md:py-[5vw]">
             <div className="text-xl md:text-3xl items-center justify-center flex font-semibold">
                 Articles
             </div>

@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import moon from "../../assets/moon.svg";
 import PToday from "../../components/Panchang/PToday/PToday";
 import P2024 from "../../components/Panchang/P2024/P2024";
 import P2025 from "../../components/Panchang/P2025/P2025";
 import CTimings from "../../components/Panchang/CTimings/CTimings";
 import Articles from "../../components/common/Articles/Articles";
+import Scrollc from "@/lib/scrollc";
 
 const Panchang = () => {
   const [selIt, setSelIt] = useState("1");
+  const section = Scrollc();
   const items = [
     {
       key: "1",
@@ -26,8 +28,27 @@ const Panchang = () => {
       value: "Chogadiya Timings",
     },
   ];
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const year = urlParams.get("year");
+    const chogadiya = urlParams.get("chogadiya");
+    if (year) {
+      if (year === "2024") {
+        setSelIt("2");
+      } else if (year === "2025") {
+        setSelIt("3");
+      }
+      return;
+    }
+    if (chogadiya) {
+      setSelIt("4");
+      return;
+    }
+    setSelIt("1");
+  }, []);
   return (
-    <div className="py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div ref={section} className="py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold">
         <div className="text-xl md:text-3xl ">Panchang</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">

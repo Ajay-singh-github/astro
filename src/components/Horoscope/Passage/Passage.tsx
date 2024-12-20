@@ -2,98 +2,112 @@ import { HoroscopeProps, HoroscopePropWeekly, HoroscopePropYearly } from "@/page
 import moon from "../../../assets/moon.svg";
 import { useState } from "react";
 
-const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
+const Passage = ({ data, img, error }: { data: HoroscopeProps; img: string, error: boolean }) => {
   const { lucky_color, lucky_color_code, lucky_number, bot_response, zodiac } = data;
 
   return (
-    <div className="p-4 md:p-10 font-sans space-y-8">
-      {/* Header Section */}
-      <div className="w-full flex items-center justify-center">
-        <img src={img} className="w-[80%]" alt="Zodiac symbol" />
-      </div>
-      <div className="font-bold w-max my-4 md:my-8 mx-auto">
-        <div className="text-xl md:text-3xl text-center flex gap-2 uppercase">
-          {zodiac} Daily Horoscope
-        </div>
-        <div className="relative my-3 border-b w-full border-primary-500 flex justify-center">
-          <div className="absolute -top-4 bg-primary-100">
-            <img src={moon} className="text-xs" alt="Moon Icon" />
+    <div>
+      {
+        error ? (
+          <div className="w-full p-12 text-center text-xl md:text-3xl">
+            <div className="w-full h-[200px] flex items-center justify-center">
+              <div className="w-full h-[200px] flex items-center justify-center">
+                <span className="text-xl md:text-3xl font-semibold">Something went wrong</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        ) : (
+          <div className="p-4 md:p-10 font-sans space-y-8">
+            {/* Header Section */}
+            <div className="w-full flex items-center justify-center">
+              <img src={img} className="w-[80%]" alt="Zodiac symbol" />
+            </div>
+            <div className="font-bold w-max my-4 md:my-8 mx-auto">
+              <div className="text-xl md:text-3xl text-center flex gap-2 uppercase">
+                {zodiac} Daily Horoscope
+              </div>
+              <div className="relative my-3 border-b w-full border-primary-500 flex justify-center">
+                <div className="absolute -top-4 bg-primary-100">
+                  <img src={moon} className="text-xs" alt="Moon Icon" />
+                </div>
+              </div>
+            </div>
 
-      {/* Lucky Information Section */}
-      <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
-        <thead>
-          <tr className="bg-orange-200">
-            <th className="border border-orange-500 p-2">Attribute</th>
-            <th className="border border-orange-500 p-2">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border border-orange-500 p-2">Zodiac Sign</td>
-            <td className="border border-orange-500 p-2">{zodiac}</td>
-          </tr>
-          <tr>
-            <td className="border border-orange-500 p-2">Lucky Color</td>
-            <td className="border border-orange-500 p-2">
-              {lucky_color}
-            </td>
-          </tr>
-          <tr>
-            <td className="border border-orange-500 p-2">Lucky Numbers</td>
-            <td className="border border-orange-500 p-2">{lucky_number?.join(", ")}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      {/* Horoscope Details Section */}
-      <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
-        <thead>
-          <tr className="bg-orange-200">
-            <th className="border border-orange-500 p-2">Category</th>
-            <th className="border border-orange-500 p-2">Score</th>
-            <th className="border border-orange-500 p-2">Message</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.keys(bot_response).map((category, index) => {
-            if (category !== "total_score") {
-              return (
-                <tr key={index}>
-                  <td className="border border-orange-500 p-2">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </td>
-                  <td className="border border-orange-500 p-2">{bot_response[category].score}</td>
-                  <td className="border border-orange-500 p-2">{bot_response[category].split_response}</td>
+            {/* Lucky Information Section */}
+            <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
+              <thead>
+                <tr className="bg-orange-200">
+                  <th className="border border-orange-500 p-2">Attribute</th>
+                  <th className="border border-orange-500 p-2">Details</th>
                 </tr>
-              );
-            }
-            return null;
-          })}
-        </tbody>
-      </table>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-orange-500 p-2">Zodiac Sign</td>
+                  <td className="border border-orange-500 p-2">{zodiac}</td>
+                </tr>
+                <tr>
+                  <td className="border border-orange-500 p-2">Lucky Color</td>
+                  <td className="border border-orange-500 p-2" >
+                    {lucky_color}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-orange-500 p-2">Lucky Numbers</td>
+                  <td className="border border-orange-500 p-2">{lucky_number?.join(", ")}</td>
+                </tr>
+              </tbody>
+            </table>
 
-      {/* Total Score Section */}
-      <table className="w-full bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
-        <thead>
-          <tr className="bg-orange-200">
-            <th className="border border-orange-500 p-2">Attribute</th>
-            <th className="border border-orange-500 p-2">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border border-orange-500 p-2">Total Score</td>
-            <td className="border border-orange-500 p-2">{bot_response.total_score.score}</td>
-          </tr>
-          <tr>
-            <td className="border border-orange-500 p-2">Message</td>
-            <td className="border border-orange-500 p-2">{bot_response.total_score.split_response}</td>
-          </tr>
-        </tbody>
-      </table>
+            {/* Horoscope Details Section */}
+            <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
+              <thead>
+                <tr className="bg-orange-200">
+                  <th className="border border-orange-500 p-2">Category</th>
+                  <th className="border border-orange-500 p-2">Score</th>
+                  <th className="border border-orange-500 p-2">Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(bot_response).map((category, index) => {
+                  if (category !== "total_score") {
+                    return (
+                      <tr key={index}>
+                        <td className="border border-orange-500 p-2">
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </td>
+                        <td className="border border-orange-500 p-2">{bot_response[category].score}</td>
+                        <td className="border border-orange-500 p-2">{bot_response[category].split_response}</td>
+                      </tr>
+                    );
+                  }
+                  return null;
+                })}
+              </tbody>
+            </table>
+
+            {/* Total Score Section */}
+            <table className="w-full bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
+              <thead>
+                <tr className="bg-orange-200">
+                  <th className="border border-orange-500 p-2">Attribute</th>
+                  <th className="border border-orange-500 p-2">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-orange-500 p-2">Total Score</td>
+                  <td className="border border-orange-500 p-2">{bot_response.total_score.score}</td>
+                </tr>
+                <tr>
+                  <td className="border border-orange-500 p-2">Message</td>
+                  <td className="border border-orange-500 p-2">{bot_response.total_score.split_response}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )
+      }
     </div>
   );
 };
@@ -152,7 +166,7 @@ export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly; img
           </tr>
           <tr>
             <td className="border border-orange-500 p-2">Lucky Color</td>
-            <td className="border border-orange-500 p-2">
+            <td className="border border-orange-500 p-2" >
               {lucky_color}
             </td>
           </tr>
@@ -320,17 +334,17 @@ export const PassageForYearly = ({
         </div>
       </div>
       <nav className="flex space-x-4 border-b pb-4 flex-wrap items-center justify-center ">
-        {Object.keys(data).map((phase) => (
+        {Object.keys(data).map((phase, index) => (
           <button
             key={phase}
-            className={`px-4 py-2 rounded-lg my-1 ${
-              phase === selectedPhase
+            className={`px-4 py-2 rounded-lg my-1 ${phase === selectedPhase
                 ? "bg-orange-500 text-white"
                 : "bg-orange-100 text-orange-500"
-            }`}
+              }`}
             onClick={() => setSelectedPhase(phase)}
           >
-            {phase?.replace("_", " ")?.toUpperCase()}
+            {/* TODO: handle phase numbering */}
+            {phase?.slice(0, 5).toUpperCase() + " " + (index + 1)}
           </button>
         ))}
       </nav>

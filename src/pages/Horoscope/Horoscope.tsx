@@ -26,9 +26,11 @@ import pisceslogo from "../../assets/pisceslogo.svg";
 import Articles from "../../components/common/Articles/Articles";
 import Passage, { PassageForWeekly, PassageForYearly } from "../../components/Horoscope/Passage/Passage";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { VITE_API_KEY } from "@/api/userAPI";
 import Loader from "@/components/Loader/loader";
+import { useNavigate } from "react-router-dom";
+import Scrollc from "@/lib/scrollc";
 
 
 export type HoroscopeProps = {
@@ -236,7 +238,7 @@ export const languages: LanguageProps[] = [
     key: "ml",
     value: "Malayalam"
   },
-  
+
   {
     key: "sp",
     value: "Spanish"
@@ -249,8 +251,11 @@ export const languages: LanguageProps[] = [
 
 
 const Horoscope = () => {
+  const navigate = useNavigate();
+  const section = Scrollc();
+  const section2 = useRef<HTMLDivElement>(null);
   const [type, setType] = useState("daily");
-  const [year, setYear] = useState<string >(new Date().getFullYear().toString());
+  const [year, setYear] = useState<string>(new Date().getFullYear().toString());
   const [lang, setLang] = useState<string>("en");
 
   const [data, setData] = useState<HoroscopeProps | null>(null);
@@ -258,6 +263,7 @@ const Horoscope = () => {
   const [dataYearly, setDataYearly] = useState(null);
 
   const [load, setLoad] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
 
   const date = new Date(Date.now());
@@ -275,18 +281,21 @@ const Horoscope = () => {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}&split=true&type=big`
         );
-        if(res.data.status === 200){
+        if (res.data.status === 200) {
           setIm(item.img);
           setData(res.data.response);
-        }else{
+        } else {
           setData(null);
         }
         console.log(res);
-        
+
       } catch (error) {
+        setError(true);
         console.log(error);
       } finally {
         setLoad(false);
+        section.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section2.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } else if (type === "weekly") {
       try {
@@ -297,9 +306,12 @@ const Horoscope = () => {
         setIm(item.img);
         setDataWeekly(res.data.response);
       } catch (error) {
+        setError(true);
         console.log(error);
       } finally {
         setLoad(false);
+        section.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section2.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
     } else if (type === "yearly") {
@@ -307,27 +319,40 @@ const Horoscope = () => {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/yearly?year=2024&zodiac=${item.key}&api_key=${VITE_API_KEY}&lang=${lang}`
         );
-        if(res.data.response){
+        if (res.data.response) {
           setIm(item.img);
           setDataYearly(res.data.response);
           console.log(item.img);
-        }else{
+        } else {
           setDataYearly(null);
         }
       } catch (error) {
+        setError(true);
         console.log(error);
       } finally {
         setLoad(false);
+        section.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section2.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   };
   useEffect(() => {
-    handleClick(zodiacList[0])
-  }, [lang, type, year])
+    const zodiac = new URLSearchParams(window.location.search).get('zodiac');
+    if (zodiac) {
+      const zodiacItem = zodiacList.find(item => item.key === zodiac);
+      if (zodiacItem) {
+        handleClick(zodiacItem);
+        setZodiacName(zodiacItem.value);
+      }
+    } else {
+      handleClick(zodiacList[0])
+    }
+    
+  }, [lang, type, year, error])
 
 
   return (
-    <div className="py-8 md:py-20 bg-primary-100 px-4 md:px-8">
+    <div ref={section} className="py-8 md:py-20 bg-primary-100 px-4 md:px-8">
       <div className="xl:grid xl:grid-cols-3 items-center justify-center">
         <div className=" items-center gap-4 justify-center xl:flex hidden">
           <div> Language:{" "} </div>
@@ -403,6 +428,7 @@ const Horoscope = () => {
             onClick={() => {
               handleClick(item);
               setZodiacName(item.value);
+              navigate(`/horoscope?zodiac=${item.key}`);
             }}
           >
             <img src={item.logo} className="" />
@@ -410,63 +436,63 @@ const Horoscope = () => {
           </div>
         ))}
       </div>
-      {
-        data ? (
-          type === "daily" ? (
-            data ? (
-              load ? (
-                <div className="w-full p-12 text-center text-xl md:text-3xl">
-                  <Loader />  
-                </div>
+      <div ref={section2} className="w-full">
+        {
+          data ? (
+            type === "daily" ? (
+              data ? (
+                load ? (
+                  <div className="w-full p-12 text-center text-xl md:text-3xl">
+                    <Loader />
+                  </div>
+                ) : (
+                  <Passage error={error} data={data} img={im} zodiacName={zodiacName} />
+                )
               ) : (
-                <Passage data={data} img={im} zodiacName={zodiacName} />
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />
+                </div>
+              )
+            ) : type === "weekly" ? (
+              dataWeekly ? (
+                load ? (
+                  <div className="w-full p-12 text-center text-xl md:text-3xl">
+                    <Loader />
+                  </div>
+                ) : (
+                  <PassageForWeekly data={dataWeekly} img={im} />
+                )
+              ) : (
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />
+                </div>
+              )
+            ) : type === "yearly" ? (
+              dataYearly ? (
+                load ? (
+                  <div className="w-full p-12 text-center text-xl md:text-3xl">
+                    <Loader />
+                  </div>
+                ) : (
+                  <PassageForYearly data={dataYearly} zodiacName={zodiacName} img={im} />
+                )
+              ) : (
+                <div className="w-full p-12 text-center text-xl md:text-3xl">
+                  <Loader />
+                </div>
               )
             ) : (
               <div className="w-full p-12 text-center text-xl md:text-3xl">
-                <Loader />  
-              </div>
-            )
-          ) : type === "weekly" ? (
-            dataWeekly ? (
-              load ? (
-                <div className="w-full p-12 text-center text-xl md:text-3xl">
-                  <Loader />  
-                </div>
-              ) : (
-                <PassageForWeekly data={dataWeekly} img={im} />
-              )
-            ) : (
-              <div className="w-full p-12 text-center text-xl md:text-3xl">
-                <Loader />  
-              </div>
-            )
-          ) : type === "yearly" ? (
-            dataYearly ? (
-              load ? (
-                <div className="w-full p-12 text-center text-xl md:text-3xl">
-                  <Loader />  
-                </div>
-              ) : (
-                <PassageForYearly data={dataYearly} zodiacName={zodiacName} img={im} />
-              )
-            ) : (
-              <div className="w-full p-12 text-center text-xl md:text-3xl">
-                <Loader />  
+                <Loader />
               </div>
             )
           ) : (
             <div className="w-full p-12 text-center text-xl md:text-3xl">
-              <Loader />  
+              <Loader />
             </div>
           )
-        ) : (
-          <div className="w-full p-12 text-center text-xl md:text-3xl">
-            <Loader />  
-          </div>
-        )
-
-        
-      }
+        }
+      </div>
 
       <div className="w-full">
         <Articles />

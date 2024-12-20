@@ -135,3 +135,6 @@ export const USERS = {
     return response.data;
   },
 };
+
+
+export const VITE_API_KEY="1a4a78f7-613a-5193-b256-dcfa6f843779"

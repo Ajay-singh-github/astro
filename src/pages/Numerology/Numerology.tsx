@@ -31,8 +31,8 @@ type NumerologyData = {
 const Numerology = () => {
 
   const [name, setName] = useState<string>("");
-  const [dateofbirth, setDateofbirth] = useState<Date | null>()
-  const [timeofbirth, setTimeofbirth] = useState<Date | null>()
+  const [dateofbirth, setDateofbirth] = useState<Date | null>(null)
+  const [timeofbirth, setTimeofbirth] = useState<Date | null>(null)
   const [location, setLocation] = useState<string>("");
   const [latitude, setLatitude] = useState<string>("")
   const [longitude, setLongitude] = useState<string>("")
@@ -108,7 +108,8 @@ const Numerology = () => {
       const locations = Array.isArray(response.data.response)
         ? response.data.response
         : [];
-      setLocationOptions(locations);
+      const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
+      setLocationOptions(locationOptions);
     } catch (error) {
       console.error("Error fetching location data:", error);
       setLocationOptions([]);

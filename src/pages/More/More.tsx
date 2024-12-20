@@ -7,6 +7,7 @@ import { VITE_API_KEY } from "@/api/userAPI";
 import { IoMdClose } from "react-icons/io";
 import { Location as LocationType } from "@/components/more/Form";
 import { languages } from "../Horoscope/Horoscope";
+import Loader from "@/components/Loader/loader";
 
 const Dosha: { key: string; link: string }[] = [
   {
@@ -218,6 +219,11 @@ const More = () => {
       setLatitude("");
       setLongitude("");
       setTimezone("");
+      setLocationOptions([]);
+      sectionRef.current?.scrollIntoView({
+        behavior: "smooth", 
+        block: "start", 
+      });
     }
   };
 
@@ -234,7 +240,8 @@ const More = () => {
       const locations = Array.isArray(response.data.response)
         ? response.data.response
         : [];
-      setLocationOptions(locations);
+        const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
+      setLocationOptions(locationOptions);
     } catch (error) {
       console.error("Error fetching location data:", error);
       setLocationOptions([]);
@@ -300,7 +307,7 @@ const More = () => {
           {
             data && <div className="min-h-screen flex mt-10 items-center justify-center">
               <div className="w-full max-w-6xl" ref={sectionRef} >
-                <TableComponent data={data} />
+                <TableComponent data={data} link={link} />
               </div>
             </div>
           }
@@ -309,8 +316,8 @@ const More = () => {
       {
         formShow && <div className="fixed top-0 left-0 h-full w-full flex justify-center items-center bg-primary-300/50">
           <div className="rounded-lg border-4 border-primary-300 p-2 md:p-4 sm:min-w-[20rem] md:min-w-[30rem] bg-primary-100">
-            <div className="bg-secondary-200 p-2 rounded text-center w-full text-xl flex gap-2">
-              <span className="w-[90%]">Fill the Form</span>
+            <div className="p-2 rounded text-center w-full text-xl flex gap-2">
+              <span className="w-[90%] text-2xl font-semibold">{link.split("/")[0]?.toUpperCase().replace(/-/g, " ")}</span>
               <span className="text-2xl flex items-center cursor-pointer" onClick={() => setFormShow(false)}>
                 <IoMdClose />
               </span>
@@ -371,11 +378,12 @@ const More = () => {
                             setLocationOptions([]);
                           }}
                         >
-                          {item.name}
+                          {item.name ? item.name : <Loader/>}
                         </div>
                       ))}
                     </div>
-                  )}
+                  )
+                }
                 </div>
               </div>
               <div className="w-full p-2 text-center border cursor-pointer text-xl bg-secondary-100 text-primary-200 rounded-lg" onClick={handleSubmit}>
@@ -392,34 +400,56 @@ const More = () => {
 export default More;
 
 
-const TableComponent = ({ data }) => {
+const TableComponent = ({ data, link }: { data: any, link: string }) => {
   // Helper function to render arrays or objects inline
-  const renderValue = (value) => {
+  const renderValue = (value: any) => {
+    // Check for false values first
+    if (value === false) {
+      return "False";
+    }
+    if(value === true){
+      return "True";
+    }
+    
+    // Handle arrays
     if (Array.isArray(value)) {
       return (
         <ul className="list-disc pl-4">
           {value.map((item, index) => (
-            <li key={index}>{item}</li>
+            <li key={index}>{item || "N/A"}</li>
           ))}
         </ul>
       );
-    } else if (typeof value === "object" && value !== null) {
+    }
+    
+    // Handle objects
+    if (typeof value === "object" && value !== null) {
       return (
         <div className="pl-4">
           {Object.entries(value).map(([key, val], index) => (
             <div key={index} className="flex gap-2">
               <span className="font-medium capitalize">{key.replace(/_/g, " ")}:</span>
-              <span>{val}</span>
+              <span>{val === false ? "N/A" : val}</span>
             </div>
           ))}
         </div>
       );
     }
+    
+    // Handle empty strings, null, or undefined
+    if (!value && value !== 0) {
+      return "N/A";
+    }
+    
+    // Return the value as is
     return value;
   };
 
   return (
     <div className="overflow-x-auto">
+      <div>
+        <h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">{link.split("/")[0]?.toUpperCase().replace(/-/g, " ")}</h1>
+      </div>
       <table className="w-full border-collapse border bg-orange-100 border-orange-500">
         <thead>
           <tr className="bg-orange-200">
@@ -431,10 +461,10 @@ const TableComponent = ({ data }) => {
           {Object.entries(data).map(([key, value], index) => (
             <tr
               key={index}
-              className=" transition-colors"
+              className="transition-colors"
             >
               <td className="border border-orange-500 px-4 py-2 font-medium capitalize">
-                {key.replace(/_/g, " ")} {/* Replace underscores with spaces */}
+                {key.replace(/_/g, " ")}
               </td>
               <td className="border border-orange-500 px-4 py-2">{renderValue(value)}</td>
             </tr>
@@ -444,6 +474,7 @@ const TableComponent = ({ data }) => {
     </div>
   );
 };
+
 
 
 

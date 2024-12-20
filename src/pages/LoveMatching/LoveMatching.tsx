@@ -2,35 +2,74 @@ import moon from "../../assets/moon.svg";
 import matchmaking from "../../assets/matchmaking.svg";
 import Form from "../../components/LoveMatching/Form/Form";
 import Articles from "../../components/common/Articles/Articles";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Loader from "@/components/Loader/loader";
 import { languages } from "../Horoscope/Horoscope";
 import { VITE_API_KEY } from "@/api/userAPI";
+import Scrollc from "@/lib/scrollc";
+
+
+type MatchDetailValue = {
+  // Boy properties
+  boy_tara?: string;
+  boy_gana?: string;
+  boy_yoni?: string;
+  boy_rasi?: number;
+  boy_rasi_name?: string;
+  boy_lord?: string;
+  boy_vasya?: string;
+  boy_nadi?: string;
+  boy_varna?: string;
+  
+  // Girl properties
+  girl_tara?: string;
+  girl_gana?: string;
+  girl_yoni?: string;
+  girl_rasi?: number;
+  girl_rasi_name?: string;
+  girl_lord?: string;
+  girl_vasya?: string;
+  girl_nadi?: string;
+  girl_varna?: string;
+  
+  // Score properties
+  score?: number;
+  description?: string;
+  full_score?: number;
+  
+  // The specific match type score (e.g., tara: 3, yoni: 4)
+  [key: string]: any;
+};
+
+
+type MatchDetailsData = {
+  status: number;
+  response: {
+    tara?: MatchDetailValue;
+    gana?: MatchDetailValue;
+    yoni?: MatchDetailValue;
+    bhakoot?: MatchDetailValue;
+    grahamaitri?: MatchDetailValue;
+    vasya?: MatchDetailValue;
+    nadi?: MatchDetailValue;
+    varna?: MatchDetailValue;
+    score: number;
+    bot_response: string;
+  };
+};
+
 
 const LoveMatching = () => {
-  // const [boyDate, setBoyDate] = useState("");
-  // const [girlDate, setGirlDate] = useState("");
-  // const [boyMonth, setBoyMonth] = useState("");
-  // const [girlMonth, setGirlMonth] = useState("");
-  // const [boyYear, setBoyYear] = useState("");
-  // const [girlYear, setGirlYear] = useState("");
-  // const [boyHr, setBoyHr] = useState("");
-  // const [boyMin, setBoyMin] = useState("");
-  // const [boySec, setBoySec] = useState("");
-  // const [girlHr, setGirlHr] = useState("");
-  // const [girlMin, setGirlMin] = useState("");
-  // const [girlSec, setGirlSec] = useState("");
-  // const [boyCity, setBoyCity] = useState("");
-  // const [boyLat, setBoyLat] = useState("");
-  // const [boyLon, setBoyLon] = useState("");
-  // const [girlCity, setGirlCity] = useState("");
-  // const [girlLat, setGirlLat] = useState("");
-  // const [girlLon, setGirlLon] = useState("");
+  const section = Scrollc();
+  const section2 = useRef<HTMLDivElement>(null);
+
   const [dir, setDir] = useState("ashtakoot");
   const [data, setData] = useState<any>(null);
   const [load, setLoad] = useState<boolean>(false);
 
+  const [boyName, setBoyName] = useState("");
+  const [girlName, setGirlName] = useState("");
   const [boyDate, setBoyDate] = useState<Date | null>(null);
   const [boyTime, setBoyTime] = useState("");
   const [boyTz, setBoyTz] = useState("");
@@ -44,59 +83,31 @@ const LoveMatching = () => {
   const [lang, setLang] = useState("en");
 
 
+  const clearFormFields = () => {
+    setBoyName("");
+    setGirlName("");
+    setBoyDate(null);
+    setBoyTime("");
+    setBoyTz("");
+    setBoyLat("");
+    setBoyLon("");
+    setGirlDate(null);
+    setGirlTime("");
+    setGirlTz("");
+    setGirlLat("");
+    setGirlLon("");
+  };
 
-
-  // const handleSubmit = async () => {
-  //   setLoad(true);
-  //   console.log(boySec, girlSec);
-  //   const resBoy = await axios.get(
-  //     `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${boyCity}&api_key=${process.env.VITE_API_KEY}`
-  //   );
-  //   const rb = resBoy?.data.response.filter(
-  //     (items: any) => items.country === "IN"
-  //   );
-  //   setBoyLat(rb[0].coordinates[0]);
-  //   setBoyLon(rb[0].coordinates[1]);
-
-  //   const resGirl = await axios.get(
-  //     `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${girlCity}&api_key=${process.env.VITE_API_KEY}`
-  //   );
-  //   const rg = resGirl?.data.response.filter(
-  //     (items: any) => items.country === "IN"
-  //   );
-  //   setGirlLat(rg[0].coordinates[0]);
-  //   setGirlLon(rg[0].coordinates[1]);
-
-  //   await axios
-  //     .get(
-  //       `https://api.vedicastroapi.com/v3-json/matching/${dir}?boy_dob=${boyDate}/${boyMonth}/${boyYear}&boy_tob=${boyHr}:${boyMin}&boy_tz=5.5&boy_lat=${boyLat}&boy_lon=${boyLon}&girl_dob=${girlDate}/${girlMonth}/${girlYear}&girl_tob=${girlHr}:${girlMin}&girl_tz=5.5&girl_lat=${girlLat}&girl_lon=${girlLon}&api_key=${process.env.VITE_API_KEY}&lang=en`
-  //     )
-  //     .then((res) => {
-  //       setData(res.data.response);
-  //       console.log(res.data.response);
-  //       console.log(res);
-  //     });
-
-  //   setLoad(false);
-  // };
-
+  useEffect(() => {
+    if (data && section2.current) {
+      section2.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [data]);
 
 
   const handleSubmit = async () => {
     setLoad(true);
-    console.log(
-      boyDate, "boy date",
-      boyTime, "boy time",
-      boyTz, "boy tz",
-      boyLat, "boy lat",
-      boyLon, "boy lon",
-      girlDate, "girl date",
-      girlTime, "girl time",
-      girlTz, "girl tz",
-      girlLat, "girl lat",
-      girlLon, "girl lon",
-      lang, "lang"
-    );
+    
     setLoad(false);
 
     if (!boyDate || !boyTime || !boyTz || !boyLat || !boyLon || !girlDate || !girlTime || !girlTz || !girlLat || !girlLon || !lang) {
@@ -125,26 +136,15 @@ const LoveMatching = () => {
 
         // Sending the API request
         const res = await axios.get(requestUrl);
-
-        // Parsing the response into the required format
         console.log(res);
+        // Parsing the response into the required format
         setData(res.data.response);
 
       } catch (error) {
         console.log(error);
         alert("Something went wrong");
       } finally {
-        setLoad(false);
-        setBoyDate(null);
-        setBoyTime("");
-        setBoyTz("");
-        setBoyLat("");
-        setBoyLon("");
-        setGirlDate(null);
-        setGirlTime("");
-        setGirlTz("");
-        setGirlLat("");
-        setGirlLon("");
+        clearFormFields();
       }
     }
   };
@@ -152,7 +152,7 @@ const LoveMatching = () => {
 
 
   return (
-    <div className="px-4 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100 p-4 md:p-12">
+    <div ref={section} className="px-4 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100 p-4 md:p-12">
       <div className="font-bold mb-4">
         <div className="text-xl md:text-3xl ">Love Matching</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
@@ -240,7 +240,14 @@ const LoveMatching = () => {
           </div>
           <div className="flex flex-col md:flex-row md:gap-4 gap-2">
             <Form
+              name={boyName}
+              time={boyTime}
+              date={boyDate}
+              tz={boyTz}
+              lat={boyLat}
+              lon={boyLon}
               title="Boy's Detail"
+              setName={setBoyName}
               setDate={setBoyDate}
               setTime={setBoyTime}
               setTz={setBoyTz}
@@ -248,7 +255,14 @@ const LoveMatching = () => {
               setLon={setBoyLon}
             />
             <Form
+              name={girlName}
+              time={girlTime}
+              date={girlDate}
+              tz={girlTz}
+              lat={girlLat}
+              lon={girlLon}
               title="Girl's Detail"
+              setName={setGirlName}
               setDate={setGirlDate}
               setTime={setGirlTime}
               setTz={setGirlTz}
@@ -278,110 +292,10 @@ const LoveMatching = () => {
         <div className="mt-4 md:mt-10">
           {load && <Loader />}
         </div>
-        {/* {data && (
-          <div className="container mx-auto p-4">
-            <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
-            <div className="overflow-x-auto">
-              <table className="table-auto w-full border border-orange-500 bg-orange-100">
-                <thead>
-                  <tr className="bg-orange-200">
-                    <th className="px-4 py-2 border border-orange-500">Category</th>
-                    <th className="px-4 py-2 border border-orange-500">Boy</th>
-                    <th className="px-4 py-2 border border-orange-500">Girl</th>
-                    <th className="px-4 py-2 border border-orange-500">Score</th>
-                    <th className="px-4 py-2 border border-orange-500">Description</th>
-                    <th className="px-4 py-2 border border-orange-500">Full Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data &&
-                    Object.entries(data).map(([key, value], index) => (
-                      <tr key={index} className="border-t">
-                        <td className="px-4 py-2 border border-orange-500 capitalize">{key}</td>
-                        <td className="px-4 py-2 border border-orange-500">
-                          {value.boy_tara ||
-                            value.boy_gana ||
-                            value.boy_yoni ||
-                            value.boy_rasi_name ||
-                            value.boy_lord ||
-                            value.boy_vasya ||
-                            value.boy_nadi ||
-                            value.boy_varna ||
-                            "N/A"}
-                        </td>
-                        <td className="px-4 py-2 border border-orange-500">
-                          {value.girl_tara ||
-                            value.girl_gana ||
-                            value.girl_yoni ||
-                            value.girl_rasi_name ||
-                            value.girl_lord ||
-                            value.girl_vasya ||
-                            value.girl_nadi ||
-                            value.girl_varna ||
-                            "N/A"}
-                        </td>
-                        <td className="px-4 py-2 border border-orange-500">{value.score || "N/A"}</td>
-                        <td className="px-4 py-2 border border-orange-500">{value.description || "N/A"}</td>
-                        <td className="px-4 py-2 border border-orange-500">{value.full_score || "N/A"}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )} */}
+        
       </div>
       {data && (
-        <div className="w-full container mx-auto p-4">
-          <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
-          <div className="overflow-x-auto">
-            <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
-              <thead>
-                <tr className="bg-orange-200">
-                  <th className="border border-orange-500 p-2">Category</th>
-                  <th className="border border-orange-500 p-2">Boy</th>
-                  <th className="border border-orange-500 p-2">Girl</th>
-                  <th className="border border-orange-500 p-2">Score</th>
-                  <th className="border border-orange-500 p-2">Description</th>
-                  <th className="border border-orange-500 p-2">Full Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  Object.entries(data).map(([key, value], index) => (
-                    <tr key={index} className="border-t">
-                      <td className="border border-orange-500 p-2 capitalize">{key}</td>
-                      <td className="border border-orange-500 p-2">
-                        {value.boy_tara ||
-                          value.boy_gana ||
-                          value.boy_yoni ||
-                          value.boy_rasi_name ||
-                          value.boy_lord ||
-                          value.boy_vasya ||
-                          value.boy_nadi ||
-                          value.boy_varna ||
-                          "N/A"}
-                      </td>
-                      <td className="border border-orange-500 p-2">
-                        {value.girl_tara ||
-                          value.girl_gana ||
-                          value.girl_yoni ||
-                          value.girl_rasi_name ||
-                          value.girl_lord ||
-                          value.girl_vasya ||
-                          value.girl_nadi ||
-                          value.girl_varna ||
-                          "N/A"}
-                      </td>
-                      <td className="border border-orange-500 p-2">{value.score || "N/A"}</td>
-                      <td className="border border-orange-500 p-2">{value.description || "N/A"}</td>
-                      <td className="border border-orange-500 p-2">{value.full_score || "N/A"}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div ref={section2} > <MatchDetailsTable data={data} /></div>
       )}
 
 
@@ -474,37 +388,76 @@ export default LoveMatching;
 
 
 
-const MatchTable = ({ response }: { response: any }) => {
-  const { score, bot_response, ...details } = response;
+
+const MatchDetailsTable = ({ data }) => {
+  if (!data) return null;
+
+  // Remove score and bot_response from the entries to process
+  const { score, bot_response, ...matchDetails } = data;
+
+  // Get all possible boy and girl property prefixes
+  const boyProperties = ['boy_tara', 'boy_gana', 'boy_yoni', 'boy_rasi_name', 'boy_lord', 'boy_vasya', 'boy_nadi', 'boy_varna'];
+  const girlProperties = ['girl_tara', 'girl_gana', 'girl_yoni', 'girl_rasi_name', 'girl_lord', 'girl_vasya', 'girl_nadi', 'girl_varna'];
+
+  const getBoyValue = (entry) => {
+    for (const prop of boyProperties) {
+      if (entry[1][prop]) return entry[1][prop];
+    }
+    return "N/A";
+  };
+
+  const getGirlValue = (entry) => {
+    for (const prop of girlProperties) {
+      if (entry[1][prop]) return entry[1][prop];
+    }
+    return "N/A";
+  };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4 text-center">Match Details</h1>
+    <div ref={data.sectionRef} className="w-full container mx-auto p-4">
+      <div className="text-center space-y-4 mb-8">
+        <h1 className="text-2xl font-bold">Kundali Match Details</h1>
+        <p className="text-lg font-medium">
+          Total Match Score: {score} out of 36
+        </p>
+        <p className="text-md italic">
+          {bot_response}
+        </p>
+      </div>
+      
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-orange-500 bg-orange-100">
+        <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
           <thead>
             <tr className="bg-orange-200">
-              <th className="px-4 py-2 border border-orange-500">Category</th>
-              <th className="px-4 py-2 border border-orange-500">Boy</th>
-              <th className="px-4 py-2 border border-orange-500">Girl</th>
-              <th className="px-4 py-2 border border-orange-500">Score</th>
-              <th className="px-4 py-2 border border-orange-500">Description</th>
-              <th className="px-4 py-2 border border-orange-500">Full Score</th>
+              <th className="border border-orange-500 p-2">Aspect</th>
+              <th className="border border-orange-500 p-2">Boy's Value</th>
+              <th className="border border-orange-500 p-2">Girl's Value</th>
+              <th className="border border-orange-500 p-2">Score</th>
+              <th className="border border-orange-500 p-2">Maximum Score</th>
+              <th className="border border-orange-500 p-2">Description</th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(details).map(([key, value], index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-2 border border-orange-500 capitalize">{key}</td>
-                <td className="px-4 py-2 border border-orange-500">
-                  {value.boy_tara || value.boy_gana || value.boy_yoni || value.boy_rasi_name || value.boy_lord || value.boy_vasya || value.boy_nadi || value.boy_varna || "N/A"}
+            {Object.entries(matchDetails).map(([key, value], index) => (
+              <tr key={index} className={'bg-orange-100'}>
+                <td className="border border-orange-500 p-2 font-medium capitalize">
+                  {key}
                 </td>
-                <td className="px-4 py-2 border border-orange-500">
-                  {value.girl_tara || value.girl_gana || value.girl_yoni || value.girl_rasi_name || value.girl_lord || value.girl_vasya || value.girl_nadi || value.girl_varna || "N/A"}
+                <td className="border border-orange-500 p-2 capitalize">
+                  {getBoyValue([key, value])}
                 </td>
-                <td className="px-4 py-2 border border-orange-500">{value[key] || "N/A"}</td>
-                <td className="px-4 py-2 border border-orange-500">{value.description || "N/A"}</td>
-                <td className="px-4 py-2 border border-orange-500">{value.full_score || "N/A"}</td>
+                <td className="border border-orange-500 p-2 capitalize">
+                  {getGirlValue([key, value])}
+                </td>
+                <td className="border border-orange-500 p-2 text-center font-medium">
+                  {value[key] || "N/A"}
+                </td>
+                <td className="border border-orange-500 p-2 text-center">
+                  {value.full_score || "N/A"}
+                </td>
+                <td className="border border-orange-500 p-2">
+                  {value.description || "N/A"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -513,6 +466,7 @@ const MatchTable = ({ response }: { response: any }) => {
     </div>
   );
 };
+
 
 
 

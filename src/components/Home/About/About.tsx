@@ -6,25 +6,31 @@ import choose3 from "../../../assets/choose3.svg";
 import choose4 from "../../../assets/choose4.svg";
 import calendar from "../../../assets/calendar.svg";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
   const [selIt, setSelIt] = useState("1");
+  const navigate = useNavigate();
   const items = [
     {
       key: "1",
       value: "Todays Panchang",
+      navigate: "/panchang"
     },
     {
       key: "2",
       value: "Panchang 2024",
+      navigate: "/panchang?year=2024"
     },
     {
       key: "3",
       value: "Panchang 2025",
+      navigate: "/panchang?year=2025"
     },
     {
       key: "4",
       value: "Chogadiya Timings",
+      navigate: "/panchang?chogadiya=true"
     },
   ];
   return (
@@ -146,7 +152,7 @@ const About = () => {
                   ? "bg-secondary-100 text-primary-200"
                   : "bg-secondary-200"
               } rounded-full cursor-pointer`}
-              onClick={() => setSelIt(item.key)}
+              onClick={() => navigate(item.navigate)}
             >
               {item.value}
             </div>

@@ -56,7 +56,8 @@ const Form: React.FC<Props> = ({ onSubmit, setCall }) => {
       const locations = Array.isArray(response.data.response)
         ? response.data.response
         : [];
-      setLocation(locations);
+      const locationOptions = locations.filter((item:Location) => item.country === "IN");
+      setLocation(locationOptions);
     } catch (error) {
       console.error("Error fetching location data:", error);
       setLocation([]);

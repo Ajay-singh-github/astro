@@ -231,211 +231,211 @@ export const shubhMuhrat: ShubhMuhrat = {
     Apr: [
       {
         Date: "Apr 15, 2024 Monday",
-        Time: "Morning: 06:26 AM to 12:10 PM",
+        Time: "Morning: 06:26 AM - 12:10 PM",
       },
       {
         Date: "Apr 26, 2024 Friday",
-        Time: "Morning: 07:17 AM to 01:47 PM",
+        Time: "Morning: 07:17 AM - 01:47 PM",
       },
     ],
     May: [
       {
         Date: "May 3, 2024 Friday",
-        Time: "Morning: 06:49 AM to 11:00 AM",
+        Time: "Morning: 06:49 AM - 11:00 AM",
       },
       {
         Date: "May 6, 2024 Monday",
-        Time: "Morning: 06:38 AM to 01:08 PM",
+        Time: "Morning: 06:38 AM - 01:08 PM",
       },
       {
         Date: "May 9, 2024 Thursday",
-        Time: "Afternoon: 12:56 PM to Evening: 05:30 PM",
+        Time: "Afternoon: 12:56 PM - Evening: 05:30 PM",
       },
       {
         Date: "May 20, 2024 Monday",
-        Time: "Night: 09:25 PM to 11:29 PM",
+        Time: "Night: 09:25 PM - 11:29 PM",
       },
       {
         Date: "May 23, 2024 Thursday",
-        Time: "Afternoon: 02:19 PM to Night: 09:13 PM",
+        Time: "Afternoon: 02:19 PM - Night: 09:13 PM",
       },
       {
         Date: "May 27, 2024 Monday",
-        Time: "Evening: 06:39 PM to Night: 11:01 PM",
+        Time: "Evening: 06:39 PM - Night: 11:01 PM",
       },
       {
         Date: "May 30, 2024",
-        Time: "Morning: 06:59 AM to 09:13 AM",
+        Time: "Morning: 06:59 AM - 09:13 AM",
       },
     ],
     Jun: [
       {
         Date: "Jun 10, 2024 Monday",
-        Time: "5:44 PM to 8:02 PM",
+        Time: "5:44 PM - 8:02 PM",
       },
       {
         Date: "Jun 19, 2024 Wednesday",
-        Time: "9:31 PM to 11:13 PM",
+        Time: "9:31 PM - 11:13 PM",
       },
       {
         Date: "Jun 20, 2024 Thursday",
-        Time: "5:55 AM to 10:11 AM",
+        Time: "5:55 AM - 10:11 AM",
       },
       {
         Date: "Jun 24, 2024 Monday",
-        Time: "7:35 AM to 2:29 PM",
+        Time: "7:35 AM - 2:29 PM",
       },
       {
         Date: "Jun 26, 2024 Wednesday",
-        Time: "9:48 AM to 4:41 PM",
+        Time: "9:48 AM - 4:41 PM",
       },
     ],
     Jul: [
       {
         Date: "Jul 12, 2024 Friday",
-        Time: "3:38 PM to 9:43 PM",
+        Time: "3:38 PM - 9:43 PM",
       },
       {
         Date: "Jul 15, 2024 Monday",
-        Time: "9:31 PM to 10:58 PM",
+        Time: "9:31 PM - 10:58 PM",
       },
       {
         Date: "Jul 22, 2024 Monday",
-        Time: "2:58 PM to 9:03 PM",
+        Time: "2:58 PM - 9:03 PM",
       },
       {
         Date: "Jul 25, 2024 Thursday",
-        Time: "7:09 PM to 10:19 PM",
+        Time: "7:09 PM - 10:19 PM",
       },
     ],
     Aug: [
       {
         Date: "Aug 2, 2024 Friday",
-        Time: "11:56 AM to 2:15 PM",
+        Time: "11:56 AM - 2:15 PM",
       },
       {
         Date: "Aug 7, 2024 Wednesday",
-        Time: "9:28 PM to 10:36 PM",
+        Time: "9:28 PM - 10:36 PM",
       },
       {
         Date: "Aug 9, 2024 Friday",
-        Time: "6:55 AM to 11:28 AM",
+        Time: "6:55 AM - 11:28 AM",
       },
       {
         Date: "Aug 12, 2024 Monday",
-        Time: "6:43 AM to 9:00 AM",
+        Time: "6:43 AM - 9:00 AM",
       },
       {
         Date: "Aug 14, 2024 Wednesday",
-        Time: "11:09 AM to 1:28 PM",
+        Time: "11:09 AM - 1:28 PM",
       },
       {
         Date: "Aug 19, 2024 Monday",
-        Time: "3:27 PM to 7:13 PM",
+        Time: "3:27 PM - 7:13 PM",
       },
       {
         Date: "Aug 23, 2024 Friday",
-        Time: "12:53 PM to 3:11 PM",
+        Time: "12:53 PM - 3:11 PM",
       },
       {
         Date: "Aug 28, 2024 Wednesday",
-        Time: "6:28 AM to 12:33 PM",
+        Time: "6:28 AM - 12:33 PM",
       },
     ],
     Sep: [
       {
         Date: "Sep 4, 2024 Wednesday",
-        Time: "12:05 PM to 6:10 PM",
+        Time: "12:05 PM - 6:10 PM",
       },
       {
         Date: "Sep 5, 2024 Thursday",
-        Time: "7:26 AM to 9:42 AM",
+        Time: "7:26 AM - 9:42 AM",
       },
       {
         Date: "Sep 6, 2024 Friday",
-        Time: "7:22 AM to 9:38 AM",
+        Time: "7:22 AM - 9:38 AM",
       },
       {
         Date: "Sep 16, 2024 Monday",
-        Time: "6:42 AM to 11:18 AM",
+        Time: "6:42 AM - 11:18 AM",
       },
     ],
     Oct: [
       {
         Date: "Oct 4, 2024 Friday",
-        Time: "6:47 AM to 10:08 AM",
+        Time: "6:47 AM - 10:08 AM",
       },
       {
         Date: "Oct 7, 2024 Monday",
-        Time: "2:18 PM to 6:53 PM",
+        Time: "2:18 PM - 6:53 PM",
       },
       {
         Date: "Oct 17, 2024 Thursday",
-        Time: "7:18 AM to 11:35 AM",
+        Time: "7:18 AM - 11:35 AM",
       },
       {
         Date: "Oct 21, 2024 Monday",
-        Time: "9:01 PM to 3:05 AM",
+        Time: "9:01 PM - 3:05 AM",
       },
       {
         Date: "Oct 23, 2024 Wednesday",
-        Time: "2:58 PM to 4:25 PM",
+        Time: "2:58 PM - 4:25 PM",
       },
       {
         Date: "Oct 30, 2024 Wednesday",
-        Time: "8:25 AM to 2:30 PM",
+        Time: "8:25 AM - 2:30 PM",
       },
     ],
     Nov: [
       {
         Date: "Nov 4, 2024 Monday",
-        Time: "7:07 AM to 10:24 AM",
+        Time: "7:07 AM - 10:24 AM",
       },
       {
         Date: "Nov 8, 2024 Friday",
-        Time: "7:50 AM to 1:55 PM",
+        Time: "7:50 AM - 1:55 PM",
       },
       {
         Date: "Nov 11, 2024 Monday",
-        Time: "9:57 AM to 12:00 PM",
+        Time: "9:57 AM - 12:00 PM",
       },
       {
         Date: "Nov 13, 2024 Wednesday",
-        Time: "1:35 PM to 4:27 PM",
+        Time: "1:35 PM - 4:27 PM",
       },
       {
         Date: "Nov 14, 2024 Thursday",
-        Time: "7:26 AM to 11:49 AM",
+        Time: "7:26 AM - 11:49 AM",
       },
       {
         Date: "Nov 20, 2024 Wednesday",
-        Time: "11:25 AM to 4:00 PM",
+        Time: "11:25 AM - 4:00 PM",
       },
       {
         Date: "Nov 25, 2024 Monday",
-        Time: "7:23 AM to 12:48 PM",
+        Time: "7:23 AM - 12:48 PM",
       },
       {
         Date: "Nov 28, 2024 Thursday",
-        Time: "8:50 AM to 2:04 PM",
+        Time: "8:50 AM - 2:04 PM",
       },
       {
         Date: "Nov 29, 2024 Friday",
-        Time: "8:46 AM to 10:50 AM",
+        Time: "8:46 AM - 10:50 AM",
       },
     ],
     Dec: [
       {
         Date: "Dec 5, 2024 Thursday",
-        Time: "1:36 PM to 6:32 PM",
+        Time: "1:36 PM - 6:32 PM",
       },
       {
         Date: "Dec 6, 2024 Friday",
-        Time: "7:32 AM to 12:05 PM",
+        Time: "7:32 AM - 12:05 PM",
       },
       {
         Date: "Dec 25, 2024 Wednesday",
-        Time: "7:43 AM to 10:50 AM",
+        Time: "7:43 AM - 10:50 AM",
       },
     ],
   },
@@ -705,279 +705,279 @@ export const shubhMuhrat: ShubhMuhrat = {
     Jan: [
       {
         Date: "16 Jan 2024, Tuesday",
-        Time: "20:01 to 17 Jan 07:15",
+        Time: "20:01 - 17 Jan 07:15",
       },
       {
         Date: "17 Jan 2023, Wednesday",
-        Time: "07:15 to 21:50",
+        Time: "07:15 - 21:50",
       },
       {
         Date: "20 Jan 2024, Saturday",
-        Time: "03:09 to 21 Jan 07:14",
+        Time: "03:09 - 21 Jan 07:14",
       },
       {
         Date: "21 Jan 2024, Sunday",
-        Time: "07:14 to 07:23",
+        Time: "07:14 - 07:23",
       },
       {
         Date: "22 Jan 2024, Monday",
-        Time: "07:14 to 23 Jan 04:58",
+        Time: "07:14 - 23 Jan 04:58",
       },
       {
         Date: "27 Jan 2024, Saturday",
-        Time: "19:44 to 28 Jan 07:12",
+        Time: "19:44 - 28 Jan 07:12",
       },
       {
         Date: "28 Jan 2024, Sunday",
-        Time: "07:12 to 15:53",
+        Time: "07:12 - 15:53",
       },
       {
         Date: "30 Jan 2024, Tuesday",
-        Time: "10:43 to 31 Jan 07:10",
+        Time: "10:43 - 31 Jan 07:10",
       },
       {
         Date: "31 Jan 2024, Wednesday",
-        Time: "07:10 to 1 Feb 01:08",
+        Time: "07:10 - 1 Feb 01:08",
       },
     ],
 
     Feb: [
       {
         Date: "4 Feb 2024, Sunday",
-        Time: "07:21 to 05 Feb 05:44",
+        Time: "07:21 - 05 Feb 05:44",
       },
       {
         Date: "6 Feb 2024, Tuesday",
-        Time: "13:18 to 07 Feb 06:27",
+        Time: "13:18 - 07 Feb 06:27",
       },
       {
         Date: "7 Feb 2024, Wednesday",
-        Time: "04:37 to 08 Feb 07:05",
+        Time: "04:37 - 08 Feb 07:05",
       },
       {
         Date: "8 Feb 2024, Thursday",
-        Time: "07:05 to 11:17 Uttarashada",
+        Time: "07:05 - 11:17 Uttarashada",
       },
       {
         Date: "12 Feb 2024, Monday",
-        Time: "14:56 to 13 Feb 07:02",
+        Time: "14:56 - 13 Feb 07:02",
       },
       {
         Date: "13 Feb 2024, Tuesday",
-        Time: "14:41 to 14 Feb 05:11",
+        Time: "14:41 - 14 Feb 05:11",
       },
       {
         Date: "17 Feb 2024, Saturday",
-        Time: "08:46 to 13:44",
+        Time: "08:46 - 13:44",
       },
       {
         Date: "24 Feb 2024, Saturday",
-        Time: "13:35 to 22:20",
+        Time: "13:35 - 22:20",
       },
       {
         Date: "25 Feb 2024, Sunday",
-        Time: "01:24 to 26 Feb 06:50",
+        Time: "01:24 - 26 Feb 06:50",
       },
       {
         Date: "26 Feb 2024, Monday",
-        Time: "06:50 to 15:27",
+        Time: "06:50 - 15:27",
       },
       {
         Date: "29 Feb 2024, Thursday",
-        Time: "10:22 to 01 Mar 06:46",
+        Time: "10:22 - 01 Mar 06:46",
       },
     ],
 
     Mar: [
-      { Date: "1 Mar 2024, Friday", Time: "06:46 to 12:48" },
+      { Date: "1 Mar 2024, Friday", Time: "06:46 - 12:48" },
       {
         Date: "2 Mar 2024, Saturday",
-        Time: "20:24 to 03 Mar 06:44",
+        Time: "20:24 - 03 Mar 06:44",
       },
-      { Date: "Mar 3, 2024, Sunday", Time: "06:44 to 15:55" },
+      { Date: "Mar 3, 2024, Sunday", Time: "06:44 - 15:55" },
       {
         Date: "4 Mar 2024, Monday",
-        Time: "22:16 to 05 Mar 06:42",
+        Time: "22:16 - 05 Mar 06:42",
       },
-      { Date: "5 Mar 2024, Tuesday", Time: "06:42 to 14:09" },
+      { Date: "5 Mar 2024, Tuesday", Time: "06:42 - 14:09" },
       {
         Date: "6 Mar 2024, Wednesday",
-        Time: "14:52 to 07 Mar 06:40",
+        Time: "14:52 - 07 Mar 06:40",
       },
       {
         Date: "7 Mar 2024, Thursday",
-        Time: "06:40 to 08:24",
+        Time: "06:40 - 08:24",
       },
       {
         Date: "10 Mar 2024, Sunday",
-        Time: "01:55 to 11 Mar 06:35",
+        Time: "01:55 - 11 Mar 06:35",
       },
       {
         Date: "11 Mar 2024, Monday",
-        Time: "06:35 to 12 Mar 06:34",
+        Time: "06:35 - 12 Mar 06:34",
       },
       {
         Date: "12 Mar 2024, Tuesday",
-        Time: "06:34 to 15:08",
+        Time: "06:34 - 15:08",
       },
     ],
 
     Apr: [
       {
         Date: "18 Apr 2024, Thursday",
-        Time: "00:44 to 19 Apr 05:51",
+        Time: "00:44 - 19 Apr 05:51",
       },
-      { Date: "19 Apr 2024, Friday", Time: "05:51 to 06:46" },
+      { Date: "19 Apr 2024, Friday", Time: "05:51 - 06:46" },
       {
         Date: "20 Apr 2024, Saturday",
-        Time: "14:04 to 21 Apr 02:48",
+        Time: "14:04 - 21 Apr 02:48",
       },
       {
         Date: "21 Apr 2024 Sunday",
-        Time: "03:45 to 22 Apr 05:48",
+        Time: "03:45 - 22 Apr 05:48",
       },
-      { Date: "22 Apr 2024, Monday", Time: "05:48 to 20:00" },
+      { Date: "22 Apr 2024, Monday", Time: "05:48 - 20:00" },
     ],
 
     Jul: [
-      { Date: "9 Jul 2024, Tuesday", Time: "14:28 to 18:56" },
+      { Date: "9 Jul 2024, Tuesday", Time: "14:28 - 18:56" },
       {
         Date: "11 Jul 2024, Thursday",
-        Time: "13:04 to 12 Jul 04:09",
+        Time: "13:04 - 12 Jul 04:09",
       },
       {
         Date: "12 Jul 2024, Friday",
-        Time: "05:15 to 13 Jul 05:32",
+        Time: "05:15 - 13 Jul 05:32",
       },
       {
         Date: "13 Jul 2024, Saturday",
-        Time: "05:32 to 15:05",
+        Time: "05:32 - 15:05",
       },
       {
         Date: "14 Jul 2024, Sunday",
-        Time: "22:06 to 15 Jul 05:33",
+        Time: "22:06 - 15 Jul 05:33",
       },
       {
         Date: "15 Jul 2024, Monday",
-        Time: "05:33 to 16 Jul 00:30",
+        Time: "05:33 - 16 Jul 00:30",
       },
     ],
 
     Nov: [
       {
         Date: "12 Nov 2024, Tuesday",
-        Time: "16:04 to 19:10",
+        Time: "16:04 - 19:10",
       },
       {
         Date: "13 Nov 2024 Wednesday",
-        Time: "15:26 to 21:48",
+        Time: "15:26 - 21:48",
       },
       {
         Date: "16 Nov 2024 Saturday",
-        Time: "23:48 to 17 Nov 06:45",
+        Time: "23:48 - 17 Nov 06:45",
       },
       {
         Date: "17 Nov 2024, Sunday",
-        Time: "06:45 to 18 Nov 06:46",
+        Time: "06:45 - 18 Nov 06:46",
       },
       {
         Date: "18 Nov 2024, Monday",
-        Time: "06:46 to 07:56",
+        Time: "06:46 - 07:56",
       },
       {
         Date: "22 Nov 2024, Friday",
-        Time: "23:44 to 23 Nov 06:50",
+        Time: "23:44 - 23 Nov 06:50",
       },
       {
         Date: "23 Nov 2024, Saturday",
-        Time: "06:50 to 11:42",
+        Time: "06:50 - 11:42",
       },
       {
         Date: "25 Nov 2024, Monday",
-        Time: "01:01 to 26 Nov 06:53",
+        Time: "01:01 - 26 Nov 06:53",
       },
       {
         Date: "26 Nov 2024, Tuesday",
-        Time: "06:53 to 27 Nov 04:35",
+        Time: "06:53 - 27 Nov 04:35",
       },
       {
         Date: "28 Nov 2024, Thursday",
-        Time: "07:36 to 29 Nov 06:55",
+        Time: "07:36 - 29 Nov 06:55",
       },
       {
         Date: "29 Nov 2024, Friday",
-        Time: "06:55 to 08:39",
+        Time: "06:55 - 08:39",
       },
     ],
 
     Dec: [
       {
         Date: "4 Dec 2024, Wednesday",
-        Time: "17:15 to 05 Dec 01:02",
+        Time: "17:15 - 05 Dec 01:02",
       },
       {
         Date: "5 Dec 2024, Thursday",
-        Time: "12:49 to 17:26",
+        Time: "12:49 - 17:26",
       },
       {
         Date: "9 Dec 2024, Monday",
-        Time: "14:56 to 10 Dec 01:06",
+        Time: "14:56 - 10 Dec 01:06",
       },
       {
         Date: "10 Dec 2024, Tuesday",
-        Time: "22:03 to 11 Dec 06:13",
+        Time: "22:03 - 11 Dec 06:13",
       },
       {
         Date: "14 Dec 2024, Saturday",
-        Time: "07:06 to 16:58",
+        Time: "07:06 - 16:58",
       },
       {
         Date: "15 Dec 2024, Sunday",
-        Time: "03:42 to 07:06",
+        Time: "03:42 - 07:06",
       },
     ],
   },
   GrihaPravesh: {
-    Jan: [{ Date: "Jan 3, 2024", Time: "7:14 AM To 2:46 PM" }],
+    Jan: [{ Date: "Jan 3, 2024", Time: "7:14 AM - 2:46 PM" }],
 
     Feb: [
-      { Date: "Feb 12, 2024", Time: "2:56 PM TO 5:44 PM" },
-      { Date: "Feb 14, 2024", Time: "7:01 AM T0 10:43 AM" },
-      { Date: "Feb 19, 2024", Time: "6:57 AM TO 10:33 AM" },
-      { Date: "Feb 26, 2024", Time: "6:50 AM TO 4:30 AM" },
-      { Date: "Feb 28, 2024", Time: "4:18 AM TO 6:47 AM" },
-      { Date: "Feb 29, 2024", Time: "6:47 AM TO 10:22 AM" },
+      { Date: "Feb 12, 2024", Time: "2:56 PM - 5:44 PM" },
+      { Date: "Feb 14, 2024", Time: "7:01 AM - 10:43 AM" },
+      { Date: "Feb 19, 2024", Time: "6:57 AM - 10:33 AM" },
+      { Date: "Feb 26, 2024", Time: "6:50 AM - 4:30 AM" },
+      { Date: "Feb 28, 2024", Time: "4:18 AM - 6:47 AM" },
+      { Date: "Feb 29, 2024", Time: "6:47 AM - 10:22 AM" },
     ],
 
     Mar: [
-      { Date: "Mar 2, 2024", Time: "2:42 PM TO 6:44 AM" },
-      { Date: "Mar 6, 2024", Time: "2:52 PM TO 4:13 AM" },
-      { Date: "Mar 11, 2024", Time: "10:44 AM TO 6:34 AM" },
-      { Date: "Mar 15, 2024", Time: "10:09 PM TO 6:39 AM" },
-      { Date: "Mar 16, 2024", Time: "6: 29 AM TO 9:38 PM" },
-      { Date: "Mar 27, 2024", Time: "6: 17 AM TO 4:16 PM" },
-      { Date: "Mar 29, 2024", Time: "8:36 PM TO 6:13 AM" },
-      { Date: "Mar 30, 2024", Time: "6:13 AM TO 9:13 AM" },
+      { Date: "Mar 2, 2024", Time: "2:42 PM - 6:44 AM" },
+      { Date: "Mar 6, 2024", Time: "2:52 PM - 4:13 AM" },
+      { Date: "Mar 11, 2024", Time: "10:44 AM - 6:34 AM" },
+      { Date: "Mar 15, 2024", Time: "10:09 PM - 6:39 AM" },
+      { Date: "Mar 16, 2024", Time: "6: 29 AM - 9:38 PM" },
+      { Date: "Mar 27, 2024", Time: "6: 17 AM - 4:16 PM" },
+      { Date: "Mar 29, 2024", Time: "8:36 PM - 6:13 AM" },
+      { Date: "Mar 30, 2024", Time: "6:13 AM - 9:13 AM" },
     ],
 
-    Apr: [{ Date: "Apr 3, 2024", Time: "6:29 PM TO 9:47 PM" }],
+    Apr: [{ Date: "Apr 3, 2024", Time: "6:29 PM - 9:47 PM" }],
 
     Nov: [
-      { Date: "Nov 2, 2024", Time: "5: 58 AM TO 6:35 AM" },
-      { Date: "Nov 4, 2024", Time: "6:35 AM TO 8:04 AM" },
-      { Date: "Nov 7, 2024", Time: "12:34 AM TO 6:38 AM" },
-      { Date: "Nov 8, 2024", Time: "6:38 AM TO 12:03 PM" },
-      { Date: "Nov 13, 2024", Time: "1:01 PM TO 3:11 AM" },
-      { Date: "Nov 16, 2024", Time: "7:28 PM TO 6:45 AM" },
-      { Date: "Nov 18, 2024", Time: "6:46 AM TO 3:49 PM" },
-      { Date: "Nov 25, 2024", Time: "6:52 AM TO 1:24 AM" },
+      { Date: "Nov 2, 2024", Time: "5: 58 AM - 6:35 AM" },
+      { Date: "Nov 4, 2024", Time: "6:35 AM - 8:04 AM" },
+      { Date: "Nov 7, 2024", Time: "12:34 AM - 6:38 AM" },
+      { Date: "Nov 8, 2024", Time: "6:38 AM - 12:03 PM" },
+      { Date: "Nov 13, 2024", Time: "1:01 PM - 3:11 AM" },
+      { Date: "Nov 16, 2024", Time: "7:28 PM - 6:45 AM" },
+      { Date: "Nov 18, 2024", Time: "6:46 AM - 3:49 PM" },
+      { Date: "Nov 25, 2024", Time: "6:52 AM - 1:24 AM" },
     ],
 
     Dec: [
-      { Date: "Dec 5, 2024", Time: "12: 40 PM TO 5:26 PM" },
-      { Date: "Dec 11, 2024", Time: "7:04 AM TO 11:48 AM" },
-      { Date: "Dec 21, 2024", Time: "6:14 AM TO 7:10 AM" },
-      { Date: "Dec 25, 2024", Time: "7:12 AM TO 3:22 PM" },
+      { Date: "Dec 5, 2024", Time: "12: 40 PM - 5:26 PM" },
+      { Date: "Dec 11, 2024", Time: "7:04 AM - 11:48 AM" },
+      { Date: "Dec 21, 2024", Time: "6:14 AM - 7:10 AM" },
+      { Date: "Dec 25, 2024", Time: "7:12 AM - 3:22 PM" },
     ],
   },
 };
