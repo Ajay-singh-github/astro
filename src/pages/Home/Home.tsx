@@ -97,7 +97,7 @@ const Home = () => {
 
       <div className="py-8 md:py-20 flex flex-col items-center justify-center">
         <div className="font-bold">
-          <div className="text-xl md:text-3xl ">Welcome to AstroServe</div>
+          <div className="text-xl md:text-3xl ">Welcome to Astro Magic</div>
           <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
             <div className="absolute -top-4 bg-primary-100">
               <img src={moon} className="text-xs" />
@@ -115,7 +115,7 @@ const Home = () => {
             <div
               key={item.key}
               className="cursor-pointer rounded-full text-primary-300 font-bold "
-              onClick={()=>navigate("/horoscope")}
+              onClick={()=>navigate(`/horoscope?zodiac=${item.key}`)}
             >
               <img src={item.img} className=''/>
             </div>
