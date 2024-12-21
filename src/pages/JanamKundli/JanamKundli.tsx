@@ -70,9 +70,9 @@ const JanamKundli = () => {
     },
   ];
   return (
-    <div ref={section} className="px-4 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div ref={section} className="px-4 py-8 md:py-10 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold">
-        <div className="text-xl md:text-5xl ">Janam Kundli</div>
+        <div className="text-xl md:text-4xl font-bold ">Janam Kundli</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />

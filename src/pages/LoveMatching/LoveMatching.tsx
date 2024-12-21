@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Loader from "@/components/Loader/loader";
 import { languages } from "../Horoscope/Horoscope";
-import { VITE_API_KEY } from "@/api/userAPI";
 import Scrollc from "@/lib/scrollc";
+import { VITE_API_KEY } from "@/api/userAPI";
 
 
 type MatchDetailValue = {
@@ -21,7 +21,7 @@ type MatchDetailValue = {
   boy_vasya?: string;
   boy_nadi?: string;
   boy_varna?: string;
-  
+
   // Girl properties
   girl_tara?: string;
   girl_gana?: string;
@@ -32,12 +32,12 @@ type MatchDetailValue = {
   girl_vasya?: string;
   girl_nadi?: string;
   girl_varna?: string;
-  
+
   // Score properties
   score?: number;
   description?: string;
   full_score?: number;
-  
+
   // The specific match type score (e.g., tara: 3, yoni: 4)
   [key: string]: any;
 };
@@ -75,11 +75,13 @@ const LoveMatching = () => {
   const [boyTz, setBoyTz] = useState("");
   const [boyLat, setBoyLat] = useState("");
   const [boyLon, setBoyLon] = useState("");
+  const [boyLocation, setBoyLocation] = useState("");
   const [girlDate, setGirlDate] = useState<Date | null>(null);
   const [girlTime, setGirlTime] = useState("");
   const [girlTz, setGirlTz] = useState("");
   const [girlLat, setGirlLat] = useState("");
   const [girlLon, setGirlLon] = useState("");
+  const [girlLocation, setGirlLocation] = useState("");
   const [lang, setLang] = useState("en");
 
 
@@ -95,7 +97,10 @@ const LoveMatching = () => {
     setGirlTime("");
     setGirlTz("");
     setGirlLat("");
+    setBoyLon("");
+    setBoyLocation("");
     setGirlLon("");
+    setGirlLocation("");
   };
 
   useEffect(() => {
@@ -106,8 +111,12 @@ const LoveMatching = () => {
 
 
   const handleSubmit = async () => {
+    if (boyLocation === "" || boyDate === null || boyTime === "" || boyTz === "" || boyLat === "" || boyLon === "" || girlLocation === "" || girlDate === null || girlTime === "" || girlTz === "" || girlLat === "" || girlLon === "" || lang === "") {
+      alert("Please fill all the fields");
+      return;
+    }
     setLoad(true);
-    
+
     setLoad(false);
 
     if (!boyDate || !boyTime || !boyTz || !boyLat || !boyLon || !girlDate || !girlTime || !girlTz || !girlLat || !girlLon || !lang) {
@@ -138,7 +147,7 @@ const LoveMatching = () => {
         const res = await axios.get(requestUrl);
         console.log(res);
         // Parsing the response into the required format
-        setData(res.data.response);
+        setData(res.data);
 
       } catch (error) {
         console.log(error);
@@ -152,9 +161,9 @@ const LoveMatching = () => {
 
 
   return (
-    <div ref={section} className="px-4 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100 p-4 md:p-12">
+    <div ref={section} className="px-4 md:px-8 py-8 md:py-10 flex flex-col items-center justify-center bg-primary-100 p-4 md:p-12">
       <div className="font-bold mb-4">
-        <div className="text-xl md:text-3xl ">Love Matching</div>
+        <div className="text-xl md:text-4xl ">Love Matching</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />
@@ -253,6 +262,8 @@ const LoveMatching = () => {
               setTz={setBoyTz}
               setLat={setBoyLat}
               setLon={setBoyLon}
+              setLocation={setBoyLocation}
+              location={boyLocation}
             />
             <Form
               name={girlName}
@@ -268,6 +279,8 @@ const LoveMatching = () => {
               setTz={setGirlTz}
               setLat={setGirlLat}
               setLon={setGirlLon}
+              setLocation={setGirlLocation}
+              location={girlLocation}
             />
           </div>
           <div className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl">
@@ -284,7 +297,12 @@ const LoveMatching = () => {
           </div>
           <div
             className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl cursor-pointer"
-            onClick={handleSubmit}
+            onClick={() => {
+              handleSubmit();
+              setGirlLocation("");
+              setBoyLocation("");
+            }}
+
           >
             Match Horoscope
           </div>
@@ -292,12 +310,11 @@ const LoveMatching = () => {
         <div className="mt-4 md:mt-10">
           {load && <Loader />}
         </div>
-        
+
       </div>
       {data && (
-        <div ref={section2} > <MatchDetailsTable data={data} /></div>
+        <div ref={section2} > <MatchDetailsTable data={data} sectionRef={section2} /></div>
       )}
-
 
       <div className="my-6 md:my-[6vw]">
         <div className="font-bold w-max">
@@ -389,32 +406,32 @@ export default LoveMatching;
 
 
 
-const MatchDetailsTable = ({ data }) => {
+const MatchDetailsTable = ({ data, sectionRef }: { data: MatchDetailsData, sectionRef: React.RefObject<HTMLDivElement> }) => {
   if (!data) return null;
 
   // Remove score and bot_response from the entries to process
-  const { score, bot_response, ...matchDetails } = data;
+  const { score, bot_response, ...matchDetails } = data.response;
 
   // Get all possible boy and girl property prefixes
   const boyProperties = ['boy_tara', 'boy_gana', 'boy_yoni', 'boy_rasi_name', 'boy_lord', 'boy_vasya', 'boy_nadi', 'boy_varna'];
   const girlProperties = ['girl_tara', 'girl_gana', 'girl_yoni', 'girl_rasi_name', 'girl_lord', 'girl_vasya', 'girl_nadi', 'girl_varna'];
 
-  const getBoyValue = (entry) => {
+  const getBoyValue = (entry: any) => {
     for (const prop of boyProperties) {
-      if (entry[1][prop]) return entry[1][prop];
+      if (entry?.[1]?.[prop]) return entry[1][prop];
     }
     return "N/A";
   };
 
-  const getGirlValue = (entry) => {
+  const getGirlValue = (entry: any) => {
     for (const prop of girlProperties) {
-      if (entry[1][prop]) return entry[1][prop];
+      if (entry?.[1]?.[prop]) return entry[1][prop];
     }
     return "N/A";
   };
 
   return (
-    <div ref={data.sectionRef} className="w-full container mx-auto p-4">
+    <div ref={sectionRef} className="w-full container mx-auto p-4">
       <div className="text-center space-y-4 mb-8">
         <h1 className="text-2xl font-bold">Kundali Match Details</h1>
         <p className="text-lg font-medium">
@@ -424,7 +441,7 @@ const MatchDetailsTable = ({ data }) => {
           {bot_response}
         </p>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
           <thead>
@@ -453,10 +470,10 @@ const MatchDetailsTable = ({ data }) => {
                   {value[key] || "N/A"}
                 </td>
                 <td className="border border-orange-500 p-2 text-center">
-                  {value.full_score || "N/A"}
+                  {value?.full_score || "N/A"}
                 </td>
                 <td className="border border-orange-500 p-2">
-                  {value.description || "N/A"}
+                  {value?.description || "N/A"}
                 </td>
               </tr>
             ))}

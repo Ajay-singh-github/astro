@@ -1,12 +1,11 @@
 import moon from "../../../assets/moon.svg";
 import kundli from "../../../assets/kunli.svg";
 import { useState } from "react";
-import axios from "axios";
-import Loader from "@/components/Loader/loader";
-import { VITE_API_KEY } from "@/api/userAPI";
 import { languages } from "@/pages/Horoscope/Horoscope";
-import { Location as OptionLocation } from "@/pages/Horoscope/Horoscope";
 import Scrollc from "@/lib/scrollc";
+import Loader from "@/components/Loader/loader";
+import getLocation from "@/utils/getLocation";
+import { VITE_API_KEY } from "@/api/userAPI";
 
 type IndexedObject = {
   name: string;
@@ -97,242 +96,7 @@ const kundaliFaq = [
   },
 ];
 
-const kundliData = {
 
-  0: {
-    name: "As",
-    full_name: "Ascendant",
-    local_degree: 27.569488877783385,
-    global_degree: 87.56948887778339,
-    rasi_no: 3,
-    zodiac: "Gemini",
-    house: 1,
-    nakshatra: "Ashlesha",
-    nakshatra_lord: "Mercury",
-    nakshatra_pada: 1,
-    nakshatra_no: 9,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    lord_status: "Neutral",
-    basic_avastha: "Vriddha",
-    is_combust: false
-  },
-  1: {
-    name: "Su",
-    full_name: "Sun",
-    local_degree: 7.220457066672964,
-    global_degree: 7.220457066672964,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Malefic",
-    is_combust: false
-  },
-  2: {
-    name: "Mo",
-    full_name: "Moon",
-    local_degree: 18.660634460340304,
-    global_degree: 108.6606344603403,
-    rasi_no: 4,
-    zodiac: "Cancer",
-    house: 2,
-    nakshatra: "Ashlesha",
-    nakshatra_lord: "Mercury",
-    nakshatra_pada: 1,
-    nakshatra_no: 9,
-    zodiac_lord: "Moon",
-    is_planet_set: true,
-    basic_avastha: "Vriddha",
-    lord_status: "Neutral",
-    is_combust: false
-  },
-  3: {
-    name: "Ma",
-    full_name: "Mars",
-    local_degree: 4.499931621419634,
-    global_degree: 64.49993162141963,
-    rasi_no: 3,
-    zodiac: "Gemini",
-    house: 1,
-    nakshatra: "Mrigashira",
-    nakshatra_lord: "Mars",
-    nakshatra_pada: 4,
-    nakshatra_no: 5,
-    zodiac_lord: "Mercury",
-    is_planet_set: false,
-    basic_avastha: "Bala",
-    lord_status: "Highly Malefic",
-    is_combust: false,
-  },
-  4: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  5: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  6: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  7: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  8: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  9: {
-    name: "Me",
-    full_name: "Mercury",
-    local_degree: 9.728014687152118,
-    global_degree: 9.728014687152118,
-    rasi_no: 1,
-    zodiac: "Aries",
-    house: 11,
-    nakshatra: "Ashvini",
-    nakshatra_lord: "Ketu",
-    nakshatra_pada: 3,
-    nakshatra_no: 1,
-    zodiac_lord: "Mars",
-    is_planet_set: false,
-    basic_avastha: "Kumara",
-    lord_status: "Benefic",
-    is_combust: true
-  },
-  birth_dasa: "Mercury>Ke>Ve",
-  current_dasa: "Ke>Ke>Ke",
-  birth_dasa_time: "06/01/2018",
-  current_dasa_time: " 30/10/2023",
-  lucky_gem: [
-    "emerald"
-  ],
-  lucky_num: [
-    5
-  ],
-  lucky_colors: [
-    "black",
-    "red"
-  ],
-  lucky_letters: [
-    "D"
-  ],
-  lucky_name_start: [
-    "Di",
-    "Du",
-    "Dae",
-    "Do"
-  ],
-  rasi: "Cancer",
-  nakshatra: "Ashlesha",
-  nakshatra_pada: 1,
-  panchang: {
-    ayanamsa: 24.157071540169,
-    ayanamsa_name: "Lahiri",
-    karana: "Kaulava",
-    yoga: "Soola",
-    day_of_birth: "Wednesday",
-    day_lord: "Mercury",
-    hora_lord: "Sun",
-    sunrise_at_birth: "06:12:00",
-    sunset_at_birth: "18:29:00",
-    tithi: "S.Navami"
-  },
-  ghatka_chakra: {
-    rasi: "Leo",
-    tithi: [
-      "2 (dvitiya)",
-      "7 (saptami)",
-      "12 (dwadasi)"
-    ],
-    day: "Wednesday",
-    nakshatra: "Anuradha",
-    tatva: "Prithvi (Earth)",
-    lord: "Mercury",
-    same_sex_lagna: "Libra",
-    opposite_sex_lagna: "Aries"
-  }
-
-}
 
 
 const Kundli = () => {
@@ -346,42 +110,48 @@ const Kundli = () => {
   const [timezone, setTimezone] = useState<string>("");
   const [language, setLanguage] = useState<string>("en");
   const [data, setData] = useState<KundliData>();
+  const [loading, setLoading] = useState<boolean>(false);
 
 
-  const [locationOptions, setLocationOptions] = useState<OptionLocation[]>([]);
+  // const [locationOptions, setLocationOptions] = useState<OptionLocation[]>([]);
+  const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
 
-  const getLocationOptions = async (city: string) => {
-    if (city.trim() === "") {
-      setLocationOptions([]);
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
-      );
-      const locations = Array.isArray(response.data.response)
-        ? response.data.response
-        : [];
+  // const getLocationOptions = async (city: string) => {
+  //   if (city.trim() === "") {
+  //     setLocationOptions([]);
+  //     return;
+  //   }
+  //   try {
+  //     const response = await axios.get(
+  //       `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=c0f2d604-a6c6-54b2-a6f8-530c3e3dd1f6`
+  //     );
+  //     const locations = Array.isArray(response.data.response)
+  //       ? response.data.response
+  //       : [];
 
-        const locationOptions = locations.filter((item:OptionLocation) => item.country === "IN");
+  //     const locationOptions = locations.filter((item: OptionLocation) => item.country === "IN");
 
-      setLocationOptions(locationOptions);
-      
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setLocationOptions([]);
-    }
-  };
+  //     setLocationOptions(locationOptions);
+
+  //   } catch (error) {
+  //     console.error("Error fetching location data:", error);
+  //     setLocationOptions([]);
+  //   }
+  // };
 
   const handleSubmit = async () => {
+    if(timeOfBirth == "" || dateOfBirth == "" || location == "" || latitude == 0 || longitude == 0 || timezone == ""){
+      alert("Please fill all the fields");
+      return;
+    }
     setLoad(true);
 
     const formattedDob = new Date(dateOfBirth).toLocaleDateString('en-GB'); // Converts to DD/MM/YYYY format
 
     const formattedTob = timeOfBirth;
 
-    const formattedLat = parseFloat(latitude).toFixed(2);
-    const formattedLon = parseFloat(longitude).toFixed(1);
+    const formattedLat = parseFloat(latitude.toString()).toFixed(2);
+    const formattedLon = parseFloat(longitude.toString()).toFixed(1);
 
     const formattedTz = timezone;
 
@@ -407,33 +177,33 @@ const Kundli = () => {
       setLatitude(0);
       setLongitude(0);
       setTimezone("");
+      // @ts-ignore
       setLocationOptions([]);
     }
 
   };
 
-  const renderPlanetaryData = () => {
-    const planets = Object.keys(data).filter((key: any) => !isNaN(key)); // Filters out non-numeric keys
 
-    return planets.map((planetKey) => {
-      const planet = data[planetKey];
-      return (
-        <div key={planetKey} className="">
-          <h3 className="text-md md:text-xl font-bold">{planet.full_name}</h3>
-          <p><strong>Zodiac:</strong> {planet.zodiac} ({planet.rasi_no})</p>
-          <p><strong>House:</strong> {planet.house}</p>
-          <p><strong>Local Degree:</strong> {planet.local_degree}</p>
-          <p><strong>Global Degree:</strong> {planet.global_degree}</p>
-          <p><strong>Nakshatra:</strong> {planet.nakshatra} ({planet.nakshatra_lord})</p>
-          <p><strong>Nakshatra Pada:</strong> {planet.nakshatra_pada}</p>
-          <p><strong>Lord Status:</strong> {planet.lord_status}</p>
-          <p><strong>Basic Avastha:</strong> {planet.basic_avastha}</p>
-          <p><strong>Is Retrograde:</strong> {planet.retro ? "Yes" : "No"}</p>
-          <p><strong>Is Combust:</strong> {planet.is_combust ? "Yes" : "No"}</p>
-        </div>
-      );
-    });
-  };
+
+  //   return planets.map((planetKey) => {
+  //     const planet = data[planetKey];
+  //     return (
+  //       <div key={planetKey} className="">
+  //         <h3 className="text-md md:text-xl font-bold">{planet.full_name}</h3>
+  //         <p><strong>Zodiac:</strong> {planet.zodiac} ({planet.rasi_no})</p>
+  //         <p><strong>House:</strong> {planet.house}</p>
+  //         <p><strong>Local Degree:</strong> {planet.local_degree}</p>
+  //         <p><strong>Global Degree:</strong> {planet.global_degree}</p>
+  //         <p><strong>Nakshatra:</strong> {planet.nakshatra} ({planet.nakshatra_lord})</p>
+  //         <p><strong>Nakshatra Pada:</strong> {planet.nakshatra_pada}</p>
+  //         <p><strong>Lord Status:</strong> {planet.lord_status}</p>
+  //         <p><strong>Basic Avastha:</strong> {planet.basic_avastha}</p>
+  //         <p><strong>Is Retrograde:</strong> {planet.retro ? "Yes" : "No"}</p>
+  //         <p><strong>Is Combust:</strong> {planet.is_combust ? "Yes" : "No"}</p>
+  //       </div>
+  //     );
+  //   });
+  // };
 
   return (
     <div className="text-primary-300 p-4 md:p-12">
@@ -532,29 +302,45 @@ const Kundli = () => {
                   name="city"
                   minLength={3}
                   value={location}
-                  onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value) }}
+                  // @ts-ignore
+                  onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true) }}
 
                   className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                 />
-                {locationOptions.length > 0 && (
-                  <div className="absolute top-[75px] w-full h-[200px] z-10 bg-white overflow-y-auto ">
+                {locationOptions.length > 0 ? (
+                  <div className="absolute  sm:top-[75px] w-full h-[200px] z-10 bg-white overflow-y-auto">
+                    {/* @ts-ignore */}
                     {locationOptions.map((item) => (
                       <div
                         key={item.name}
                         className="p-2 cursor-pointer hover:bg-primary-200"
                         onClick={() => {
                           setLocation(item.name);
-                          setLatitude(item.coordinates[0]);
-                          setLongitude(item.coordinates[1]);
+                          setLatitude(Number(item.coordinates[0]));
+                          setLongitude(Number(item.coordinates[1]));
                           setTimezone(item.tz.toString());
+                          // @ts-ignore
                           setLocationOptions([]);
+                          setLoading(false);
                         }}
                       >
-                        {item.name}
+                        {item.name ? item.name : <Loader />}
                       </div>
                     ))}
                   </div>
+                ) : (
+                  loading && location !== "" && (
+                    <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
+                      <div className="flex items-center flex-col justify-center">
+                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        <div>
+                          Select location from the list...
+                        </div>
+                      </div>
+                    </div>
+                  )
                 )}
+
               </div>
 
               {/* <div className="flex gap-2 md:justify-between">
@@ -570,9 +356,9 @@ const Kundli = () => {
                 </div>
               </div> */}
             </div>
-            <div className="flex items-center justify-center w-full my-2">
+            <div className="flex items-center  justify-center w-full my-2">
               <div
-                className="p-1 px-2 text-primary-200 cursor-pointer bg-secondary-100 font-semibold shadow-md rounded-md text-xl"
+                className="p-1 px-2 mb-4 text-primary-200 cursor-pointer bg-secondary-100 font-semibold shadow-md rounded-md text-xl"
                 onClick={handleSubmit}
               >
                 SHOW KUNDLI
@@ -582,8 +368,8 @@ const Kundli = () => {
         </div>
         <div className="mt-4 md:mt-10" ref={section}>
           <div className="w-full text-center text-xl md:text-3xl">{load}</div>
-          
-          {data && <ZodiacTabs  response={data} />}
+
+          {data && <ZodiacTabs response={data} />}
         </div>
       </div>
       <div className="my-6 md:my-[6vw] w-full">
@@ -616,16 +402,16 @@ const Kundli = () => {
 export default Kundli;
 
 
-
-const ZodiacTabs = ({ response }) => {
+const ZodiacTabs = ({ response }: { response: KundliData }) => {
   // Extract objects 0 to 9
   const items = Object.entries(response).filter(([key]) => parseInt(key, 10) < 10);
+  console.log(items, "items");
 
   // State to track the active tab
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Handle tab click
-  const handleTabClick = (index) => {
+  const handleTabClick = (index: number) => {
     setActiveIndex(index);
   };
 
@@ -641,20 +427,21 @@ const ZodiacTabs = ({ response }) => {
           <button
             key={key}
             onClick={() => handleTabClick(index)}
-            className={`px-2  py-1  my-1 md:my-2 rounded-md border border-orange-500 shadow-md ${
-              activeIndex === index
-                ? "bg-orange-500 text-white"
-                : "bg-orange-100 text-orange-500"
-            } hover:bg-orange-200`}
+            className={`px-2  py-1  my-1 md:my-2 rounded-md border border-orange-500 shadow-md ${activeIndex === index
+              ? "bg-orange-500 text-white"
+              : "bg-orange-100 text-orange-500"
+              } hover:bg-orange-200`}
           >
+            {/* @ts-ignore */}
             {value.zodiac}
           </button>
         ))}
       </div>
 
       <div className="flex sm:hidden justify-center mb-4 space-x-4 flex-wrap">
-        <select className="w-full p-1 rounded-md bg-orange-100 text-orange-500 border border-orange-500 py-2">
+        <select onChange={(e) => handleTabClick(parseInt(e.target.value))} className="w-full p-1 rounded-md bg-orange-100 text-orange-500 border border-orange-500 py-2">
           {items.map(([key, value], index) => (
+            //@ts-ignore
             <option key={key} value={index}>{value.zodiac}</option>
           ))}
         </select>

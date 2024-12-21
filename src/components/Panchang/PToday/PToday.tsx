@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { languages } from "@/pages/Horoscope/Horoscope";
-import { Location as LocationType } from "@/components/more/Form";
-import { VITE_API_KEY } from "@/api/userAPI";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Loader } from "lucide-react";
+import getLocation from "@/utils/getLocation";
+import { VITE_API_KEY } from "@/api/userAPI";
 
 const PToday = () => {
   const [data, setData] = useState<any>(null);
@@ -13,36 +14,20 @@ const PToday = () => {
   const [longitude, setLongitude] = useState("");
   const [timezone, setTimezone] = useState("");
   const [location, setLocation] = useState("");
-  const [locationOptions, setLocationOptions] = useState<LocationType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
 
   const section = useRef<HTMLDivElement>(null);
 
-  const getLocationOptions = async (city: string) => {
-    if (city.trim() === "") {
-      setLocationOptions([]);
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
-      );
-      const locations = Array.isArray(response.data.response)
-        ? response.data.response
-        : [];
-
-      const locationOptions = locations.filter((item: LocationType) => item.country === "IN");
-      setLocationOptions(locationOptions);
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setLocationOptions([]);
-    } finally {
-      setLoad(false);
-    }
-  };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if(location === "" || latitude === "" || longitude === "" || timezone === ""){
+      alert("Please fill all the fields");
+      return;
+    }
     setLoad(true);
+    
     try {
       const formattedDate = `${new Date().getDate().toString().padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`
       const formattedTz = timezone;
@@ -64,6 +49,7 @@ const PToday = () => {
       setLoad(false);
       setLanguage("en");
       setLocation("");
+      // @ts-ignore
       setLocationOptions([]);
       setLatitude("");
       setLongitude("");
@@ -104,13 +90,16 @@ const PToday = () => {
                   minLength={3}
                   value={location}
                   onChange={(e) => {
+                    // @ts-ignore
                     getLocationOptions(e.target.value);
                     setLocation(e.target.value);
+                    setLoading(true);
                   }}
                   className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                 />
-                {locationOptions.length > 0 && (
+                {locationOptions.length > 0 ? (
                   <div className="absolute top-[75px] w-full h-[200px] z-10 bg-white overflow-y-auto">
+                    {/* @ts-ignore */}
                     {locationOptions.map((item) => (
                       <div
                         key={item.name}
@@ -120,13 +109,23 @@ const PToday = () => {
                           setLatitude(item.coordinates[0]);
                           setLongitude(item.coordinates[1]);
                           setTimezone(item.tz.toString());
+                          // @ts-ignore
                           setLocationOptions([]);
+                          setLoading(false);
                         }}
                       >
-                        {item.name}
+                        {item.name ? item.name : <Loader />}
                       </div>
                     ))}
                   </div>
+                ) : (
+                  loading && location !== "" && (
+                    <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
+                      <div className="flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                      </div>
+                    </div>
+                  )
                 )}
               </div>
             </div>
@@ -172,13 +171,13 @@ export default PToday;
 
 const DynamicPanchangTable = ({ data }: { data: any }) => {
   // Helper function to check if a value is an object
-  const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
+  const isObject = (value: any) => value && typeof value === 'object' && !Array?.isArray(value);
 
   // Helper function to format key from snake_case to Title Case
-  const formatKey = (key) => {
+  const formatKey = (key: any) => {
     return key
       .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word: any) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
       .join(' ');
   };
 
@@ -205,7 +204,7 @@ const DynamicPanchangTable = ({ data }: { data: any }) => {
 
     return (
       <div className="mb-6">
-        <h3 className="text-lg text-center bg-orange-200 font-semibold ">{formatKey(sectionName)}</h3>
+        <h3 className="text-lg text-center bg-orange-200 font-semibold border border-orange-500 border-b-0 ">{formatKey(sectionName)}</h3>
         <div className="overflow-x-auto">
           <table className="w-full mb-8 bg-orange-100 rounded-xl p-4 border-collapse border border-orange-500">
             <tbody>{rows}</tbody>

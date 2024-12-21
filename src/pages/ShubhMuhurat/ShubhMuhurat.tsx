@@ -10,22 +10,9 @@ import { PiBowlFood } from "react-icons/pi";
 import Articles from "../../components/common/Articles/Articles";
 import { shubhMuhrat } from "@/constants/constants";
 import { useState } from "react";
+import { MProps, MonthProps,MonthKeys } from "@/constants/types";
 
-type MProps = "Marriage" | "Vehicle" | "Annanprashan" | "Namkaran" | "Mundan" | "GrihaPravesh";
-type MonthProps = "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun" | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec" | "all"
-type MonthKeys =
-  | "Jan"
-  | "Feb"
-  | "Mar"
-  | "Apr"
-  | "May"
-  | "Jun"
-  | "Jul"
-  | "Aug"
-  | "Sep"
-  | "Oct"
-  | "Nov"
-  | "Dec";
+
 
 
 const ShubhMuhurat = () => {
@@ -80,9 +67,9 @@ const ShubhMuhurat = () => {
     );
   };
   return (
-    <div className="py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div className="py-8 md:py-10 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
-        <div className="text-xl md:text-5xl ">Shubhmuhurat Dates</div>
+        <div className="text-xl md:text-4xl font-bold ">Shubhmuhurat Dates</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />

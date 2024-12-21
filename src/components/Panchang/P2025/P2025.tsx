@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
 import Loader from "@/components/Loader/loader";
+import { VITE_API_KEY } from "@/api/userAPI";
+import { HoraTabsTable } from "../P2024/P2024";
 
 const P2025 = () => {
   const [cdate, setCdate] = useState<Date | undefined>(new Date("2025-01-01"));
@@ -10,12 +12,13 @@ const P2025 = () => {
   const [lon, setLon] = useState(0);
   const [data, setData] = useState<any>();
   const [load, setLoad] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   let d = new Date("2025-01-01");
-  if(typeof cdate !== "undefined" && cdate){
+  if (typeof cdate !== "undefined" && cdate) {
     d = cdate;
   }
   const date = `${String(d.getDate()).padStart(2, "0")}/${String(
-    d.getMonth()+1
+    d.getMonth() + 1
   ).padStart(2, "0")}/${d.getFullYear()}`;
   console.log(date);
   const time = `${String(d.getHours()).padStart(2, "0")}:${String(
@@ -41,19 +44,21 @@ const P2025 = () => {
   const getData = async () => {
     handleLoc();
     const res = await axios.get(
-      `https://api.vedicastroapi.com/v3-json/panchang/hora-muhurta?api_key=${process.env.VITE_API_KEY}&date=${date}&tz=5.5&lat=${lat}&lon=${lon}&time=${time}&lang=en`
+      `https://api.vedicastroapi.com/v3-json/panchang/hora-muhurta?api_key=${VITE_API_KEY}&date=${date}&tz=5.5&lat=${lat}&lon=${lon}&time=${time}&lang=en`
     );
 
     if (res.data.status === 200) {
       setData(res.data.response);
       setLoad(false);
+    }else{
+      setError("Something went wrong");
     }
     console.log(res);
   };
 
   useEffect(() => {
     getData();
-    console.log("hi");
+    setError(null);
   }, [cdate]);
   return (
     <div className="px-4 md:px-8 mb-6 md:mb-[4vw]">
@@ -84,40 +89,17 @@ const P2025 = () => {
         />
       </div>
       {load && <Loader />}
+      {error && <div className="flex my-3 items-center justify-center">
+        <div className="w-full max-w-6xl">
+          <div className="text-xl md:text-4xl font-bold text-center">{error}</div>
+        </div>
+      </div>}
       <div className="w-full flex items-center justify-center my-6 md:my-[4vw]">
         {data && (
-          <div>
-            <h1 className="text-xl md:text-3xl font-bold mb-4">Hora Timings</h1>
-
-            <div className="rounded-lg bg-primary-200 p-2 md:p-6">
-              <div className="flex flex-col gap-2 md:gap-4">
-                {data.horas.map((hora: any, index: number) => (
-                  <div
-                    key={index}
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      margin: "10px 0",
-                    }}
-                  >
-                    <h2 className="text-lg md:text-2xl font-bold">
-                      {hora.hora} Hora
-                    </h2>
-                    <p>
-                      <strong>Start Time:</strong> {hora.start}
-                    </p>
-                    <p>
-                      <strong>End Time:</strong> {hora.end}
-                    </p>
-                    <p>
-                      <strong>Benefits:</strong> {hora.benefits}
-                    </p>
-                    <p>
-                      <strong>Lucky Gem:</strong> {hora.lucky_gem}
-                    </p>
-                  </div>
-                ))}
-              </div>
+          <div className="w-full flex items-center justify-center my-6 md:my-[4vw]">
+            <div>
+              <h1 className="text-xl md:text-3xl text-center font-bold mb-4">Hora Timings</h1>
+              <HoraTabsTable data={data} />
             </div>
           </div>
         )}

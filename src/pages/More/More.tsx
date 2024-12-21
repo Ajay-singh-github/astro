@@ -1,158 +1,13 @@
-import { moreItems } from "@/constants/constants";
 import moon from "../../assets/moon.svg";
-import Form from "@/components/more/Form";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { VITE_API_KEY } from "@/api/userAPI";
 import { IoMdClose } from "react-icons/io";
-import { Location as LocationType } from "@/components/more/Form";
 import { languages } from "../Horoscope/Horoscope";
 import Loader from "@/components/Loader/loader";
+import getLocation from "@/utils/getLocation";
+import { VITE_API_KEY } from "@/api/userAPI";
+import { Dosha, Dashas, ExtendedHoroscope } from "@/constants/constants";
 
-const Dosha: { key: string; link: string }[] = [
-  {
-    key: "Mangal Dosh",
-    link: "dosha/mangal-dosh",
-  },
-  {
-    key: "Kaalsarp Dosh",
-    link: "dosha/kaalsarp-dosh",
-  },
-  {
-    key: "Manglik Dosh",
-    link: "dosha/manglik-dosh",
-  },
-  {
-    key: "Pitra Dosh",
-    link: "dosha/pitra-dosh",
-  },
-  {
-    key: "Papasamaya",
-    link: "dosha/papasamaya",
-  },
-];
-
-const Dashas: { key: string; link: string }[] = [
-  {
-    key: "Mahadasha",
-    link: "dosha/maha-dasha",
-  },
-  {
-    key: "Mahadasha Predictions",
-    link: "dashas/maha-dasha-predictions",
-  },
-  {
-    key: "antardasha",
-    link: "dashas/antar-dasha",
-  },
-  {
-    key: "charDashaCurrent",
-    link: "dashas/char-dasha-current",
-  },
-  {
-    key: "CharDashaMain",
-    link: "dashas/char-dasha-main",
-  },
-  {
-    key: "CharDashaSub",
-    link: "dashas/char-dasha-sub",
-  },
-  {
-    key: "currentMahaDashaFull",
-    link: "dashas/current-mahadasha-full",
-  },
-  {
-    key: "CurrentMahadasha",
-    link: "dashas/current-mahadasha",
-  },
-  {
-    key: "ParyantarDasha",
-    link: "dashas/paryantar-dasha",
-  },
-  {
-    key: "SpecificDasha",
-    link: "dashas/specific-sub-dasha",
-  },
-  {
-    key: "yoginiDashaMain",
-    link: "dashas/yogini-dasha-main",
-  },
-  {
-    key: "YoginiDashaSub",
-    link: "dashas/yogini-dasha-sub",
-  },
-];
-
-const ExtendedHoroscope: { key: string; link: string }[] = [
-  {
-    key: "Find Moon Sign",
-    link: "extended-horoscope/find-moon-sign",
-  },
-  {
-    key: "Find Sun Sign",
-    link: "extended-horoscope/find-sun-sign",
-  },
-  {
-    key: "Find ascendant",
-    link: "extended-horoscope/find-ascendant",
-  },
-  {
-    key: "Current Sade Sati",
-    link: "extended-horoscope/current-sade-sati",
-  },
-  {
-    key: "Extended Kundli Details",
-    link: "extended-horoscope/extended-kundli-details",
-  },
-  {
-    key: "Shad Bala",
-    link: "extended-horoscope/shad-bala",
-  },
-  {
-    key: "Sade Sati Table",
-    link: "extended-horoscope/sade-sati-table",
-  },
-  {
-    key: "Friendship Table",
-    link: "extended-horoscope/friendship",
-  },
-  {
-    key: "KP-Houses",
-    link: "extended-horoscope/kp-houses",
-  },
-  {
-    key: "KP-Planets",
-    link: "extended-horoscope/kp-planets",
-  },
-  {
-    key: "Gem Suggestion",
-    link: "extended-horoscope/gem-suggestion",
-  },
-  {
-    key: "Numero Table",
-    link: "extended-horoscope/numero-table",
-  },
-  {
-    key: "Rudraksh Suggestion",
-    link: "extended-horoscope/rudraksh-suggestion",
-  },
-  {
-    key: "Varshapal Details",
-    link: "extended-horoscope/varshapal-details",
-  },
-  {
-    key: "Varshapal Month Chart",
-    link: "extended-horoscope/varshapal-month-chart",
-  },
-  {
-    key: "Varshapal Year Chart",
-    link: "extended-horoscope/varshapal-year-chart",
-  },
-  {
-    key: "List of yogas",
-    link: "extended-horoscope/list-of-yogas",
-  },
-];
 
 const More = () => {
   const [link, setLink] = useState<string>("");
@@ -165,13 +20,16 @@ const More = () => {
   const [longitude, setLongitude] = useState<string>("");
   const [timezone, setTimezone] = useState<string>("");
   const [language, setLanguage] = useState("en");
+  const [error, setError] = useState<string | null>(null);
 
-  const [locationOptions, setLocationOptions] = useState<LocationType[]>([]);
+  const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
 
   const handleSubmit = async () => {
+    
     try {
       // Check if all required fields are filled
       if (!dateofbirth || !timeofbirth || !latitude || !longitude || !timezone) {
@@ -194,19 +52,14 @@ const More = () => {
       // Construct API URL
       const apiUrl = `https://api.vedicastroapi.com/v3-json/${link}?dob=${formattedDateOfBirth}&tob=${formattedTimeOfBirth}&lat=${formattedLatitude}&lon=${formattedLongitude}&tz=${formattedTimezone}&api_key=${VITE_API_KEY}&lang=${language}`;
 
-      console.log("API URL:", apiUrl);
 
       // Make the API call
       const response = await axios.get(apiUrl);
-      if(response.status==200){
+      if (response.status == 200) {
         setData(response.data.response);
-        sectionRef.current.scrollIntoView({
-          behavior: "smooth", 
-          block: "start", 
-        });
       }
-      else{
-        alert("Something went wrong");
+      else {
+        setError("Something went wrong");
       }
 
     } catch (error) {
@@ -219,59 +72,53 @@ const More = () => {
       setLatitude("");
       setLongitude("");
       setTimezone("");
+      setLoading(false);
+      // @ts-ignore
       setLocationOptions([]);
-      sectionRef.current?.scrollIntoView({
-        behavior: "smooth", 
-        block: "start", 
+      sectionRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
     }
   };
 
-
-  const getLocationOptions = async (city: string) => {
-    if (city.trim() === "") {
-      setLocationOptions([]);
-      return;
+  useEffect(() => {
+    if (data && sectionRef.current) {
+      sectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
-    try {
-      const response = await axios.get(
-        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
-      );
-      const locations = Array.isArray(response.data.response)
-        ? response.data.response
-        : [];
-        const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
-      setLocationOptions(locationOptions);
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setLocationOptions([]);
-    }
+    
+  }, [data]);
 
-  };
+
 
   function convertToCapitalizedWords(str: string) {
     return str
       .replace(/([a-z])([A-Z])/g, "$1 $2")
-      .split(" ") 
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) 
-      .join(" "); 
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   }
 
   return (
-    <div className="px-2 md:px-8 py-8 md:py-20 bg-primary-100 w-full">
+    <div className="px-2 md:px-8 py-8 md:py-10 bg-primary-100 w-full">
       {/* heading */}
-      <div className="font-bold mb-4 md:mb-10">
-        <div className="text-xl md:text-5xl mb-6">More in Astrology</div>
-        <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
-          <div className="absolute -top-4 bg-primary-100">
-            <img src={moon} className="text-xs" />
+      <div className = "flex mb-4 md:mb-10 flex-col items-center justify-center w-full">
+        <div className="font-bold text-center w-full md:w-max">
+          <div className="text-xl md:text-4xl font-bold text-center ">More in Astrology</div>
+          <div className="relative my-3 border-b w-full border-primary-300 flex justify-center">
+            <div className="absolute -top-4 bg-primary-100">
+              <img src={moon} className="text-xs" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* components */}
       <div className="">
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col gap-10 w-full">
           <div><h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">Dosha</h1>
             <div className="mt-2 flex flex-wrap gap-2">
               {Dosha.map((item) => (
@@ -305,9 +152,13 @@ const More = () => {
         </div>
         <div>
           {
-            data && <div className="min-h-screen flex mt-10 items-center justify-center">
+            data ? <div className="min-h-screen flex mt-10 items-center justify-center">
               <div className="w-full max-w-6xl" ref={sectionRef} >
                 <TableComponent data={data} link={link} />
+              </div>
+            </div> : error && <div className="min-h-screen flex mt-10 items-center justify-center">
+              <div className="w-full max-w-6xl">
+                <div className="text-xl md:text-4xl font-bold text-center">{error}</div>
               </div>
             </div>
           }
@@ -318,7 +169,8 @@ const More = () => {
           <div className="rounded-lg border-4 border-primary-300 p-2 md:p-4 sm:min-w-[20rem] md:min-w-[30rem] bg-primary-100">
             <div className="p-2 rounded text-center w-full text-xl flex gap-2">
               <span className="w-[90%] text-2xl font-semibold">{link.split("/")[0]?.toUpperCase().replace(/-/g, " ")}</span>
-              <span className="text-2xl flex items-center cursor-pointer" onClick={() => setFormShow(false)}>
+              {/* @ts-ignore */}
+              <span className="text-2xl flex items-center cursor-pointer" onClick={() => { setFormShow(false); setLoading(false); setLocationOptions([]); setLocation(""); setLatitude(""); setLongitude(""); setTimezone(""); }}>
                 <IoMdClose />
               </span>
             </div>
@@ -360,12 +212,15 @@ const More = () => {
                     placeholder="Enter place of birth"
                     className="p-1 border-2 rounded-md w-full cursor-pointer"
                     onChange={(e) => {
+                      setLoading(true);
+                      // @ts-ignore
                       getLocationOptions(e.target.value);
                       setLocation(e.target.value);
                     }}
                   />
-                  {locationOptions.length > 0 && (
+                  {locationOptions.length > 0 ? (
                     <div className="absolute top-[70px] w-full h-[200px] bg-white overflow-y-auto ">
+                      {/* @ts-ignore */}
                       {locationOptions.map((item) => (
                         <div
                           key={item.name}
@@ -375,15 +230,25 @@ const More = () => {
                             setLatitude(item.coordinates[0]);
                             setLongitude(item.coordinates[1]);
                             setTimezone(item.tz.toString());
+                            // @ts-ignore
                             setLocationOptions([]);
+                            setLoading(false);
                           }}
                         >
-                          {item.name ? item.name : <Loader/>}
+                          {item.name ? item.name : <Loader />}
                         </div>
                       ))}
                     </div>
+                  ) : (
+                    loading && location !== "" && (
+                      <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
+                        <div className="flex items-center justify-center">
+                          <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        </div>
+                      </div>
+                    )
                   )
-                }
+                  }
                 </div>
               </div>
               <div className="w-full p-2 text-center border cursor-pointer text-xl bg-secondary-100 text-primary-200 rounded-lg" onClick={handleSubmit}>
@@ -407,10 +272,10 @@ const TableComponent = ({ data, link }: { data: any, link: string }) => {
     if (value === false) {
       return "False";
     }
-    if(value === true){
+    if (value === true) {
       return "True";
     }
-    
+
     // Handle arrays
     if (Array.isArray(value)) {
       return (
@@ -421,7 +286,7 @@ const TableComponent = ({ data, link }: { data: any, link: string }) => {
         </ul>
       );
     }
-    
+
     // Handle objects
     if (typeof value === "object" && value !== null) {
       return (
@@ -429,18 +294,18 @@ const TableComponent = ({ data, link }: { data: any, link: string }) => {
           {Object.entries(value).map(([key, val], index) => (
             <div key={index} className="flex gap-2">
               <span className="font-medium capitalize">{key.replace(/_/g, " ")}:</span>
-              <span>{val === false ? "N/A" : val}</span>
+              <span>{val?.toString()}</span>
             </div>
           ))}
         </div>
       );
     }
-    
+
     // Handle empty strings, null, or undefined
     if (!value && value !== 0) {
       return "N/A";
     }
-    
+
     // Return the value as is
     return value;
   };
@@ -478,6 +343,6 @@ const TableComponent = ({ data, link }: { data: any, link: string }) => {
 
 
 
- 
+
 
 

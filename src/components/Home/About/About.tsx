@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const About = () => {
-  const [selIt, setSelIt] = useState("1");
+  const [selIt] = useState("1");
   const navigate = useNavigate();
   const items = [
     {
@@ -36,7 +36,7 @@ const About = () => {
   return (
     <div className="text-primary-300">
       <div className="font-bold w-max">
-        <div className="text-xl md:text-3xl flex gap-2">
+        <div className="text-xl md:text-xl flex gap-2">
           <span>Unlock the Mysteries</span>
           <span className="hidden md:block">
             of Your Life Through Astrology

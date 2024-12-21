@@ -1,8 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { languages } from "@/pages/Horoscope/Horoscope"
-import axios from "axios";
-import { VITE_API_KEY } from "@/api/userAPI";
-import { Location as LocationType } from "@/components/more/Form";
+import getLocation from "@/utils/getLocation";
 
 
 interface Props {
@@ -12,41 +9,22 @@ interface Props {
   setTz: Dispatch<SetStateAction<string>>;
   setLat: Dispatch<SetStateAction<string>>;
   setLon: Dispatch<SetStateAction<string>>;
+  setLocation: Dispatch<SetStateAction<string>>;
   name: string;
   date: Date | null;
   time: string;
   tz: string;
   lat: string;
   lon: string;
+  location: string;
   setName: Dispatch<SetStateAction<string>>;
 }
-const Form:React.FC<Props> = ({title, setDate, setTime, setTz, setLat, setLon, name, date, time, tz, lat, lon, setName}) => {
+const Form:React.FC<Props> = ({title, setDate, setTime, setTz, setLat, setLon, location, setLocation, name, date, time, setName}) => {
 
-  const [location, setLocation] = useState<string>("");
-  const [locationOptions, setLocationOptions] = useState<LocationType[]>([]);
+  const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const getLocationOptions = async (city: string) => {
-    if (city.trim() === "") {
-      setLocationOptions([]);
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
-      );
-      const locations = Array.isArray(response.data.response)
-        ? response.data.response
-        : [];
-      const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
-      setLocationOptions(locationOptions);
-      console.log(response.data.response);
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setLocationOptions([]);
-    }
-
-  };
-
+ 
   return (
     <div className="rounded-lg border-4 border-secondary-600 bg-secondary-600 p-2 md:p-4 md:min-w-[20rem]">
       <div className="bg-secondary-200 p-2 rounded text-center w-full text-xl">
@@ -90,12 +68,15 @@ const Form:React.FC<Props> = ({title, setDate, setTime, setTz, setLat, setLon, n
               placeholder="Enter place of birth"
               className="p-1 border-2 rounded-md w-full cursor-pointer"
                     onChange={(e) => {
+                      // @ts-ignore
                       getLocationOptions(e.target.value);
                       setLocation(e.target.value);
+                      setLoading(true);
                     }}
                   />
-                  {locationOptions.length > 0 && (
+                  {locationOptions.length > 0 ? (
                     <div className="absolute top-[70px] w-full h-[200px] bg-white overflow-y-auto ">
+                      {/* @ts-ignore */}
                       {locationOptions.map((item) => (
                         <div
                           key={item.name}
@@ -105,13 +86,23 @@ const Form:React.FC<Props> = ({title, setDate, setTime, setTz, setLat, setLon, n
                             setLat(item.coordinates[0]);
                             setLon(item.coordinates[1]);
                             setTz(item.tz.toString());
+                            // @ts-expect-error
                             setLocationOptions([]);
+                            setLoading(false);
                           }}
                         >
                           {item.name}
                         </div>
                       ))}
                     </div>
+                  ):(
+                    loading && location !== "" && (
+                      <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
+                        <div className="flex items-center justify-center">
+                          <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        </div>
+                      </div>
+                    )
                   )}
                 </div>
               </div>

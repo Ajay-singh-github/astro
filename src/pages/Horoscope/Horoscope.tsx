@@ -27,10 +27,10 @@ import Articles from "../../components/common/Articles/Articles";
 import Passage, { PassageForWeekly, PassageForYearly } from "../../components/Horoscope/Passage/Passage";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { VITE_API_KEY } from "@/api/userAPI";
 import Loader from "@/components/Loader/loader";
 import { useNavigate } from "react-router-dom";
 import Scrollc from "@/lib/scrollc";
+import { VITE_API_KEY } from "@/api/userAPI";
 
 
 export type HoroscopeProps = {
@@ -58,9 +58,29 @@ export type HoroscopeProps = {
       score: number;
       split_response: string;
     };
+    travel: {
+      score: number;
+      split_response: string;
+    };
+    family: {
+      score: number;
+      split_response: string;
+    };
+    friends: {
+      score: number;
+      split_response: string;
+    };
+    health: {
+      score: number;
+      split_response: string;
+    };
+    total_score: {
+      score: number;
+      split_response: string;
+    };
   };
   zodiac: string;
-
+  
 };
 
 export type HoroscopePropWeekly = {
@@ -80,44 +100,44 @@ export type HoroscopePropWeekly = {
   zodiac: string;
 };
 
-type Phase = {
-  score: number;
-  period: string;
-  prediction: string;
-  health: {
-    score: number;
-    prediction: string;
-  };
-  career: {
-    score: number;
-    prediction: string;
-  };
-  relationship: {
-    score: number;
-    prediction: string;
-  };
-  travel: {
-    score: number;
-    prediction: string;
-  };
-  family: {
-    score: number;
-    prediction: string;
-  };
-  friends: {
-    score: number;
-    prediction: string;
-  };
-  finances: {
-    score: number;
-    prediction: string;
-  };
-  status: {
-    score: number;
-    prediction: string;
-  };
+// type Phase = {
+//   score: number;
+//   period: string;
+//   prediction: string;
+//   health: {
+//     score: number;
+//     prediction: string;
+//   };
+//   career: {
+//     score: number;
+//     prediction: string;
+//   };
+//   relationship: {
+//     score: number;
+//     prediction: string;
+//   };
+//   travel: {
+//     score: number;
+//     prediction: string;
+//   };
+//   family: {
+//     score: number;
+//     prediction: string;
+//   };
+//   friends: {
+//     score: number;
+//     prediction: string;
+//   };
+//   finances: {
+//     score: number;
+//     prediction: string;
+//   };
+//   status: {
+//     score: number;
+//     prediction: string;
+//   };
 
-};
+// };
 
 
 
@@ -255,15 +275,17 @@ const Horoscope = () => {
   const section = Scrollc();
   const section2 = useRef<HTMLDivElement>(null);
   const [type, setType] = useState("daily");
-  const [year, setYear] = useState<string>(new Date().getFullYear().toString());
+  const [year, ] = useState<string>(new Date().getFullYear().toString());
   const [lang, setLang] = useState<string>("en");
 
   const [data, setData] = useState<HoroscopeProps | null>(null);
+  const [error, setError] = useState<boolean>(false);
   const [dataWeekly, setDataWeekly] = useState<HoroscopePropWeekly | null>(null);
+  const [weeklyError, setWeeklyError] = useState<boolean>(false);
   const [dataYearly, setDataYearly] = useState(null);
+  const [yearlyError, setYearlyError] = useState<boolean>(false);
 
   const [load, setLoad] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
 
   const date = new Date(Date.now());
@@ -282,9 +304,11 @@ const Horoscope = () => {
           `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}&split=true&type=big`
         );
         if (res.data.status === 200) {
+          console.log(res.data.response,"res.data.response");
           setIm(item.img);
           setData(res.data.response);
         } else {
+          setError(true);
           setData(null);
         }
         console.log(res);
@@ -302,11 +326,18 @@ const Horoscope = () => {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/weekly-sun?zodiac=${item.key}&week=thisweek&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}`
         );
+        console.log(res, "----------------------");
+        if (res.data.status === 200) {
+          setIm(item.img);
+          setDataWeekly(res.data.response);
+        } else {
+          setWeeklyError(true);
+          setDataWeekly(null);
+        }
         console.log(res);
-        setIm(item.img);
-        setDataWeekly(res.data.response);
+        
       } catch (error) {
-        setError(true);
+        setWeeklyError(true);
         console.log(error);
       } finally {
         setLoad(false);
@@ -319,15 +350,16 @@ const Horoscope = () => {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/yearly?year=2024&zodiac=${item.key}&api_key=${VITE_API_KEY}&lang=${lang}`
         );
-        if (res.data.response) {
+        if (res.data.status === 200) {  
           setIm(item.img);
           setDataYearly(res.data.response);
           console.log(item.img);
         } else {
+          setYearlyError(true);
           setDataYearly(null);
         }
       } catch (error) {
-        setError(true);
+        setYearlyError(true);
         console.log(error);
       } finally {
         setLoad(false);
@@ -348,13 +380,13 @@ const Horoscope = () => {
       handleClick(zodiacList[0])
     }
     
-  }, [lang, type, year, error])
+  }, [lang, type, year, error, weeklyError, yearlyError])
 
 
   return (
-    <div ref={section} className="py-8 md:py-20 bg-primary-100 px-4 md:px-8">
+    <div ref={section} className="py-8 md:py-10 bg-primary-100 px-4 md:px-8">
       <div className="xl:grid xl:grid-cols-3 items-center justify-center">
-        <div className=" items-center gap-4 justify-center xl:flex hidden">
+        <div className=" items-center gap-4  justify-center xl:flex hidden">
           <div> Language:{" "} </div>
           <select
             className="p-2 rounded-md border "
@@ -366,7 +398,7 @@ const Horoscope = () => {
           </select>
         </div>
         <div className="flex flex-col justify-between items-center">
-          <div className="text-xl md:text-4xl ">Free Horoscope</div>
+          <div className="text-xl md:text-4xl font-bold ">Free Horoscope</div>
           <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
             <div className="absolute -top-4 bg-primary-100">
               <img src={moon} className="text-xs" />
@@ -375,8 +407,8 @@ const Horoscope = () => {
         </div>
         <div>
           <div className="flex gap-7 flex-wrap items-center justify-center mt-4 md:mt-0">
-            <div className=" items-center justify-center xl:hidden flex">
-              <div> Language:{" "} </div>
+            <div className=" items-center gap-4 justify-center xl:hidden flex">
+              <div> Language:{"   "} </div>
               <select
                 className="p-2 rounded-md border"
                 onChange={(e) => setLang(e.target.value)}
@@ -398,23 +430,7 @@ const Horoscope = () => {
               </select>
             </div>
 
-            {/* {type === "yearly" && (
-              <div className="flex gap-4 items-center">
-                Select Year:{" "}
-                <select
-                  className="p-2 rounded-md border"
-                  onChange={(e) => setYear(e.target.value)}
-                >
-                  <option value="2024">2024</option>
-                  <option value="2023">2023</option>
-                  <option value="2022">2022</option>
-                  <option value="2021">2021</option>
-                  <option value="2020">2020</option>
-                  <option value="2019">2019</option>
-                  <option value="2018">2018</option>
-                </select>
-              </div>
-            )} */}
+            
           </div>
         </div>
       </div>
@@ -446,7 +462,7 @@ const Horoscope = () => {
                     <Loader />
                   </div>
                 ) : (
-                  <Passage error={error} data={data} img={im} zodiacName={zodiacName} />
+                  <Passage  data={data} img={im} />
                 )
               ) : (
                 <div className="w-full p-12 text-center text-xl md:text-3xl">

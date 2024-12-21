@@ -6,28 +6,11 @@ import P2025 from "../../components/Panchang/P2025/P2025";
 import CTimings from "../../components/Panchang/CTimings/CTimings";
 import Articles from "../../components/common/Articles/Articles";
 import Scrollc from "@/lib/scrollc";
-
+import { items } from "@/constants/constants";
 const Panchang = () => {
   const [selIt, setSelIt] = useState("1");
   const section = Scrollc();
-  const items = [
-    {
-      key: "1",
-      value: "Todays Panchang",
-    },
-    {
-      key: "2",
-      value: "Panchang 2024",
-    },
-    {
-      key: "3",
-      value: "Panchang 2025",
-    },
-    {
-      key: "4",
-      value: "Chogadiya Timings",
-    },
-  ];
+  
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -47,10 +30,11 @@ const Panchang = () => {
     }
     setSelIt("1");
   }, []);
+  
   return (
-    <div ref={section} className="py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div ref={section} className="py-8 md:py-10 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold">
-        <div className="text-xl md:text-3xl ">Panchang</div>
+        <div className="text-xl md:text-4xl ">Panchang</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />

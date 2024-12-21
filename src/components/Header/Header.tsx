@@ -1,4 +1,3 @@
-import { CiSearch } from "react-icons/ci";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
@@ -67,7 +66,7 @@ const Header = () => {
         <div className="px-4 w-full cursor-pointer flex items-center text-2xl md:text-4xl font-semibold text-primary-300"
         onClick={() => navigate("/")}
         >
-          Astro Magic
+          Astromazik
         </div>
         <div className="flex gap-3 md:gap-8 items-center w-full justify-end text-xs md:text-base">
           <div

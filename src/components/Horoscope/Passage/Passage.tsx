@@ -1,22 +1,14 @@
-import { HoroscopeProps, HoroscopePropWeekly, HoroscopePropYearly } from "@/pages/Horoscope/Horoscope";
+import { HoroscopeProps, HoroscopePropWeekly } from "@/pages/Horoscope/Horoscope";
 import moon from "../../../assets/moon.svg";
 import { useState } from "react";
 
-const Passage = ({ data, img, error }: { data: HoroscopeProps; img: string, error: boolean }) => {
+const Passage = ({ data, img }: { data: HoroscopeProps; img: string }) => {
   const { lucky_color, lucky_color_code, lucky_number, bot_response, zodiac } = data;
 
   return (
     <div>
       {
-        error ? (
-          <div className="w-full p-12 text-center text-xl md:text-3xl">
-            <div className="w-full h-[200px] flex items-center justify-center">
-              <div className="w-full h-[200px] flex items-center justify-center">
-                <span className="text-xl md:text-3xl font-semibold">Something went wrong</span>
-              </div>
-            </div>
-          </div>
-        ) : (
+        data && (
           <div className="p-4 md:p-10 font-sans space-y-8">
             {/* Header Section */}
             <div className="w-full flex items-center justify-center">
@@ -53,6 +45,12 @@ const Passage = ({ data, img, error }: { data: HoroscopeProps; img: string, erro
                   </td>
                 </tr>
                 <tr>
+                  <td className="border border-orange-500 p-2">Lucky Color Code</td>
+                  <td className="border border-orange-500 p-2" >
+                    {lucky_color_code}
+                  </td>
+                </tr>
+                <tr>
                   <td className="border border-orange-500 p-2">Lucky Numbers</td>
                   <td className="border border-orange-500 p-2">{lucky_number?.join(", ")}</td>
                 </tr>
@@ -76,8 +74,10 @@ const Passage = ({ data, img, error }: { data: HoroscopeProps; img: string, erro
                         <td className="border border-orange-500 p-2">
                           {category.charAt(0).toUpperCase() + category.slice(1)}
                         </td>
-                        <td className="border border-orange-500 p-2">{bot_response[category].score}</td>
-                        <td className="border border-orange-500 p-2">{bot_response[category].split_response}</td>
+                        {/* @ts-ignore */}
+                        <td className="border border-orange-500 p-2">{bot_response[category]?.score }</td>
+                        {/* @ts-ignore */}
+                        <td className="border border-orange-500 p-2">{bot_response[category]?.split_response}</td>
                       </tr>
                     );
                   }
@@ -97,11 +97,11 @@ const Passage = ({ data, img, error }: { data: HoroscopeProps; img: string, erro
               <tbody>
                 <tr>
                   <td className="border border-orange-500 p-2">Total Score</td>
-                  <td className="border border-orange-500 p-2">{bot_response.total_score.score}</td>
+                  <td className="border border-orange-500 p-2">{bot_response?.total_score?.score}</td>
                 </tr>
                 <tr>
                   <td className="border border-orange-500 p-2">Message</td>
-                  <td className="border border-orange-500 p-2">{bot_response.total_score.split_response}</td>
+                  <td className="border border-orange-500 p-2">{bot_response?.total_score?.split_response}</td>
                 </tr>
               </tbody>
             </table>
@@ -119,8 +119,8 @@ export default Passage;
 export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly; img: string }) => {
   const {
     lucky_color,
-    lucky_color_code,
     lucky_number,
+    lucky_color_code,
     bot_response,
     zodiac,
     total_score,
@@ -169,6 +169,11 @@ export const PassageForWeekly = ({ data, img }: { data: HoroscopePropWeekly; img
             <td className="border border-orange-500 p-2" >
               {lucky_color}
             </td>
+          </tr>
+          
+          <tr>
+            <td className="border border-orange-500 p-2">Lucky Color Code</td>
+            <td className="border border-orange-500 p-2">{lucky_color_code}</td>
           </tr>
           <tr>
             <td className="border border-orange-500 p-2">Lucky Numbers</td>
@@ -279,7 +284,7 @@ export const PassageForYearly = ({
     Object.keys(data)[0]
   );
 
-  const renderTable = (phase: HoroscopePhase, zodiacName: string) => (
+  const renderTable = (phase: HoroscopePhase,) => (
     <div className="overflow-x-auto">
       <table className="w-full h-full bg-orange-100 rounded-xl border-collapse border border-orange-500">
         <thead>
@@ -351,7 +356,7 @@ export const PassageForYearly = ({
       <h1 className="text-2xl w-full flex justify-center font-semibold text-center text-orange-500">
         {renderHeading(data[selectedPhase]?.period ?? "")}
       </h1>
-      {renderTable(data[selectedPhase], zodiacName)}
+      {renderTable(data[selectedPhase])}
     </div>
   );
 };

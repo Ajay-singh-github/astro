@@ -981,3 +981,168 @@ export const shubhMuhrat: ShubhMuhrat = {
     ],
   },
 };
+
+export const items = [
+  {
+    key: "1",
+    value: "Todays Panchang",
+  },
+  {
+    key: "2",
+    value: "Panchang 2024",
+  },
+  {
+    key: "3",
+    value: "Panchang 2025",
+  },
+  {
+    key: "4",
+    value: "Chogadiya Timings",
+  },
+];
+
+export const Dosha: { key: string; link: string }[] = [
+  {
+    key: "Mangal Dosh",
+    link: "dosha/mangal-dosh",
+  },
+  {
+    key: "Kaalsarp Dosh",
+    link: "dosha/kaalsarp-dosh",
+  },
+  {
+    key: "Manglik Dosh",
+    link: "dosha/manglik-dosh",
+  },
+  {
+    key: "Pitra Dosh",
+    link: "dosha/pitra-dosh",
+  },
+  {
+    key: "Papasamaya",
+    link: "dosha/papasamaya",
+  },
+];
+
+export const Dashas: { key: string; link: string }[] = [
+  {
+    key: "Mahadasha",
+    link: "dosha/maha-dasha",
+  },
+  {
+    key: "Mahadasha Predictions",
+    link: "dashas/maha-dasha-predictions",
+  },
+  {
+    key: "antardasha",
+    link: "dashas/antar-dasha",
+  },
+  {
+    key: "charDashaCurrent",
+    link: "dashas/char-dasha-current",
+  },
+  {
+    key: "CharDashaMain",
+    link: "dashas/char-dasha-main",
+  },
+  {
+    key: "CharDashaSub",
+    link: "dashas/char-dasha-sub",
+  },
+  {
+    key: "currentMahaDashaFull",
+    link: "dashas/current-mahadasha-full",
+  },
+  {
+    key: "CurrentMahadasha",
+    link: "dashas/current-mahadasha",
+  },
+  {
+    key: "ParyantarDasha",
+    link: "dashas/paryantar-dasha",
+  },
+  {
+    key: "SpecificDasha",
+    link: "dashas/specific-sub-dasha",
+  },
+  {
+    key: "yoginiDashaMain",
+    link: "dashas/yogini-dasha-main",
+  },
+  {
+    key: "YoginiDashaSub",
+    link: "dashas/yogini-dasha-sub",
+  },
+];
+
+export const ExtendedHoroscope: { key: string; link: string }[] = [
+  {
+    key: "Find Moon Sign",
+    link: "extended-horoscope/find-moon-sign",
+  },
+  {
+    key: "Find Sun Sign",
+    link: "extended-horoscope/find-sun-sign",
+  },
+  {
+    key: "Find ascendant",
+    link: "extended-horoscope/find-ascendant",
+  },
+  {
+    key: "Current Sade Sati",
+    link: "extended-horoscope/current-sade-sati",
+  },
+  {
+    key: "Extended Kundli Details",
+    link: "extended-horoscope/extended-kundli-details",
+  },
+  {
+    key: "Shad Bala",
+    link: "extended-horoscope/shad-bala",
+  },
+  {
+    key: "Sade Sati Table",
+    link: "extended-horoscope/sade-sati-table",
+  },
+  {
+    key: "Friendship Table",
+    link: "extended-horoscope/friendship",
+  },
+  {
+    key: "KP-Houses",
+    link: "extended-horoscope/kp-houses",
+  },
+  {
+    key: "KP-Planets",
+    link: "extended-horoscope/kp-planets",
+  },
+  {
+    key: "Gem Suggestion",
+    link: "extended-horoscope/gem-suggestion",
+  },
+  {
+    key: "Numero Table",
+    link: "extended-horoscope/numero-table",
+  },
+  {
+    key: "Rudraksh Suggestion",
+    link: "extended-horoscope/rudraksh-suggestion",
+  },
+  {
+    key: "Varshapal Details",
+    link: "extended-horoscope/varshapal-details",
+  },
+  {
+    key: "Varshapal Month Chart",
+    link: "extended-horoscope/varshapal-month-chart",
+  },
+  {
+    key: "Varshapal Year Chart",
+    link: "extended-horoscope/varshapal-year-chart",
+  },
+  {
+    key: "List of yogas",
+    link: "extended-horoscope/list-of-yogas",
+  },
+];
+

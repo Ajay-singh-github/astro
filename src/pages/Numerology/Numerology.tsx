@@ -1,31 +1,13 @@
 import { useRef, useState } from "react";
 import moon from "../../assets/moon.svg";
 import Articles from "../../components/common/Articles/Articles";
-import axios from "axios";
-import { VITE_API_KEY } from "@/api/userAPI";
-import { Location as LocationType } from "@/components/more/Form";
 import { languages } from "../Horoscope/Horoscope";
 import Loader from "@/components/Loader/loader";
+import getLocation from "@/utils/getLocation";
 
+import { VITE_API_KEY } from "@/api/userAPI";
+import { NumerologyData } from "@/constants/types";
 
-type NumerologyData = {
-  radical_number: number;
-  radical_ruler: string;
-  characteristics: string[];
-  fav_color: string;
-  fav_day: string;
-  fav_god: string;
-  fav_mantra: string;
-  fav_metal: string;
-  fav_stone: string;
-  fav_substone: string;
-  friendly_num: string;
-  evil_num: string;
-  neutral_num: string;
-  destiny: number;
-  name_number: number;
-  date_considered: string;
-}
 
 
 const Numerology = () => {
@@ -40,28 +22,34 @@ const Numerology = () => {
   const [language, setLanguage] = useState("en")
 
 
-  const [locationOptions, setLocationOptions] = useState<LocationType[]>([])
+  const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
   const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<NumerologyData>();
 
-  const sectionRef = useRef(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const sectionRef = useRef<HTMLDivElement>(null);
 
 
   const handleSubmit = async () => {
+    if(location === "" || latitude === "" || longitude === "" || timezone === ""){
+      alert("Please fill all the fields");
+      return;
+    }
     setLoad(true);
     // Format date of birth (DD/MM/YYYY)
-    const formattedDateOfBirth = new Date(dateofbirth).toLocaleDateString("en-GB");
+    const formattedDateOfBirth = dateofbirth ? new Date(dateofbirth).toLocaleDateString("en-GB") : "";
 
     // Format time of birth (HH:MM)
-    const timeParts = new Date(timeofbirth).toTimeString().split(":");
-    const formattedTimeOfBirth = `${timeParts[0]}:${timeParts[1]}`;
+    const timeParts = timeofbirth ? new Date(timeofbirth).toTimeString().split(":") : [];
+    const formattedTimeOfBirth = timeParts.length > 1 ? `${timeParts[0]}:${timeParts[1]}` : "";
 
     // Format timezone (jumps of 0.5)
-    const formattedTimezone = parseFloat(timezone).toFixed(1);
+    const formattedTimezone = timezone ? parseFloat(timezone).toFixed(1) : "";
 
     // Format latitude and longitude (decimals)
-    const formattedLatitude = parseFloat(latitude).toFixed(6);
-    const formattedLongitude = parseFloat(longitude).toFixed(6);
+    const formattedLatitude = latitude ? parseFloat(latitude).toFixed(6) : "";
+    const formattedLongitude = longitude ? parseFloat(longitude).toFixed(6) : "";
 
     // Construct the API URL with parameters
     const apiUrl = `https://api.vedicastroapi.com/v3-json/extended-horoscope/numero-table?name=${encodeURIComponent(
@@ -78,7 +66,7 @@ const Numerology = () => {
       const result = await response.json();
 
       setData(result.response);
-      sectionRef.current.scrollIntoView({
+      sectionRef?.current?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
@@ -96,29 +84,10 @@ const Numerology = () => {
     }
   };
 
-  const getLocationOptions = async (city: string) => {
-    if (city.trim() === "") {
-      setLocationOptions([]);
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=${VITE_API_KEY}`
-      );
-      const locations = Array.isArray(response.data.response)
-        ? response.data.response
-        : [];
-      const locationOptions = locations.filter((item:LocationType) => item.country === "IN");
-      setLocationOptions(locationOptions);
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setLocationOptions([]);
-    }
-  };
   return (
-    <div className="px-2 md:px-8 py-8 md:py-20 flex flex-col items-center justify-center bg-primary-100">
+    <div className="px-2 md:px-8 py-8 md:py-10 flex flex-col items-center justify-center bg-primary-100">
       <div className="font-bold mb-4 md:mb-10">
-        <div className="text-xl md:text-5xl mb-6">Numerology Calculator</div>
+        <div className="text-xl md:text-4xl font-bold mb-6">Numerology Calculator</div>
         <div className="w-full relative my-3 border-b border-primary-300 flex justify-center">
           <div className="absolute -top-4 bg-primary-100">
             <img src={moon} className="text-xs" />
@@ -220,27 +189,39 @@ const Numerology = () => {
                 type="text"
                 value={location}
                 className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-                onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value) }}
+                // @ts-ignore
+                onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true) }}
               />
-              {locationOptions.length > 0 && (
-                <div className="absolute top-[90px] w-full h-[200px] bg-white overflow-y-auto ">
-                  {locationOptions.map((item) => (
-                    <div
-                      key={item.name}
-                      className="p-2 cursor-pointer hover:bg-primary-200"
-                      onClick={() => {
-                        setLocation(item.name);
-                        setLatitude(item.coordinates[0]);
-                        setLongitude(item.coordinates[1]);
-                        setTimezone(item.tz.toString());
-                        setLocationOptions([]);
-                      }}
-                    >
-                      {item.name}
+              {locationOptions.length > 0 ? (
+                  <div className="absolute top-[90px] w-full h-[200px] z-10 bg-white overflow-y-auto">
+                    {/* @ts-ignore */}
+                    {locationOptions.map((item) => (
+                      <div
+                        key={item.name}
+                        className="p-2 cursor-pointer hover:bg-primary-200"
+                        onClick={() => {
+                          setLocation(item.name);
+                          setLatitude(item.coordinates[0]);
+                          setLongitude(item.coordinates[1]);
+                          setTimezone(item.tz.toString());
+                          // @ts-ignore
+                          setLocationOptions([]);
+                          setLoading(false);
+                        }}
+                      >
+                        {item.name ? item.name : <Loader />}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  loading && location !== "" && (
+                    <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
+                      <div className="flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  )
+                )}
             </div>
           </div>
           <div className="flex w-full items-center justify-center">
@@ -272,7 +253,7 @@ const Numerology = () => {
                   </thead>
                   <tbody className="bg-orange-100">
                     {Object.keys(data).slice(0, Math.ceil(Object.keys(data).length / 2)).map((key) => {
-                      const value = data[key];
+                      const value = data[key as keyof typeof data];
                       return (
                         <tr key={key} className="border-t border-orange-500">
                           <td className="border border-orange-500 p-2 font-semibold capitalize">
@@ -307,7 +288,7 @@ const Numerology = () => {
                   </thead>
                   <tbody className="bg-orange-100">
                     {Object.keys(data).slice(Math.ceil(Object.keys(data).length / 2)).map((key) => {
-                      const value = data[key];
+                      const value = data[key as keyof typeof data];
                       return (
                         <tr key={key} className="border-t border-orange-500">
                           <td className="border border-orange-500 p-2 font-semibold capitalize">
@@ -347,7 +328,7 @@ const Numerology = () => {
                   </thead>
                   <tbody className="bg-orange-100">
                     {Object.keys(data).map((key) => {
-                      const value = data[key];
+                      const value = data[key as keyof typeof data];
                       return (
                         <tr key={key} className="border-t border-orange-500">
                           <td className="border border-orange-500 p-2 font-semibold capitalize">
