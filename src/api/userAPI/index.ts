@@ -137,4 +137,4 @@ export const USERS = {
 };
 
 
-export const VITE_API_KEY="9d50bf50-1a92-507d-b96f-f49bde06999f"
+export const VITE_API_KEY="947def4e-11b7-5f1e-87dd-39f0cdaa6a3d"
