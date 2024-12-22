@@ -112,36 +112,33 @@ const Kundli = () => {
   const [data, setData] = useState<KundliData>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [errorDate, setErrorDate] = useState<string | null>(null);
+  const [errorTime, setErrorTime] = useState<string | null>(null);
+  const [errorLocation, setErrorLocation] = useState<string | null>(null);
+
 
   // const [locationOptions, setLocationOptions] = useState<OptionLocation[]>([]);
   const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
 
-  // const getLocationOptions = async (city: string) => {
-  //   if (city.trim() === "") {
-  //     setLocationOptions([]);
-  //     return;
-  //   }
-  //   try {
-  //     const response = await axios.get(
-  //       `https://api.vedicastroapi.com/v3-json/utilities/geo-search?city=${city}&api_key=c0f2d604-a6c6-54b2-a6f8-530c3e3dd1f6`
-  //     );
-  //     const locations = Array.isArray(response.data.response)
-  //       ? response.data.response
-  //       : [];
 
-  //     const locationOptions = locations.filter((item: OptionLocation) => item.country === "IN");
+  const validate = () => {
+    if(dateOfBirth == ""){
+      setErrorDate("Date of Birth is required");
+      return false;
+    }
+    if(timeOfBirth == ""){
+      setErrorTime("Time of Birth is required");
+      return false;
+    }
+    if(location == ""){
+      setErrorLocation("Location is required");
+      return false;
+    }
+    return true;
+  }
 
-  //     setLocationOptions(locationOptions);
-
-  //   } catch (error) {
-  //     console.error("Error fetching location data:", error);
-  //     setLocationOptions([]);
-  //   }
-  // };
-
-  const handleSubmit = async () => {
-    if(timeOfBirth == "" || dateOfBirth == "" || location == "" || latitude == 0 || longitude == 0 || timezone == ""){
-      alert("Please fill all the fields");
+    const handleSubmit = async () => {
+    if(!validate()){
       return;
     }
     setLoad(true);
@@ -185,26 +182,7 @@ const Kundli = () => {
 
 
 
-  //   return planets.map((planetKey) => {
-  //     const planet = data[planetKey];
-  //     return (
-  //       <div key={planetKey} className="">
-  //         <h3 className="text-md md:text-xl font-bold">{planet.full_name}</h3>
-  //         <p><strong>Zodiac:</strong> {planet.zodiac} ({planet.rasi_no})</p>
-  //         <p><strong>House:</strong> {planet.house}</p>
-  //         <p><strong>Local Degree:</strong> {planet.local_degree}</p>
-  //         <p><strong>Global Degree:</strong> {planet.global_degree}</p>
-  //         <p><strong>Nakshatra:</strong> {planet.nakshatra} ({planet.nakshatra_lord})</p>
-  //         <p><strong>Nakshatra Pada:</strong> {planet.nakshatra_pada}</p>
-  //         <p><strong>Lord Status:</strong> {planet.lord_status}</p>
-  //         <p><strong>Basic Avastha:</strong> {planet.basic_avastha}</p>
-  //         <p><strong>Is Retrograde:</strong> {planet.retro ? "Yes" : "No"}</p>
-  //         <p><strong>Is Combust:</strong> {planet.is_combust ? "Yes" : "No"}</p>
-  //       </div>
-  //     );
-  //   });
-  // };
-
+  
   return (
     <div className="text-primary-300 p-4 md:p-12">
       <div className="font-bold w-max">
@@ -285,13 +263,15 @@ const Kundli = () => {
                 </select>
               </div>
               <div className="flex md:flex-col justify-between gap-2">
-                <div>
+                <div className = "flex flex-col gap-1">
                   <label className="font-bold"> Date of Birth</label>
-                  <input className="w-full p-1 rounded-md" type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)}></input>
-                </div>
-                <div>
+                  <input className="w-full p-1 rounded-md" type="date" value={dateOfBirth} onChange={(e) => {setDateOfBirth(e.target.value); setErrorDate(null)}}></input>
+                  {errorDate && <span className="text-red-500 text-sm">{errorDate}</span>}
+                </div>  
+                <div className = "flex flex-col gap-1"  >
                   <label className="font-bold"> Time of Birth</label>
-                  <input className="w-full p-1 rounded-md" type="time" value={timeOfBirth} onChange={(e) => setTimeOfBirth(e.target.value)}></input>
+                  <input className="w-full p-1 rounded-md" type="time" value={timeOfBirth} onChange={(e) => {setTimeOfBirth(e.target.value); setErrorTime(null)}}></input>
+                  {errorTime && <span className="text-red-500 text-sm">{errorTime}</span>}
                 </div>
               </div>
               <div className="flex flex-col gap-1 md:basis-2/3 mb-2 relative">
@@ -303,10 +283,11 @@ const Kundli = () => {
                   minLength={3}
                   value={location}
                   // @ts-ignore
-                  onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true) }}
+                  onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true); setErrorLocation(null) }}
 
                   className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                 />
+                {errorLocation && <span className="text-red-500 text-sm">{errorLocation}</span>}
                 {locationOptions.length > 0 ? (
                   <div className="absolute  sm:top-[75px] w-full h-[200px] z-10 bg-white overflow-y-auto">
                     {/* @ts-ignore */}

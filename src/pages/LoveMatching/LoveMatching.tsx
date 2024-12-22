@@ -84,6 +84,78 @@ const LoveMatching = () => {
   const [girlLocation, setGirlLocation] = useState("");
   const [lang, setLang] = useState("en");
 
+  const [boyNameError, setBoyNameError] = useState<string | null>(null);
+  const [girlNameError, setGirlNameError] = useState<string | null>(null);
+  const [boyDateError, setBoyDateError] = useState<string | null>(null);
+  const [boyTimeError, setBoyTimeError] = useState<string | null>(null);
+  const [boyLocationError, setBoyLocationError] = useState<string | null>(null);
+  const [girlDateError, setGirlDateError] = useState<string | null>(null);
+  const [girlTimeError, setGirlTimeError] = useState<string | null>(null);
+  const [girlLocationError, setGirlLocationError] = useState<string | null>(null);
+  const validateInput = () => {
+    if (boyName === "") {
+      setBoyNameError("Name is required");
+      return false;
+    }
+    if (girlName === "") {
+      setGirlNameError("Name is required");
+      return false;
+    }
+    if (boyDate === null) {
+      setBoyDateError("Date is required");
+      return false;
+    }
+    if (girlDate === null) {
+      setGirlDateError("Date is required");
+      return false;
+    }
+    if (boyTime === "") {
+      setBoyTimeError("Time is required");
+      return false;
+    }
+    if (girlTime === "") {
+      setGirlTimeError("Time is required");
+      return false;
+    }
+    if (boyLocation === "") {
+      setBoyLocationError("Location is required");
+      return false;
+    }
+    if (girlLocation === "") {
+      setGirlLocationError("Location is required");
+      return false;
+    }
+    if (boyTz === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    if (boyLat === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    if (boyLon === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    
+    
+    if (girlTz === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    if (girlLat === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    if (girlLon === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    
+    return true;
+
+  }
+
 
   const clearFormFields = () => {
     setBoyName("");
@@ -111,18 +183,13 @@ const LoveMatching = () => {
 
 
   const handleSubmit = async () => {
-    if (boyLocation === "" || boyDate === null || boyTime === "" || boyTz === "" || boyLat === "" || boyLon === "" || girlLocation === "" || girlDate === null || girlTime === "" || girlTz === "" || girlLat === "" || girlLon === "" || lang === "") {
-      alert("Please fill all the fields");
+    if (!validateInput()) {
       return;
     }
     setLoad(true);
 
     setLoad(false);
 
-    if (!boyDate || !boyTime || !boyTz || !boyLat || !boyLon || !girlDate || !girlTime || !girlTz || !girlLat || !girlLon || !lang) {
-      alert("Please fill all the fields");
-      return;
-    }
 
     if (boyDate && boyTime && boyTz && boyLat && boyLon && girlDate && girlTime && girlTz && girlLat && girlLon && lang) {
       try {
@@ -264,6 +331,14 @@ const LoveMatching = () => {
               setLon={setBoyLon}
               setLocation={setBoyLocation}
               location={boyLocation}
+              errorName={boyNameError}
+              errorDate={boyDateError}
+              errorTime={boyTimeError}
+              errorLocation={boyLocationError}
+              setErrorName={setBoyNameError}
+              setErrorDate={setBoyDateError}
+              setErrorTime={setBoyTimeError}
+              setErrorLocation={setBoyLocationError}
             />
             <Form
               name={girlName}
@@ -281,6 +356,14 @@ const LoveMatching = () => {
               setLon={setGirlLon}
               setLocation={setGirlLocation}
               location={girlLocation}
+              errorName={girlNameError}
+              errorDate={girlDateError}
+              errorTime={girlTimeError}
+              errorLocation={girlLocationError}
+              setErrorName={setGirlNameError}
+              setErrorDate={setGirlDateError}
+              setErrorTime={setGirlTimeError}
+              setErrorLocation={setGirlLocationError}
             />
           </div>
           <div className="w-full text-primary-200 rounded-full bg-secondary-100 text-center p-1 my-2 text-xl">

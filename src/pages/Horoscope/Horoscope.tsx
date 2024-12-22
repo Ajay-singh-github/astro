@@ -80,7 +80,7 @@ export type HoroscopeProps = {
     };
   };
   zodiac: string;
-  
+
 };
 
 export type HoroscopePropWeekly = {
@@ -275,7 +275,7 @@ const Horoscope = () => {
   const section = Scrollc();
   const section2 = useRef<HTMLDivElement>(null);
   const [type, setType] = useState("daily");
-  const [year, ] = useState<string>(new Date().getFullYear().toString());
+  const [year,] = useState<string>(new Date().getFullYear().toString());
   const [lang, setLang] = useState<string>("en");
 
   const [data, setData] = useState<HoroscopeProps | null>(null);
@@ -304,7 +304,7 @@ const Horoscope = () => {
           `https://api.vedicastroapi.com/v3-json/prediction/daily-sun?zodiac=${item.key}&date=${d}/${m}/${y}&show_same=true&api_key=${VITE_API_KEY}&lang=${lang}&split=true&type=big`
         );
         if (res.data.status === 200) {
-          console.log(res.data.response,"res.data.response");
+          console.log(res.data.response, "res.data.response");
           setIm(item.img);
           setData(res.data.response);
         } else {
@@ -335,7 +335,7 @@ const Horoscope = () => {
           setDataWeekly(null);
         }
         console.log(res);
-        
+
       } catch (error) {
         setWeeklyError(true);
         console.log(error);
@@ -350,7 +350,7 @@ const Horoscope = () => {
         const res = await axios.get(
           `https://api.vedicastroapi.com/v3-json/prediction/yearly?year=2024&zodiac=${item.key}&api_key=${VITE_API_KEY}&lang=${lang}`
         );
-        if (res.data.status === 200) {  
+        if (res.data.status === 200) {
           setIm(item.img);
           setDataYearly(res.data.response);
           console.log(item.img);
@@ -379,7 +379,7 @@ const Horoscope = () => {
     } else {
       handleClick(zodiacList[0])
     }
-    
+
   }, [lang, type, year, error, weeklyError, yearlyError])
 
 
@@ -411,7 +411,7 @@ const Horoscope = () => {
               <div> Language:{"   "} </div>
               <select
                 className="p-2 rounded-md border"
-                onChange={(e) => setLang(e.target.value)}
+                onChange={(e) => { setLang(e.target.value); setYearlyError(false); setWeeklyError(false); setError(false) }}
               >
                 {languages.map((item) => (
                   <option value={item.key} key={item.key}>{item.value}</option>
@@ -422,7 +422,7 @@ const Horoscope = () => {
               <div>Sort By:</div>
               <select
                 className="p-2 rounded-md border"
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => { setType(e.target.value); setYearlyError(false); setWeeklyError(false); setError(false) }}
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -430,7 +430,7 @@ const Horoscope = () => {
               </select>
             </div>
 
-            
+
           </div>
         </div>
       </div>
@@ -445,6 +445,9 @@ const Horoscope = () => {
               handleClick(item);
               setZodiacName(item.value);
               navigate(`/horoscope?zodiac=${item.key}`);
+              setYearlyError(false);
+              setWeeklyError(false);
+              setError(false);
             }}
           >
             <img src={item.logo} className="" />
@@ -454,7 +457,7 @@ const Horoscope = () => {
       </div>
       <div ref={section2} className="w-full">
         {
-          data ? (
+          yearlyError || weeklyError || error ? <div className="w-full p-[15%] text-center text-xl md:text-3xl text-red-500">Something went wrong</div> : data ? (
             type === "daily" ? (
               data ? (
                 load ? (
@@ -462,7 +465,7 @@ const Horoscope = () => {
                     <Loader />
                   </div>
                 ) : (
-                  <Passage  data={data} img={im} />
+                  <Passage data={data} img={im} />
                 )
               ) : (
                 <div className="w-full p-12 text-center text-xl md:text-3xl">

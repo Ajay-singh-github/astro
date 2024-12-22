@@ -17,13 +17,30 @@ const PToday = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
 
+  const [errorLocation, setErrorLocation] = useState<string | null>(null);
+
   const section = useRef<HTMLDivElement>(null);
+
+  const validateInput = () => {
+    if (location === "") {
+      setErrorLocation("Location is required");
+      return false;
+    }
+    if (latitude === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    if (longitude === "") {
+      alert("Something went wrong");
+      return false;
+    }
+    return true;
+  }
 
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if(location === "" || latitude === "" || longitude === "" || timezone === ""){
-      alert("Please fill all the fields");
+    if(!validateInput()){
       return;
     }
     setLoad(true);
@@ -94,10 +111,12 @@ const PToday = () => {
                     getLocationOptions(e.target.value);
                     setLocation(e.target.value);
                     setLoading(true);
+                    setErrorLocation(null);
                   }}
                   className="rounded-md border p-1 px-2 focus:outline-none focus:ring-0"
                 />
-                {locationOptions.length > 0 ? (
+                {errorLocation && <span className="text-red-500 text-sm">{errorLocation}</span>}
+                {locationOptions.length > 0 && location !== "" ? (
                   <div className="absolute top-[75px] w-full h-[200px] z-10 bg-white overflow-y-auto">
                     {/* @ts-ignore */}
                     {locationOptions.map((item) => (
@@ -121,8 +140,11 @@ const PToday = () => {
                 ) : (
                   loading && location !== "" && (
                     <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
-                      <div className="flex items-center justify-center">
-                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                      <div className="flex items-center flex-col justify-center">
+                        <div className="w-8 h-8 border-4 text-sm border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        <div className="text-sm">
+                          Select location from the list...
+                        </div>
                       </div>
                     </div>
                   )

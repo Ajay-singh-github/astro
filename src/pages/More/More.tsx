@@ -28,17 +28,40 @@ const More = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
 
+  const [errorDate, setErrorDate] = useState<string | null>(null);
+  const [errorTime, setErrorTime] = useState<string | null>(null);
+  const [errorLocation, setErrorLocation] = useState<string | null>(null);
+
+
+  const validateInput = () => {
+    if (dateofbirth == null) {
+      setErrorDate("Date is required");
+      return false;
+
+    }
+    if (timeofbirth == null) {
+      setErrorTime("Time is required");
+      return false;
+    }
+    if (location=="") {
+      setErrorLocation("Location is required");
+      return false;
+    }
+    return true;
+  }
+
+
   const handleSubmit = async () => {
+    if (!validateInput()) {
+      return;
+    }
     
     try {
       // Check if all required fields are filled
-      if (!dateofbirth || !timeofbirth || !latitude || !longitude || !timezone) {
-        alert("Please fill all the fields");
-        return;
-      }
+      
 
       // Format date of birth (DD/MM/YYYY)
-      const formattedDateOfBirth = dateofbirth.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
+      const formattedDateOfBirth = dateofbirth?.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
 
       // Format time of birth (HH:MM)
       const formattedTimeOfBirth = timeofbirth;
@@ -183,29 +206,34 @@ const More = () => {
             </div>
             <div className="flex flex-col gap-2 w-full md:text-lg my-4">
               <label>Birth Date</label>
-              <div className="flex justify-between gap-4">
+              <div className="flex flex-col justify-between gap-4">
                 <input
                   type="date"
                   placeholder="DD/MM/YYYY"
                   className="p-1 border-2 rounded-md w-full cursor-pointer"
-                  onChange={(e) => setDateofbirth(new Date(e.target.value))}
+                  onChange={(e) => {
+                    setDateofbirth(new Date(e.target.value));
+                    setErrorDate(null);
+                  }}
                 />
+                {errorDate && <span className="text-red-500 text-sm">Date is required</span>}
               </div>
 
               <label>Birth Time</label>
-              <div className="flex justify-between gap-4">
+              <div className="flex flex-col justify-between gap-4">
                 <input
                   type="time"
                   className="p-1 border-2 rounded-md w-full cursor-pointer"
                   onChange={(e) => {
                     setTimeofbirth(e.target.value);
+                    setErrorTime(null);
                   }}
                 />
-
+                {errorTime && <span className="text-red-500 text-sm">Time is required</span>}
               </div>
               <div className="relative">
                 <label>Location</label>
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-col justify-between gap-4">
                   <input
                     type="text"
                     value={location}
@@ -216,9 +244,11 @@ const More = () => {
                       // @ts-ignore
                       getLocationOptions(e.target.value);
                       setLocation(e.target.value);
+                      setErrorLocation(null);
                     }}
                   />
-                  {locationOptions.length > 0 ? (
+                  {errorLocation && <span className="text-red-500 text-sm">Location is required</span>}
+                  {locationOptions.length > 0 && location !== "" ? (
                     <div className="absolute top-[70px] w-full h-[200px] bg-white overflow-y-auto ">
                       {/* @ts-ignore */}
                       {locationOptions.map((item) => (
@@ -242,10 +272,13 @@ const More = () => {
                   ) : (
                     loading && location !== "" && (
                       <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
-                        <div className="flex items-center justify-center">
-                          <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                      <div className="flex items-center flex-col justify-center">
+                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        <div>
+                          Select location from the list...
                         </div>
                       </div>
+                    </div>
                     )
                   )
                   }

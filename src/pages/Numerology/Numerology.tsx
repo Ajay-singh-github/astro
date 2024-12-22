@@ -26,14 +26,39 @@ const Numerology = () => {
   const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<NumerologyData>();
 
+  const [errorDate, setErrorDate] = useState<string | null>(null);
+  const [errorTime, setErrorTime] = useState<string | null>(null);
+  const [errorLocation, setErrorLocation] = useState<string | null>(null);
+  const [errorName, setErrorName] = useState<string | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  const validateInput = () => {
+    if (dateofbirth == null) {
+      setErrorDate("Date is required");
+      return false;
+    }
+    if (timeofbirth == null) {
+      setErrorTime("Time is required");
+      return false;
+    }
+    if (name == "") {
+      setErrorName("Name is required");
+      return false;
+    }
+    if (location == "") {
+      setErrorLocation("Location is required");
+      return false;
+    }
+    
+    return true;
+  }
+
 
   const handleSubmit = async () => {
-    if(location === "" || latitude === "" || longitude === "" || timezone === ""){
-      alert("Please fill all the fields");
+    if(!validateInput()){
       return;
     }
     setLoad(true);
@@ -155,8 +180,12 @@ const Numerology = () => {
             <input
               type="date"
               className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-              onChange={(e) => setDateofbirth(e.target.valueAsDate)}
+              onChange={(e) => {
+                setDateofbirth(e.target.valueAsDate);
+                setErrorDate(null);
+              }}
             />
+            {errorDate && <span className="text-red-500 text-sm">{errorDate}</span>}
           </div>
           <div className="flex flex-col gap-2 md:gap-4 w-full">
             <label className="md:text-xl">
@@ -165,21 +194,29 @@ const Numerology = () => {
             <input
               type="time"
               className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
-              onChange={(e) => setTimeofbirth(e.target.valueAsDate)}
+              onChange={(e) => {
+                setTimeofbirth(e.target.valueAsDate);
+                setErrorTime(null);
+              }}
             />
+            {errorTime && <span className="text-red-500 text-sm">{errorTime}</span>}
           </div>
           <div className="flex flex-col gap-2 md:gap-4 w-full">
             <label className="md:text-xl">
               To Calcultate Personality, Destiny and Soul Number
             </label>
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2 flex-col w-full">
               <input
                 type="text"
                 value={name}
                 className="w-[100%] rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 placeholder="Name"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setErrorName(null);
+                }}
               />
+              {errorName && <span className="text-red-500 text-sm">{errorName}</span>}
             </div>
             <div className="relative flex flex-col gap-2 md:gap-4 w-full">
               <label className="md:text-xl">
@@ -190,9 +227,10 @@ const Numerology = () => {
                 value={location}
                 className="w-full rounded-md p-2 px-4 focus:outline-none focus:ring-0"
                 // @ts-ignore
-                onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true) }}
+                onChange={(e) => { getLocationOptions(e.target.value); setLocation(e.target.value); setLoading(true); setErrorLocation(null); }}
               />
-              {locationOptions.length > 0 ? (
+              {errorLocation && <span className="text-red-500 text-sm">{errorLocation}</span>}
+              {locationOptions.length > 0 && location !== "" ? (
                   <div className="absolute top-[90px] w-full h-[200px] z-10 bg-white overflow-y-auto">
                     {/* @ts-ignore */}
                     {locationOptions.map((item) => (
@@ -216,8 +254,11 @@ const Numerology = () => {
                 ) : (
                   loading && location !== "" && (
                     <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
-                      <div className="flex items-center justify-center">
+                      <div className="flex items-center flex-col justify-center">
                         <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                        <div>
+                          Select location from the list...
+                        </div>
                       </div>
                     </div>
                   )
