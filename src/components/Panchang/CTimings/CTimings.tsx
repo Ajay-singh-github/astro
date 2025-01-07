@@ -52,8 +52,12 @@ const PToday = () => {
       const formattedLon = parseFloat(longitude).toFixed(1);
       const formattedTime = `${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}`
 
-      const res = await axios.get(`https://api.vedicastroapi.com/v3-json/panchang/panchang?api_key=${VITE_API_KEY}&date=${formattedDate}&tz=${formattedTz}&lat=${formattedLat}&lon=${formattedLon}&time=${formattedTime}&lang=${language}`);
-
+      const res = await axios.get(`https://api.vedicastroapi.com/v3-json/panchang/choghadiya-muhurta?api_key=${VITE_API_KEY}&date=${formattedDate}&tz=${formattedTz}&lat=${formattedLat}&lon=${formattedLon}&time=${formattedTime}&lang=${language}`);
+      console.log("EEEEEEEEEEEEEEE:",res)
+      
+      const resh  = await axios.get(`https://api.vedicastroapi.com/v3-json/panchang/hora-muhurta?api_key=${VITE_API_KEY}&date=${formattedDate}&tz=${formattedTz}&lat=${formattedLat}&lon=${formattedLon}&time=${formattedTime}&lang=${language}`)
+       console.log("HURA MUHURAT",resh)
+     
       setData(res.data); // Store the response data
       setLoad(false);
     } catch (error) {

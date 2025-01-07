@@ -170,7 +170,7 @@ const About = () => {
           </div>
         </div>
 
-        <div className="bg-secondary-700 md:p-[5vw] pd-4">
+        <div className="bg-secondary-700 md:p-[5vw] pd-4  rounded-3xl">
           <div className="w-full text-center font-bold text-xl md:text-3xl mb-2 md:mb-6">
             Explore Your Cosmic Journey
           </div>

@@ -13,8 +13,8 @@ const Articles = () => {
   const navigate = useNavigate()
   
   return (
-    <div className="">
-      <div className=" px-4 md:px-8">
+    <div>
+      <div>
         <div className="border-b w-full border-primary-300 flex justify-between items-center">
           <div className="text-xl md:text-3xl mb-2">Articles</div>
           <div className="flex items-center justify-center gap-2 md:gap-4">

@@ -439,6 +439,7 @@ export const shubhMuhrat: ShubhMuhrat = {
       },
     ],
   },
+  
   Namkaran: {
     Jan: [
       { Date: "Wed, Jan 03", Time: "07:14:25 - 31:14:24" },

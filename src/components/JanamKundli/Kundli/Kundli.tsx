@@ -1,11 +1,12 @@
 import moon from "../../../assets/moon.svg";
 import kundli from "../../../assets/kunli.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { languages } from "@/pages/Horoscope/Horoscope";
 import Scrollc from "@/lib/scrollc";
 import Loader from "@/components/Loader/loader";
 import getLocation from "@/utils/getLocation";
 import { VITE_API_KEY } from "@/api/userAPI";
+// import { Console } from "node:console";
 
 type IndexedObject = {
   name: string;
@@ -122,23 +123,23 @@ const Kundli = () => {
 
 
   const validate = () => {
-    if(dateOfBirth == ""){
+    if (dateOfBirth == "") {
       setErrorDate("Date of Birth is required");
       return false;
     }
-    if(timeOfBirth == ""){
+    if (timeOfBirth == "") {
       setErrorTime("Time of Birth is required");
       return false;
     }
-    if(location == ""){
+    if (location == "") {
       setErrorLocation("Location is required");
       return false;
     }
     return true;
   }
 
-    const handleSubmit = async () => {
-    if(!validate()){
+  const handleSubmit = async () => {
+    if (!validate()) {
       return;
     }
     setLoad(true);
@@ -155,7 +156,7 @@ const Kundli = () => {
     const formattedLang = language ? language : 'en'; // Default to 'en' if not provided
 
     const apiUrl = `https://api.vedicastroapi.com/v3-json/horoscope/planet-details?dob=${formattedDob}&tob=${formattedTob}&lat=${formattedLat}&lon=${formattedLon}&tz=${formattedTz}&api_key=${VITE_API_KEY}&lang=${formattedLang}`;
-
+    console.log("dateof birrth", dateOfBirth)
     // Fetch the data from the API
     try {
       const response = await fetch(apiUrl);
@@ -167,13 +168,13 @@ const Kundli = () => {
     } finally {
       setLoad(false);
       section.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setLanguage("en");
-      setDateOfBirth("");
-      setTimeOfBirth("");
-      setLocation("");
-      setLatitude(0);
-      setLongitude(0);
-      setTimezone("");
+      // setLanguage("en");
+      // setDateOfBirth("");
+      // setTimeOfBirth("");
+      // setLocation("");
+      // setLatitude(0);
+      // setLongitude(0);
+      // setTimezone("");
       // @ts-ignore
       setLocationOptions([]);
     }
@@ -182,7 +183,7 @@ const Kundli = () => {
 
 
 
-  
+
   return (
     <div className="text-primary-300 p-4 md:p-12">
       <div className="font-bold w-max">
@@ -263,14 +264,14 @@ const Kundli = () => {
                 </select>
               </div>
               <div className="flex md:flex-col justify-between gap-2">
-                <div className = "flex flex-col gap-1">
+                <div className="flex flex-col gap-1">
                   <label className="font-bold"> Date of Birth</label>
-                  <input className="w-full p-1 rounded-md" type="date" value={dateOfBirth} onChange={(e) => {setDateOfBirth(e.target.value); setErrorDate(null)}}></input>
+                  <input className="w-full p-1 rounded-md" type="date" value={dateOfBirth} onChange={(e) => { setDateOfBirth(e.target.value); setErrorDate(null) }}></input>
                   {errorDate && <span className="text-red-500 text-sm">{errorDate}</span>}
-                </div>  
-                <div className = "flex flex-col gap-1"  >
+                </div>
+                <div className="flex flex-col gap-1"  >
                   <label className="font-bold"> Time of Birth</label>
-                  <input className="w-full p-1 rounded-md" type="time" value={timeOfBirth} onChange={(e) => {setTimeOfBirth(e.target.value); setErrorTime(null)}}></input>
+                  <input className="w-full p-1 rounded-md" type="time" value={timeOfBirth} onChange={(e) => { setTimeOfBirth(e.target.value); setErrorTime(null) }}></input>
                   {errorTime && <span className="text-red-500 text-sm">{errorTime}</span>}
                 </div>
               </div>
@@ -350,7 +351,7 @@ const Kundli = () => {
         <div className="mt-4 md:mt-10" ref={section}>
           <div className="w-full text-center text-xl md:text-3xl">{load}</div>
 
-          {data && <ZodiacTabs response={data} />}
+          {data && <ZodiacTabs response={data} dateOfBirth={dateOfBirth} timeOfBirth={timeOfBirth} latitude={latitude} longitude={longitude} timezone={timezone} language={language} />}
         </div>
       </div>
       <div className="my-6 md:my-[6vw] w-full">
@@ -383,38 +384,145 @@ const Kundli = () => {
 export default Kundli;
 
 
-const ZodiacTabs = ({ response }: { response: KundliData }) => {
-  // Extract objects 0 to 9
-  const items = Object.entries(response).filter(([key]) => parseInt(key, 10) < 10);
-  console.log(items, "items");
+const ZodiacTabs = ({ response, dateOfBirth, timeOfBirth, latitude, longitude, timezone, language, }: { response: KundliData; dateOfBirth: string; timeOfBirth: string; timezone: string; latitude: number; longitude: number; language: string }) => {
 
+  // Extract objects 0 to 9
+  const [dataa] = useState<string[]>(["Personal", "Planetary", "Chart", "Ashtakvarga", "Binnastakvarga", "Dosha"]);
+  const items = Object.entries(response).filter(([key]) => parseInt(key, 10) < 10);
+  const [chartStatus, setChartStatus] = useState<string>("north")
+  const [chartSvg, setchartSvg] = useState<string | null>(null)
   // State to track the active tab
   const [activeIndex, setActiveIndex] = useState(0);
-
   // Handle tab click
+  const [chartImages] = useState<string[]>([
+    "D1", "D2", "D3", "D3-s", "D4", "D5", "D7", "D8", "D9", "D10",
+    "D10-R", "D12", "D16", "D20", "D24", "D24-R", "D27", "D40",
+    "D45", "D60", "D30", "chalit", "sun", "moon", "kp_chalit"
+  ]);
+
+  const [mangalDosh, setmangalDosh] = useState<string[]>([])
+  const [KaalsarpDosh, setKaalsarpDosh] = useState<string[]>([])
+  const [ManglikDosh, setManglikDosh] = useState<string[]>([])
+  const [PitraDosh, setPitraDosh] = useState<string[]>([])
+  const [Papasamaya, setPapasamaya] = useState<string[]>([])
+
+  const [chartResponseImages, setChartResponseImages] = useState<string[]>([])
+  const [planetData, setplanetData] = useState<string[]>([])
+  const [astharvargaData, setAstharvargaData] = useState<string[]>([])
+  const [BinastharrvargaData, setBinastharrvargaData] = useState<string[]>([])
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
   };
+  const formattedDob = new Date(dateOfBirth).toLocaleDateString('en-GB');
+  const formattedTob = timeOfBirth;
+  const formattedLat = parseFloat(latitude.toString()).toFixed(2);
+  const formattedLon = parseFloat(longitude.toString()).toFixed(1);
+  const formattedTz = timezone;
+  const formattedLang = language ? language : 'en';
 
-  const activeData = items[activeIndex][1];
+  const fetchchartData = async (div: string) => {
+    try {
+      const north = await fetch(`https://api.vedicastroapi.com/v3-json/horoscope/chart-image?dob=${formattedDob}&tob=${formattedTob}&lat=${formattedLat}&lon=${formattedLon}&tz=${formattedTz}&div=${div}&color=%23ff3366&style=${chartStatus}&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=${formattedLang}&font_size=12&font_style=roboto&colorful_planets=0&size=300&stroke=2&format=base64&year=2024&transit_date=21/11/2024`);
+      const northData = await north.text();
+      setChartResponseImages((prevImages) => [...prevImages, northData]);
+      setchartSvg(northData)
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  const handleClick = (status: string) => {
+    setChartStatus(status);
+    setChartResponseImages([])
+      const fetchAllCharts = async () => {
+        for (const div of chartImages) {
+          await fetchchartData(div);
+        }
+      };
+      fetchAllCharts();
+  };
+  console.log("nice",chartStatus)
+  const fetchplanetryData = async () => {
+    try {
+      const res = await fetch(`https://api.vedicastroapi.com/v3-json/horoscope/planet-report?dob=${formattedDob}&tob=${formattedTob}&lat=${formattedLat}&lon=${formattedLon}&tz=${formattedTz}&api_key=2bf60a31-ce09-5a51-abb4-900e7a710717&planet=Jupiter&lang=${formattedLang}`)
+      const resData = await res.json();
+      setplanetData(resData?.response);
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+  const fetchAstharvargaData = async () => {
+    const res = await fetch(`https://api.vedicastroapi.com/v3-json/horoscope/ashtakvarga?dob=${formattedDob}&tob=${formattedTob}&lat=${formattedLat}&lon=${formattedLon}&tz=${formattedTz}&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=${language}`)
+    const data = await res.json();
+    setAstharvargaData(data?.response);
+  }
+  const fetchBinastharvargadata = async () => {
+    const res = await fetch(`https://api.vedicastroapi.com/v3-json/horoscope/binnashtakvarga?dob=${formattedDob}&tob=${formattedTob}&lat=${formattedLat}&lon=${formattedLon}&tz=${formattedTz}&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=${formattedLang}&planet=Ascendant`)
+    const data = await res.json();
+    setBinastharrvargaData(data?.response);
+  }
+  const fetchDoshadata = async () => {
+    const mangalDoshfetch = await fetch(`https://api.vedicastroapi.com/v3-json/dosha/mangal-dosh?dob=11/03/1994&tob=11:40&lat=11&lon=77&tz=5.5&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=en`)
+    const mangalres = await mangalDoshfetch.json();
+    setmangalDosh(mangalres?.response);
+
+    const KaalsarpDoshfetch = await fetch(`https://api.vedicastroapi.com/v3-json/dosha/kaalsarp-dosh?dob=23/02/1985&tob=05:40&lat=11&lon=77&tz=5.5&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=en`)
+    const kalsarres = await KaalsarpDoshfetch.json();
+    setKaalsarpDosh(kalsarres?.response);
+
+    const manglikDoshfetch = await fetch(`https://api.vedicastroapi.com/v3-json/dosha/manglik-dosh?dob=21/04/2021&tob=11:40&lat=11&lon=77&tz=5.5&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=en`)
+    const manglikres = await manglikDoshfetch.json();
+    setManglikDosh(manglikres?.response);
+
+    const pitraDoshfetch = await fetch(`https://api.vedicastroapi.com/v3-json/dosha/pitra-dosh?dob=21/04/2021&tob=11:40&lat=11&lon=77&tz=5.5&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=en`)
+    const pitrares = await pitraDoshfetch.json();
+    setPitraDosh(pitrares?.response)
+
+    const pasamayaDoshfetch = await fetch(`https://api.vedicastroapi.com/v3-json/dosha/papasamaya?dob=21/04/2021&tob=11:40&lat=11&lon=77&tz=5.5&api_key=72a5ab7e-aae6-5da8-8fa4-72175f05a260&lang=en`)
+    const papres = await pasamayaDoshfetch.json();
+    setPapasamaya(papres?.response);
+  }
+  useEffect(() => {
+    if (activeIndex === 1) {
+      fetchplanetryData();
+    }
+    if (activeIndex === 2) {
+      setChartResponseImages([])
+      const fetchAllCharts = async () => {
+        for (const div of chartImages) {
+          await fetchchartData(div);
+        }
+      };
+      fetchAllCharts();
+    }
+    if (activeIndex === 3) {
+      fetchAstharvargaData();
+    }
+    if (activeIndex === 4) {
+      fetchBinastharvargadata();
+    }
+    if (activeIndex === 5) {
+      fetchDoshadata();
+    }
+  }, [activeIndex]);
+
+  // const activeData = items[activeIndex][1];
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-xl font-bold mb-4 text-center">Zodiac Tabs</h1>
 
       {/* Navigation Tabs */}
-      <div className="hidden sm:flex justify-center mb-4 space-x-4 flex-wrap">
-        {items.map(([key, value], index) => (
+      <div className="hidden sm:flex justify-between bg-blue-600 md:h-12 items-center rounded-full overflow-hidden mb-5">
+        {dataa.map((item, index) => (
           <button
-            key={key}
             onClick={() => handleTabClick(index)}
-            className={`px-2  py-1  my-1 md:my-2 rounded-md border border-orange-500 shadow-md ${activeIndex === index
+            className={`flex-1 h-full border  shadow-md ${activeIndex === index
               ? "bg-orange-500 text-white"
               : "bg-orange-100 text-orange-500"
               } hover:bg-orange-200`}
           >
             {/* @ts-ignore */}
-            {value.zodiac}
+            {item}
           </button>
         ))}
       </div>
@@ -428,46 +536,449 @@ const ZodiacTabs = ({ response }: { response: KundliData }) => {
         </select>
       </div>
 
-      {/* Tabular Data for Active Tab */}
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-orange-500 bg-orange-100">
-          <thead>
-            <tr className="bg-orange-200">
-              <th className="px-4 py-2 border border-orange-500">Field</th>
-              <th className="px-4 py-2 border border-orange-500">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(activeData).map(([field, value], index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-2 border border-orange-500 capitalize">
+      {activeIndex === 0 && (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border  border-orange-500  overflow-hidden rounded-3xl shadow-lg">
+            <thead>
+              <tr className="bg-orange-300 text-orange-900 text-sm font-semibold uppercase">
+                {/* <th className="px-6 py-3 border-b border-orange-500">Field</th>
+              <th className="px-6 py-3 border-b border-orange-500">Value</th> */}
+                <th className="px-6 py-3 border-b border-orange-500"> personal data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                key="0"
+                className="bg-orange-100 text-orange-900 text-sm font-semibold uppercase"
+              >
+                <td className="px-6 py-3 border-b border-orange-500">Personal data</td>
+              </tr>
+              {/* {Object.entries(activeData).map(([field, value], index) => (
+              <tr
+                key={index}
+                className={`${index % 2 === 0 ? "bg-orange-100" : "bg-orange-50"
+                  } hover:bg-orange-200 transition duration-150`}
+              >
+                <td className="px-6 py-3 border-b border-orange-500 capitalize">
                   {field.replace(/_/g, " ")}
                 </td>
-                <td className="px-4 py-2 border border-orange-500">
+                <td className="px-6 py-3 border-b border-orange-500">
                   {typeof value === "boolean" ? (value ? "Yes" : "No") : value}
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            ))} */}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeIndex === 1 && (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-orange-500  overflow-hidden rounded-3xl shadow-lg">
+            <thead>
+              <tr className="bg-orange-300 text-orange-900 text-sm font-semibold uppercase">
+                <th className="px-6 py-3 border-b border-orange-500">Key</th>
+                <th className="px-6 py-3 border-b border-orange-500">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {planetData.length > 0 &&
+                Object.entries(planetData[0]).map(([key, value], index) => (
+                  <tr key={index} className="text-orange-200">
+                    <td className="px-6 py-3 border-b border-orange-500">{key}</td>
+                    <td className="px-6 py-3 border-b border-orange-500">
+                      {Array.isArray(value) ? (
+                        value.join(", ") // Render arrays as a comma-separated string
+                      ) : typeof value === "string" || typeof value === "number" ? (
+                        value
+                      ) : (
+                        JSON.stringify(value) // Safely render objects or other data types
+                      )}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeIndex === 2 && (
+        <div className="overflow-x-auto flex flex-col">
+          <div className="flex items-center justify-center gap-5 p-2 pb-3">
+            <button className="px-4 py-2 bg-yellow-400 rounded-full hover:bg-white border" onClick={() => handleClick("north")}>North Indian</button>
+            <button className="px-4 py-2 bg-yellow-400 rounded-full hover:bg-white border" onClick={() => handleClick("south")}>South Indian</button>
+          </div>
+          <table className="table-auto w-full overflow-hidden shadow-lg">
+
+            <tbody>
+              <div className=" bg-blue-600">
+                {chartResponseImages?.map((item) => (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: item }}
+                    style={{ width: "500px", height: "500px" }}
+                  />
+                ))}
+              </div>
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeIndex === 3 && (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-orange-500  overflow-hidden rounded-3xl shadow-lg">
+            <thead>
+              <tr className="bg-orange-300 text-orange-900 text-sm font-semibold uppercase">
+                <th className="px-6 py-3 border-b border-orange-500">Planets</th>
+
+              </tr>
+            </thead>
+            <tbody className="bg-orange-200 ">
+              {astharvargaData?.ashtakvarga_order?.length > 0 ? (
+                <div className="ashtakvarga-container">
+                  {astharvargaData.ashtakvarga_order.map((planet, index) => (
+                    <div key={index} className="diamond-grid-wrapper">
+                      {/* Render planet name */}
+                      <div className="grid-title">{planet}</div>
+
+                      {/* Render diamond grid */}
+                      <div className="diamond-grid">
+                        <div className="grid-cell top-left">
+                          {astharvargaData.ashtakvarga_points[index]?.[0] || "-"}
+                        </div>
+                        <div className="grid-cell top">
+                          {astharvargaData.ashtakvarga_points[index]?.[1] || "-"}
+                        </div>
+                        <div className="grid-cell top-right">
+                          {astharvargaData.ashtakvarga_points[index]?.[2] || "-"}
+                        </div>
+                        <div className="grid-cell left">
+                          {astharvargaData.ashtakvarga_points[index]?.[3] || "-"}
+                        </div>
+                        <div className="grid-cell center">
+                          {astharvargaData.ashtakvarga_points[index]?.[4] || "-"}
+                        </div>
+                        <div className="grid-cell right">
+                          {astharvargaData.ashtakvarga_points[index]?.[5] || "-"}
+                        </div>
+                        <div className="grid-cell bottom-left">
+                          {astharvargaData.ashtakvarga_points[index]?.[6] || "-"}
+                        </div>
+                        <div className="grid-cell bottom">
+                          {astharvargaData.ashtakvarga_points[index]?.[7] || "-"}
+                        </div>
+                        <div className="grid-cell bottom-right">
+                          {astharvargaData.ashtakvarga_points[index]?.[8] || "-"}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-orange-200 text-center">No data available</div>
+              )}
+
+
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeIndex === 4 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-orange-200 rounded-lg">
+          {BinastharrvargaData && Object.keys(BinastharrvargaData).length > 0 ? (
+            Object.entries(BinastharrvargaData).map(([planet, points], index) => (
+              <div
+                key={index}
+                className="border rounded-3xl shadow-lg p-4 bg-white text-orange-900"
+              >
+                {/* Planet Name */}
+                <h3 className="text-center font-semibold text-lg uppercase mb-4">
+                  {planet}
+                </h3>
+
+                {/* Points Grid */}
+                <div className="grid grid-cols-4 ">
+                  {points.map((point, pointIndex) => (
+                    <div
+                      key={pointIndex}
+                      className={`flex items-center justify-center h-14 w-h-14 border border-black font-bold ${point === 1 ? "bg-orange-300" : "bg-orange-200"
+                        }`}
+                    >
+                      {point}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-orange-900">
+              No data available
+            </div>
+          )}
+        </div>
+      )}
+      {activeIndex === 5 && (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-orange-500 overflow-hidden rounded-3xl shadow-lg mb-5">
+            <caption className="bg-orange-300 py-2 font-bold">Mangal Dosh</caption>
+            <tbody>
+              {/* Bot Response */}
+              <tr key="botResponse" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Bot Response:</strong> {mangalDosh?.bot_response}
+                </td>
+              </tr>
+
+              {/* Cancellation Reason */}
+              <tr key="cancellationReason" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Cancellation Reason:</strong> {mangalDosh?.cancellation?.cancellationReason}
+                </td>
+              </tr>
+
+              {/* Cancellation Score */}
+              <tr key="cancellationScore" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Cancellation Score:</strong> {mangalDosh?.cancellation?.cancellationScore}
+                </td>
+              </tr>
+
+              {/* Factors */}
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Factors:</strong>
+                  <ul>
+                    <li><strong>Moon:</strong> {mangalDosh?.factors?.moon}</li>
+                    <li><strong>Rahu:</strong> {mangalDosh?.factors?.rahu}</li>
+                    <li><strong>Saturn:</strong> {mangalDosh?.factors?.saturn}</li>
+                  </ul>
+                </td>
+              </tr>
+
+              {/* Dosha Presence */}
+              <tr key="isDoshaPresent" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Is Dosha Present:</strong> {mangalDosh?.is_dosha_present ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              {/* Mars Dosha Presence from Lagna */}
+              <tr key="isDoshaPresentMarsFromLagna" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Is Dosha Present (Mars from Lagna):</strong> {mangalDosh?.is_dosha_present_mars_from_lagna ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              {/* Mars Dosha Presence from Moon */}
+              <tr key="isDoshaPresentMarsFromMoon" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Is Dosha Present (Mars from Moon):</strong> {mangalDosh?.is_dosha_present_mars_from_moon ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              {/* Anshik */}
+              <tr key="isAnshik" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Is Anshik:</strong> {mangalDosh?.is_anshik ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              {/* mangalDosh? Score */}
+              <tr key="score" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Score:</strong> {mangalDosh?.score}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table className="table-auto w-full border border-orange-500 overflow-hidden rounded-3xl shadow-lg mb-5">
+            <caption className="bg-orange-300 py-2 font-bold">Mangalik Dosh</caption>
+            <tbody>
+              <tr key="botResponse" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Bot Response:</strong> {ManglikDosh?.bot_response}
+                </td>
+              </tr>
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Factors:</strong>
+                  <ul>
+                    {ManglikDosh?.factors?.length > 0 ? (
+                      <>
+                        {ManglikDosh.factors.map((factor, index) => (
+                          <li key={index}>{factor}</li>
+                        ))}
+                      </>
+                    ) : (
+                      <span>No factors available</span>
+                    )}
+                  </ul>
+                </td>
+              </tr>
+
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Aspects:</strong>
+                  <ul>
+                    {ManglikDosh?.aspects?.length > 0 ? (
+                      <>
+                        {ManglikDosh.aspects.map((aspect, index) => (
+                          <li key={index}>{aspect}</li>
+                        ))}
+                      </>
+                    ) : (
+                      <span>No data available</span>
+                    )}
+                  </ul>
+                </td>
+              </tr>
+              <tr key="isDoshaPresent" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Manglik By mars:</strong> {ManglikDosh?.manglik_by_mars ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              <tr key="isDoshaPresentMarsFromLagna" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Manglik By rahuketu:</strong> {ManglikDosh?.manglik_by_rahuketu ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              <tr key="isDoshaPresentMarsFromMoon" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Manglik By Saturn:</strong> {ManglikDosh?.manglik_by_saturn ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              <tr key="score" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Score:</strong> {mangalDosh?.score}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table className="table-auto w-full border border-orange-500 overflow-hidden rounded-3xl shadow-lg mb-5">
+            <caption className="bg-orange-300 py-2 font-bold">Kal Dosh</caption>
+            <tbody>
+              <tr key="botResponse" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Bot Response:</strong> {KaalsarpDosh?.bot_response}
+                </td>
+              </tr>
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Factors:</strong>
+                  <ul>
+                    {KaalsarpDosh?.dosha_direction}
+                  </ul>
+                </td>
+              </tr>
+
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Aspects:</strong>
+                  <ul>
+                    {KaalsarpDosh?.dosha_type}
+                  </ul>
+                </td>
+              </tr>
+
+              <tr key="isDoshaPresent" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Dosha Present</strong> {KaalsarpDosh?.is_dosha_present ? "Yes" : "No"}
+                </td>
+              </tr>
+
+              <tr key="isDoshaPresentMarsFromLagna" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>kaal sharp rahu-ketu:</strong> {KaalsarpDosh?.rahu_ketu_axis}
+                </td>
+              </tr>
+
+              
+
+              <tr key="score" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                {KaalsarpDosh?.remedies?.length > 0 ? (
+                      <>
+                        {KaalsarpDosh.remedies.map((remedy, index) => (
+                          <li key={index}>{remedy}</li>
+                        ))}
+                      </>
+                    ) : (
+                      <span>No factors available</span>
+                    )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table className="table-auto w-full border border-orange-500 overflow-hidden rounded-3xl shadow-lg mb-5">
+            <caption className="bg-orange-300 py-2 font-bold">Pitra Dosh</caption>
+            <tbody>
+              <tr key="botResponse" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Bot Response:</strong> {PitraDosh?.bot_response}
+                </td>
+              </tr>
+              <tr key="factors" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Factors:</strong>
+                  <ul>
+                  {PitraDosh?.effects?.length > 0 ? (
+                      <>
+                        {PitraDosh.effects.map((effect, index) => (
+                          <li key={index}>{effect}</li>
+                        ))}
+                      </>
+                    ) : (
+                      <span>No effects available</span>
+                    )}
+                  </ul>
+                </td>
+              </tr>
+
+              <tr key="isDoshaPresent" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Dosha Present</strong> {PitraDosh?.is_dosha_present ? "Yes" : "No"}
+                </td>
+              </tr>
+              
+
+              <tr key="score" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Remdies:</strong>
+                {PitraDosh?.remedies?.length > 0 ? (
+                      <>
+                        {PitraDosh.remedies.map((remedy, index) => (
+                          <li key={index}>{remedy}</li>
+                        ))}
+                      </>
+                    ) : (
+                      <span>No factors available</span>
+                    )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table className="table-auto w-full border border-orange-500 overflow-hidden rounded-3xl shadow-lg mb-5">
+            <caption className="bg-orange-300 py-2 font-bold">Papsamya Dosh</caption>
+            <tbody>
+              <tr key="botResponse" className="bg-orange-100 text-orange-900 text-sm font-semibold">
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Mars dad</strong> {Papasamaya?.mars_papa}
+                </td>
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Rahu dad</strong> {Papasamaya?.rahu_papa}
+                </td>
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Saturn Dad</strong> {Papasamaya?.saturn_papa}
+                </td>
+                <td className="px-6 py-3 border-b border-orange-500">
+                  <strong>Sun Dad</strong> {Papasamaya?.sun_papa}
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

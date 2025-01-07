@@ -69,7 +69,7 @@ const Home = () => {
         },
     ]
   return (
-    <div className="bg-primary-100 px-4 md:px-8">
+    <div className="bg-primary-100 px-4 md:px-20">
       <div className="">
         <div className="bg-gradient-to-b from-primary-400 to-primary-500 rounded-xl md:rounded-tl-[6rem] flex flex-col justify-between md:flex-row mt-8 md:mt-0 p-6 md:px-[5%] md:pt-[5%]">
           <div>
@@ -110,7 +110,7 @@ const Home = () => {
           </div>
           <div>do eiusmod tempor incididunt ut labore et</div> */}
         </div>
-        <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center my-4 md:my-8">
+        <div className="flex flex-wrap gap-2  items-center justify-center my-4 md:my-8">
           {items.map((item) => (
             <div
               key={item.key}

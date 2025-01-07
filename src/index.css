@@ -6,3 +6,83 @@
     --radius: 0.5rem
   }
 }
+
+.ashtakvarga-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.diamond-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grid-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.diamond-grid {
+  display: grid;
+  grid-template-areas:
+    "top-left top top-right"
+    "left center right"
+    "bottom-left bottom bottom-right";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  width: 120px; /* Adjust size */
+  height: 120px; /* Adjust size */
+  background-color: #f9f4e0;
+  border: 1px solid #ccc;
+  position: relative;
+}
+
+.grid-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.grid-cell.top-left {
+  grid-area: top-left;
+}
+
+.grid-cell.top {
+  grid-area: top;
+}
+
+.grid-cell.top-right {
+  grid-area: top-right;
+}
+
+.grid-cell.left {
+  grid-area: left;
+}
+
+.grid-cell.center {
+  grid-area: center;
+  font-weight: bold;
+}
+
+.grid-cell.right {
+  grid-area: right;
+}
+
+.grid-cell.bottom-left {
+  grid-area: bottom-left;
+}
+
+.grid-cell.bottom {
+  grid-area: bottom;
+}
+
+.grid-cell.bottom-right {
+  grid-area: bottom-right;
+}

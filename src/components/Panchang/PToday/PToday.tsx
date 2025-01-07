@@ -15,6 +15,7 @@ const PToday = () => {
   const [timezone, setTimezone] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [horamuhurat, setHoraMuhurat] = useState<any>([])
   const [locationOptions, getLocationOptions, setLocationOptions] = getLocation();
 
   const [errorLocation, setErrorLocation] = useState<string | null>(null);
@@ -40,11 +41,11 @@ const PToday = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if(!validateInput()){
+    if (!validateInput()) {
       return;
     }
     setLoad(true);
-    
+
     try {
       const formattedDate = `${new Date().getDate().toString().padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`
       const formattedTz = timezone;
@@ -53,8 +54,13 @@ const PToday = () => {
       const formattedTime = `${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}`
 
       const res = await axios.get(`https://api.vedicastroapi.com/v3-json/panchang/panchang?api_key=${VITE_API_KEY}&date=${formattedDate}&tz=${formattedTz}&lat=${formattedLat}&lon=${formattedLon}&time=${formattedTime}&lang=${language}`);
-
+      const resHoraMuhurat = await axios.get(`https://api.vedicastroapi.com/v3-json/panchang/hora-muhurta?api_key=${VITE_API_KEY}&date=${formattedDate}&tz=${formattedTz}&lat=${formattedLat}&lon=${formattedLon}&time=${formattedTime}&lang=${language}`)
+      // console.log("RESHORA MUHURAT:", resHoraMuhurat.data.response.horas.length)
+      if (resHoraMuhurat.data.response.horas.length > 0) {
+        setHoraMuhurat(resHoraMuhurat.data.response.horas)
+      }
       setData(res.data);
+
       setLoad(false);
     } catch (error) {
       console.log(error);
@@ -74,7 +80,7 @@ const PToday = () => {
     }
 
   };
-
+  console.log("DDDDDDDD:", horamuhurat)
   return (
     <>
       <div className=" flex justify-center items-center w-full my-6">
@@ -177,8 +183,23 @@ const PToday = () => {
         {/* Render table only when data is available and not loading */}
         {!load && data && (
           <div className="flex justify-center items-center my-6">
-            <div className="mx-[10vw] w-full">
+            <div className="w-full flex justify-center items-center flex-col">
               <DynamicPanchangTable data={data} />
+              <div className="md:text-3xl text-2xl font-bold text-center mb-5">----- Hora Muhurat ------</div>
+              <div className="h-auto w-full bg-[#fed7aa] flex flex-wrap p-5 rounded-3xl gap-4">
+                {horamuhurat.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    className="h-auto w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] bg-[#ffedd5] p-4 rounded-lg shadow-lg cursor-pointer scale-1 transform transition-transform hover:scale-[1.02]"
+                  >
+                    <p><strong>Benefits:</strong> {item.benefits}</p>
+                    <p><strong>Timing:</strong> {item.start} <span className="font-bold">to </span>{item.end}</p>
+                    <p><strong>Hora:</strong> {item.hora}</p>
+                    <p><strong>Luck-Gem:</strong> {item.lucky_gem}</p>
+                  </div>
+                ))}
+              </div>
+
             </div>
           </div>
         )}
@@ -272,8 +293,11 @@ const DynamicPanchangTable = ({ data }: { data: any }) => {
         <div className="space-y-4">
           {renderNestedSections(data.response)}
         </div>
+        {/* <CardTitle className="text-2xl w-full text-center">
+          Hora Muhurat for {data.response.date}
+        </CardTitle> */}
+
       </CardContent>
     </Card>
   );
 };
-

@@ -1,4 +1,5 @@
 import moon from "../../assets/moon.svg";
+import Doshaimg from "../../assets/more.png";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
@@ -43,7 +44,7 @@ const More = () => {
       setErrorTime("Time is required");
       return false;
     }
-    if (location=="") {
+    if (location == "") {
       setErrorLocation("Location is required");
       return false;
     }
@@ -55,10 +56,10 @@ const More = () => {
     if (!validateInput()) {
       return;
     }
-    
+
     try {
       // Check if all required fields are filled
-      
+
 
       // Format date of birth (DD/MM/YYYY)
       const formattedDateOfBirth = dateofbirth?.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
@@ -112,7 +113,7 @@ const More = () => {
         block: "start",
       });
     }
-    
+
   }, [data]);
 
 
@@ -128,7 +129,7 @@ const More = () => {
   return (
     <div className="px-2 md:px-8 py-8 md:py-10 bg-primary-100 w-full">
       {/* heading */}
-      <div className = "flex mb-4 md:mb-10 flex-col items-center justify-center w-full">
+      <div className="flex mb-4 md:mb-10 flex-col items-center justify-center w-full">
         <div className="font-bold text-center w-full md:w-max">
           <div className="text-xl md:text-4xl font-bold text-center ">More in Astrology</div>
           <div className="relative my-3 border-b w-full border-primary-300 flex justify-center">
@@ -140,39 +141,78 @@ const More = () => {
       </div>
 
       {/* components */}
-      <div className="">
-        <div className="flex flex-col gap-10 w-full">
-          <div><h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">Dosha</h1>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {Dosha.map((item) => (
-                <div onClick={() => {
-                  setLink(item.link);
-                  setFormShow(true);
-                }} key={item.key} className=" w-fit  bg-primary-500 hover:bg-[#ffd937] transition-all duration-300 shadow-md  p-2 rounded-md cursor-pointer">{item.key}</div>
-              ))}
+      <div>
+        <div className="flex md:flex-row flex-col gap-2 w-full h-auto lg:h-[50vh]">
+          <div className="bg-[#d8894e] h-full p-4 w-full lg:w-1/3 rounded-3xl shadow-lg">
+            <h1 className="text-xl lg:text-4xl font-semibold border-b border-white pb-2">Dosha</h1>
+            <div className="w-full h-[80%] flex flex-col lg:flex-row mt-4 rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[30%] h-[200px] lg:h-full rounded-lg">
+                <img src={Doshaimg} alt="Dosha" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex flex-col p-2 w-full lg:w-[70%] overflow-y-auto">
+                {Dosha.map((item) => (
+                  <div
+                    key={item.key}
+                    onClick={() => {
+                      setLink(item.link);
+                      setFormShow(true);
+                    }}
+                    className="hover:underline text-sm lg:text-[13px] mb-2 tracking-tighter leading-4 lg:leading-3 cursor-pointer font-bold"
+                  >
+                    {item.key}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div><h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">Disha</h1>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {Dashas.map((item) => (
-                <div onClick={() => {
-                  setLink(item.link);
-                  setFormShow(true);
-                }} key={item.key} className=" w-fit  bg-primary-500 hover:bg-[#ffd937] transition-all duration-300 shadow-md  p-2 rounded-md cursor-pointer">{convertToCapitalizedWords(item.key)}</div>
-              ))}
+
+          <div className="bg-[#d8894e] h-full p-4 w-full lg:w-1/3 rounded-3xl shadow-lg">
+            <h1 className="text-xl lg:text-4xl font-semibold border-b border-white pb-2">Disha</h1>
+            <div className="w-full h-[80%] flex flex-col lg:flex-row mt-4 rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[30%] h-[200px] lg:h-full rounded-lg">
+                <img src={Doshaimg} alt="Disha" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex flex-wrap gap-1 p-2 w-full lg:w-[70%] overflow-y-auto">
+                {Dashas.map((item) => (
+                  <div
+                    key={item.key}
+                    onClick={() => {
+                      setLink(item.link);
+                      setFormShow(true);
+                    }}
+                    className="hover:underline text-sm lg:text-[13px] mb-2 tracking-tighter leading-4 lg:leading-3 cursor-pointer font-bold"
+                  >
+                    {convertToCapitalizedWords(item.key)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div><h1 className="text-xl md:text-4xl font-semibold border-b border-primary-300 pb-2">Extended Horoscope</h1>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {ExtendedHoroscope.map((item) => (
-                <div onClick={() => {
-                  setLink(item.link);
-                  setFormShow(true);
-                }} key={item.key} className=" w-fit  bg-primary-500 hover:bg-[#ffd937] transition-all duration-300 shadow-md  p-2 rounded-md cursor-pointer">{item.key}</div>
-              ))}
+
+          <div className="bg-[#d8894e] h-full p-4 w-full lg:w-1/3 rounded-3xl shadow-lg">
+            <h1 className="text-xl lg:text-4xl font-semibold border-b border-white pb-2">Extended Horoscope</h1>
+            <div className="w-full h-[80%] flex flex-col lg:flex-row mt-4 rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[30%] h-[200px] lg:h-full rounded-lg">
+                <img src={Doshaimg} alt="Extended Horoscope" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex flex-wrap gap-2 p-2 w-full lg:w-[70%] overflow-y-auto">
+                {ExtendedHoroscope.map((item) => (
+                  <div
+                    key={item.key}
+                    onClick={() => {
+                      setLink(item.link);
+                      setFormShow(true);
+                    }}
+                    className="hover:underline text-sm lg:text-[13px] rounded-md cursor-pointer tracking-tighter leading-4 lg:leading-3 font-bold"
+                  >
+                    {item.key}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
+
         <div>
           {
             data ? <div className="min-h-screen flex mt-10 items-center justify-center">
@@ -272,13 +312,13 @@ const More = () => {
                   ) : (
                     loading && location !== "" && (
                       <div className="w-full absolute h-[200px] bg-white z-10 top-[75px] p-12 text-center text-xl md:text-3xl">
-                      <div className="flex items-center flex-col justify-center">
-                        <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
-                        <div>
-                          Select location from the list...
+                        <div className="flex items-center flex-col justify-center">
+                          <div className="w-8 h-8 border-4 border-t-transparent border-orange-500 rounded-full animate-spin"></div>
+                          <div>
+                            Select location from the list...
+                          </div>
                         </div>
                       </div>
-                    </div>
                     )
                   )
                   }
@@ -372,10 +412,3 @@ const TableComponent = ({ data, link }: { data: any, link: string }) => {
     </div>
   );
 };
-
-
-
-
-
-
-

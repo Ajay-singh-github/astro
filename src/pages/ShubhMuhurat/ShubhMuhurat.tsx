@@ -10,7 +10,7 @@ import { PiBowlFood } from "react-icons/pi";
 import Articles from "../../components/common/Articles/Articles";
 import { shubhMuhrat } from "@/constants/constants";
 import { useState } from "react";
-import { MProps, MonthProps,MonthKeys } from "@/constants/types";
+import { MProps, MonthProps, MonthKeys } from "@/constants/types";
 
 
 
@@ -29,11 +29,11 @@ const ShubhMuhurat = () => {
               {shubhMuhrat[muhrat]?.hasOwnProperty(m) ? (
                 <>
                   <div className="text-xl md:text-3xl font-bold text-center mb-4 mt-6">
-                    Muhrats in {m}, 2024
+                    Muhrats in {m}, 2025
                   </div>
 
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
-                    
+
                     <table className="w-full border bg-orange-100 border-orange-500 table-auto border-collapse">
                       <thead>
                         <tr className="border-b bg-orange-200">
@@ -57,7 +57,7 @@ const ShubhMuhurat = () => {
                 </>
               ) : (
                 <div className="w-full text-center font-bold my-4 text-xl md:text-3xl">
-                  No Muhrats in {m}, 2024
+                  No Muhrats in {m}, 2025
                 </div>
               )}
             </div>
@@ -180,96 +180,183 @@ const ShubhMuhurat = () => {
           </div>
         </div>
       </div> */}
-      <div className="px-2 md:px-8 w-full">
-        <div className="my-6 w-full px-4 md:px-8">
-          <div className="font-bold w-max">
-            <div className="text-xl md:text-3xl ">Shubh Muhurat 2024</div>
-            <div className="relative my-3 border-b w-full border-primary-300 flex justify-center">
-              <div className="absolute -top-4 bg-primary-100">
-                <img src={moon} className="text-xs" />
+     
+      <div className="w-full md:h-lvh">
+        <div className="w-full h-[10%] flex px-4 md:px-10 justify-between ">
+          <div className="w-full md:w-[40%] ">
+            <p className="text-[1.5rem] md:text-[2rem] font-bold">Subh Muhurat 2025</p>
+            <div className="border border-black"></div>
+          </div>
+          <div className="w-[40%] md:w-[40%] md:block hidden">
+            <p className="text-[1.5rem] md:text-[2rem] font-bold">Subh Muhurat 2026</p>
+            <div className="border border-black"></div>
+          </div>
+        </div>
+
+        <div className="w-full md:h-[80%] flex flex-col md:flex-row justify-between">
+          <div className="px-4 md:px-8 w-full md:w-1/2">
+            <div className="my-6 md:my-[4vw] w-full px-4 md:px-8 flex items-start justify-start">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Marriage");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <GiBigDiamondRing />
+                  </div>
+                  <div className="text-lg md:text-xl">Marriage Muhurat 2025</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Vehicle");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <FaCarSide />
+                  </div>
+                  <div className="text-lg md:text-xl">Vehicle Purchase Muhurat 2025</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("GrihaPravesh");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <FaHome />
+                  </div>
+                  <div className="text-lg md:text-xl">Griha Pravesh Muhurat 2025</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Namkaran");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <TbAbc />
+                  </div>
+                  <div className="text-lg md:text-xl">Naam Karan Muhurat 2025</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Mundan");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <LuBaby />
+                  </div>
+                  <div className="text-lg md:text-xl">Mundan Muhurat 2025</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Annanprashan");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <PiBowlFood />
+                  </div>
+                  <div className="text-lg md:text-xl">Annanprashan Muhurat 2025</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-[40%] md:hidden block pl-6 ">
+            <p className="text-[1.5rem] md:text-[2rem] font-bold">Subh Muhurat 2026</p>
+            <div className="border border-black"></div>
+          </div>
+          <div className="px-4 md:px-8 w-full md:w-1/2 ">
+            <div className="my-6 md:my-[4vw] w-full px-4 md:px-8 flex items-start justify-start">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Marriage");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <GiBigDiamondRing />
+                  </div>
+                  <div className="text-lg md:text-xl">Marriage Muhurat 2026</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Vehicle");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <FaCarSide />
+                  </div>
+                  <div className="text-lg md:text-xl">Vehicle Purchase Muhurat 2026</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("GrihaPravesh");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <FaHome />
+                  </div>
+                  <div className="text-lg md:text-xl">Griha Pravesh Muhurat 2026</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Namkaran");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <TbAbc />
+                  </div>
+                  <div className="text-lg md:text-xl">Naam Karan Muhurat 2026</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Mundan");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <LuBaby />
+                  </div>
+                  <div className="text-lg md:text-xl">Mundan Muhurat 2026</div>
+                </div>
+                <div
+                  className="border-2 border-secondary-200 p-3 flex gap-4 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setMonth("all");
+                    setMuhrat("Annanprashan");
+                  }}
+                >
+                  <div className="bg-secondary-200 rounded-md flex items-center justify-center p-3">
+                    <PiBowlFood />
+                  </div>
+                  <div className="text-lg md:text-xl">Annanprashan Muhurat 2026</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="px-2 md:px-8 w-full">
-        <div className="my-6 md:my-[4vw] w-full px-4 md:px-8 flex items-start justify-start">
-          <div className="grid grid-cols-2 gap-2 md:gap-6 w-full md:w-[80%]">
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded-md cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("Marriage");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <GiBigDiamondRing />
-              </div>
-              <div className="md:text-xl">Marriage Muhurat 2024</div>
-            </div>
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded-md cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("Vehicle");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <FaCarSide />
-              </div>
-              <div className="md:text-xl">Vehicle Purchase Muhurat 2024</div>
-            </div>
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded-md cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("GrihaPravesh");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <FaHome />
-              </div>
-              <div className="md:text-xl">Griha Pravesh Muhurat 2024</div>
-            </div>
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded-md cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("Namkaran");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <TbAbc />
-              </div>
-              <div className="md:text-xl">Naam Karan Muhurat 2024</div>
-            </div>
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded-md cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("Mundan");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <LuBaby />
-              </div>
-              <div className="md:text-xl">Mundan Muhurat 2024</div>
-            </div>
-            <div
-              className="border-2 border-secondary-200 p-1 flex gap-4 rounded- cursor-pointer"
-              onClick={() => {
-                setMonth("all");
-                setMuhrat("Annanprashan");
-              }}
-            >
-              <div className="bg-secondary-200 rounded-md flex items-center justify-center p-2">
-                <PiBowlFood />
-              </div>
-              <div className="md:text-xl">Annanprashan Muhurat 2024</div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <div className="px-2 md:px-8 w-full">
         <div className=" p-2 md:p-4 rounded-lg w-full flex flex-col gap-2 md:gap-4">
@@ -279,10 +366,11 @@ const ShubhMuhurat = () => {
           <div className="w-full p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4">
             {month === "all" ? (
               renderMuhrats()
+              
             ) : (
               <div>
                 <div className="text-xl md:text-3xl font-bold text-center mb-4">
-                  Muhrat dates in {month}, 2024
+                  Muhrat dates in {month}, 2025
                 </div>
                 {shubhMuhrat[muhrat]?.hasOwnProperty(month) && (
                   <div className="text-lg md:text-2xl text-center flex flex-col justify-center items-center gap-2">
@@ -311,6 +399,8 @@ const ShubhMuhurat = () => {
           </div>
         </div>
       </div>
+
+      
 
       <div className="w-full">
         <Articles />

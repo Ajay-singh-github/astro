@@ -1,17 +1,32 @@
 import moon from "../../assets/moon.svg";
-import aries from "../../assets/aries.webp";
+// import aries from "../../assets/aries.webp";
+
 import taurus from "../../assets/taurus.webp";
-import gemini from "../../assets/gemini.avif";
-import cancer from "../../assets/cancer.webp";
-import leo from "../../assets/leo.avif";
-import virgo from "../../assets/virgo.avif";
-import libra from "../../assets/libra.avif";
+import gemini from '../../assets/gemini.jpg';
+// import gemini from "../../assets/gemini.avif";
+import cancer from "../../assets/cancer.jpg";
+// import leo from "../../assets/leo.avif";
+import leo from "../../assets/leo.jpg";
+
+// import virgo from "../../assets/virgo.avif";
+import virgo from "../../assets/virgo.jpg";
+
+// import libra from "../../assets/libra.avif";
+import libra from "../../assets/libra.png";
+
 import scorpio from "../../assets/scorpio.jpg";
-import sagittarius from "../../assets/sagittarius.webp";
+// import sagittarius from "../../assets/sagittarius.webp";
+import sagittarius from "../../assets/sagittarius.jpg";
+
+// import capricorn from "../../assets/capricorn.jpg";
 import capricorn from "../../assets/capricorn.jpg";
-import aquarius from "../../assets/aquarius.avif";
-import pisces from "../../assets/pisces.webp";
+
+// import aquarius from "../../assets/aquarius.avif";
+import aquarius from "../../assets/aquarius.jpg";
+
+import pisces from "../../assets/pisces.jpg";
 import arieslogo from "../../assets/arieslogo.svg";
+import ariesaa from "../../assets/aries.jpg";
 import aquariuslogo from "../../assets/aquariuslogo.svg";
 import tauruslogo from "../../assets/tauruslogo.svg";
 import geminilogo from "../../assets/geminilogo.svg";
@@ -162,7 +177,7 @@ const zodiacList: ZodiacListProps[] = [
   {
     key: "1",
     value: "aries",
-    img: aries,
+    img: ariesaa,
     logo: arieslogo,
   },
   {
