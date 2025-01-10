@@ -102,9 +102,7 @@ interface KaalsarpDoshType {
   remedies: string[];  // remedies should be a string array
 }
 
-const KaalsarpDosh: KaalsarpDoshType = {
-  remedies: ['Remedy 1', 'Remedy 2', 'Remedy 3'],  // example
-};
+
 
 
 
@@ -906,7 +904,7 @@ const ZodiacTabs = ({ response, dateOfBirth, timeOfBirth, latitude, longitude, t
                 <td className="px-6 py-3 border-b border-orange-500">
                 {KaalsarpDosh?.remedies?.length > 0 ? (
                       <>
-                        {KaalsarpDosh.remedies.map((remedy:string, index:any) => (
+                        {KaalsarpDosh.remedies.map((remedy:any, index:any) => (
                           <li key={index}>{remedy}</li>
                         ))}
                       </>
@@ -954,7 +952,7 @@ const ZodiacTabs = ({ response, dateOfBirth, timeOfBirth, latitude, longitude, t
                   <strong>Remdies:</strong>
                 {PitraDosh?.remedies?.length > 0 ? (
                       <>
-                        {PitraDosh.remedies.map((remedy:string, index:any) => (
+                        {PitraDosh.remedies.map((remedy:any, index:any) => (
                           <li key={index}>{remedy}</li>
                         ))}
                       </>
